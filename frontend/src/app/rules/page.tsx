@@ -1,11 +1,12 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { FadeIn, StaggerChildren, StaggerItem } from '@/components/animations/FadeIn';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Shield, Users, Code, Scale } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Rules & Eligibility',
+  title: 'Rules & Eligibility | PRISMTECH 2026',
   description: 'Eligibility criteria, team rules, and coding guidelines for PRISMTECH 2026.',
 };
 
@@ -13,7 +14,7 @@ const ruleSections = [
   {
     title: 'Eligibility',
     icon: Users,
-    color: '#00d4ff',
+    color: 'var(--color-prism-cyan)',
     rules: [
       'Participants must be currently enrolled in an engineering degree program (B.Tech/B.E or equivalent).',
       'Valid college ID is mandatory for check-in on Day 1.',
@@ -24,7 +25,7 @@ const ruleSections = [
   {
     title: 'Team Formation',
     icon: Users,
-    color: '#8b5cf6',
+    color: 'var(--color-prism-violet)',
     rules: [
       'Teams must consist of a minimum of 2 and a maximum of 4 members.',
       'Multi-college teams are permitted and encouraged.',
@@ -35,7 +36,7 @@ const ruleSections = [
   {
     title: 'Code & Hardware Conduct',
     icon: Code,
-    color: '#f59e0b',
+    color: 'var(--color-prism-gold)',
     rules: [
       'All code and hardware designs must be created during the 24-hour hackathon period.',
       'Use of open-source libraries, frameworks, and public APIs is allowed and encouraged, provided they are attributed properly.',
@@ -44,14 +45,14 @@ const ruleSections = [
     ]
   },
   {
-    title: 'Evaluation & Fair Play',
+    title: 'Fair Innovation & Evaluation',
     icon: Scale,
-    color: '#6366f1',
+    color: 'var(--color-ieee-blue-light)',
     rules: [
-      'Plagiarism of any form (copying another team\'s code or presenting an existing project as new) will result in immediate disqualification.',
+      "Plagiarism of any form (copying another team's code or presenting an existing project as new) will result in immediate disqualification.",
       'The decision of the judges is final and binding.',
-      'Teams must respect the venue, organizers, mentors, and fellow participants. Any form of harassment or unprofessional behavior will not be tolerated.',
-      'Disqualified teams are allowed to stay at the venue and attend non-competitive sessions (like panel talks).',
+      'Qualification rounds and project submissions will take place online via the portal.',
+      'Disqualified teams will be taken offline and lose access to the submission portal, but are allowed to stay at the venue.',
     ]
   },
 ];
@@ -60,78 +61,63 @@ export default function RulesPage() {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="pt-20">
-        <section
-          className="relative py-20 overflow-hidden"
-          style={{ background: 'var(--color-surface-0)' }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse at 50% 0%, rgba(99, 102, 241, 0.12) 0%, transparent 60%)',
-            }}
-          />
-          <div className="container relative z-10 text-center">
-            <FadeIn>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 glass border border-white/10 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#6366f1]" />
-                Guidelines
-              </div>
-              <h1 className="font-display font-800 text-5xl sm:text-6xl text-white mb-5">
-                Rules & <span className="text-gradient-prism">Eligibility</span>
-              </h1>
-              <p className="text-white/50 text-lg max-w-2xl mx-auto">
-                Please read the following rules carefully. These guidelines ensure a fair, safe,
-                and competitive environment for everyone.
-              </p>
-            </FadeIn>
-          </div>
-        </section>
+      <main id="main-content" className="pt-24 pb-20 bg-[var(--color-surface-0)] min-h-screen">
+        
+        {/* Page Hero */}
+        <div className="container relative z-10 pt-10 pb-16 border-b border-white/5">
+          <Badge variant="outline" className="mb-6">Guidelines</Badge>
+          <h1 className="font-display font-bold text-5xl md:text-7xl text-white tracking-tight mb-6">
+            Rules & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-ieee-blue-light)] to-[var(--color-prism-violet)] pb-2 px-1">Eligibility</span>
+          </h1>
+          <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl">
+            Please read the following rules carefully. These guidelines ensure a fair, safe, and competitive environment for everyone.
+          </p>
+        </div>
 
-        <section className="section border-t border-white/5" style={{ background: 'var(--color-surface-1)' }}>
-          <div className="container max-w-4xl">
-            <StaggerChildren className="space-y-8">
-              {ruleSections.map((section, idx) => {
-                const Icon = section.icon;
-                return (
-                  <StaggerItem key={idx}>
-                    <div className="p-6 sm:p-8 rounded-2xl glass border border-white/5">
-                      <div className="flex items-center gap-4 mb-6">
-                        <div
-                          className="w-12 h-12 rounded-xl flex items-center justify-center"
-                          style={{ background: `${section.color}15`, border: `1px solid ${section.color}30` }}
-                        >
-                          <Icon className="w-6 h-6" style={{ color: section.color }} />
-                        </div>
-                        <h2 className="font-display font-700 text-2xl text-white">
-                          {section.title}
-                        </h2>
-                      </div>
-                      <ul className="space-y-4">
-                        {section.rules.map((rule, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            <div className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0" style={{ background: section.color }} />
-                            <span className="text-white/70 leading-relaxed text-[15px]">{rule}</span>
-                          </li>
-                        ))}
-                      </ul>
+        <div className="container py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-5xl">
+            {ruleSections.map((section, idx) => (
+              <Card key={idx} variant="glass" className="hover:border-white/10 transition-colors h-full flex flex-col">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-4 mb-2">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-[var(--color-surface-1)] shadow-inner border border-white/5">
+                      <section.icon className="w-5 h-5" style={{ color: section.color }} />
                     </div>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerChildren>
-
-            <FadeIn className="mt-12 p-6 rounded-2xl border" style={{ background: 'rgba(245,158,11,0.05)', borderColor: 'rgba(245,158,11,0.2)' }}>
-              <h3 className="font-display font-700 text-xl text-white mb-2 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-[#f59e0b]" />
-                Code of Conduct
-              </h3>
-              <p className="text-white/60 text-sm leading-relaxed">
-                PRISMTECH is dedicated to providing a harassment-free experience for everyone, regardless of gender, gender identity and expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, religion (or lack thereof), or technology choices. We do not tolerate harassment of hackathon participants in any form.
-              </p>
-            </FadeIn>
+                    <CardTitle className="text-2xl">{section.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <ul className="space-y-4">
+                    {section.rules.map((rule, ruleIdx) => (
+                      <li key={ruleIdx} className="flex items-start gap-3 text-[var(--color-text-secondary)] text-[15px] leading-relaxed">
+                        <div className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: section.color }} />
+                        <span>{rule}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </section>
+
+          <div className="mt-16 max-w-5xl">
+            <Card variant="solid" className="border-[var(--color-prism-gold)]/20 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-prism-gold)]/10 to-transparent pointer-events-none" />
+              <CardContent className="p-8 md:p-10 flex flex-col md:flex-row items-center gap-8 relative z-10">
+                <div className="w-16 h-16 rounded-2xl bg-[var(--color-prism-gold)]/10 border border-[var(--color-prism-gold)]/20 flex items-center justify-center shrink-0">
+                  <Shield className="w-8 h-8 text-[var(--color-prism-gold)]" />
+                </div>
+                <div>
+                  <h3 className="font-display font-bold text-2xl text-white mb-2">Code of Conduct</h3>
+                  <p className="text-[var(--color-text-secondary)] leading-relaxed">
+                    PRISMTECH is dedicated to providing a harassment-free experience for everyone, regardless of gender, sexual orientation, disability, physical appearance, body size, race, or religion. We do not tolerate harassment of participants in any form.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+        </div>
       </main>
       <Footer />
     </>

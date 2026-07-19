@@ -59,14 +59,24 @@ function TimeUnit({ value, label, color }: TimeUnitProps) {
 }
 
 export default function CountdownTimer() {
+  const [mounted, setMounted] = useState(false);
   const [values, setValues] = useState(getCountdownValues(EVENT_DATE));
 
   useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setValues(getCountdownValues(EVENT_DATE));
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  if (!mounted) {
+    return (
+      <div className="flex justify-center items-end gap-3 sm:gap-5 md:gap-6 min-h-[120px]">
+        {/* Placeholder skeleton */}
+      </div>
+    );
+  }
 
   if (values.isExpired) {
     return (
@@ -87,7 +97,7 @@ export default function CountdownTimer() {
 
   return (
     <div
-      className="flex items-end gap-3 sm:gap-5 md:gap-6"
+      className="flex justify-center items-end gap-2 sm:gap-4 md:gap-6"
       role="timer"
       aria-label="Countdown to PRISMTECH 2026"
       aria-live="polite"

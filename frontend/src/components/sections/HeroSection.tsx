@@ -1,251 +1,199 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { motion, Variants } from 'framer-motion';
-import { ArrowRight, Calendar, MapPin, ChevronDown } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowDown, Calendar, MapPin, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
 import CountdownTimer from '@/components/features/countdown/CountdownTimer';
 
-const PrismParticleBackground = dynamic(
-  () => import('@/components/animations/PrismParticleBackground'),
-  { ssr: false }
-);
-
-const container: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } },
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
-};
-
 export default function HeroSection() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start start', 'end start'],
+  });
+
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
     <section
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: 'var(--color-surface-0)' }}
-      aria-label="Hero section"
+      ref={containerRef}
+      className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-[var(--color-surface-0)]"
     >
-      {/* Particle Background */}
-      <PrismParticleBackground />
+      {/* 1. Grid Background */}
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
+          `,
+          backgroundSize: '4rem 4rem',
+          maskImage: 'radial-gradient(ellipse 80% 50% at 50% 50%, black 20%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 50% at 50% 50%, black 20%, transparent 100%)',
+        }}
+      />
 
-      {/* Prism Light Beams */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        {/* Cyan beam */}
-        <div
-          className="absolute top-0 left-1/4 w-px h-full opacity-20 animate-pulse-glow"
+      {/* 2. Aurora & Spotlight Effects */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Spotlight following mouse */}
+        <motion.div
+          className="absolute w-[600px] h-[600px] rounded-full"
           style={{
-            background: 'linear-gradient(180deg, transparent 0%, #00d4ff 30%, transparent 100%)',
-            filter: 'blur(2px)',
+            background: 'radial-gradient(circle, rgba(0, 98, 155, 0.15) 0%, transparent 70%)',
+            left: mousePosition.x - 300,
+            top: mousePosition.y - 300,
           }}
+          transition={{ type: 'tween', ease: 'easeOut', duration: 0.15 }}
         />
-        {/* Violet beam */}
-        <div
-          className="absolute top-0 left-1/2 w-px h-full opacity-15 animate-pulse-glow"
-          style={{
-            background: 'linear-gradient(180deg, transparent 0%, #8b5cf6 40%, transparent 100%)',
-            filter: 'blur(3px)',
-            animationDelay: '1s',
+        
+        {/* Animated Aurora Orbs */}
+        <motion.div
+          animate={{
+            rotate: [0, 360],
+            scale: [1, 1.2, 1],
           }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full blur-[120px] opacity-30"
+          style={{ background: 'radial-gradient(circle, var(--color-ieee-blue-light) 0%, transparent 60%)' }}
         />
-        {/* Gold beam */}
-        <div
-          className="absolute top-0 left-3/4 w-px h-full opacity-15 animate-pulse-glow"
-          style={{
-            background: 'linear-gradient(180deg, transparent 0%, #f59e0b 50%, transparent 100%)',
-            filter: 'blur(2px)',
-            animationDelay: '2s',
+        <motion.div
+          animate={{
+            rotate: [360, 0],
+            scale: [1, 1.3, 1],
           }}
-        />
-
-        {/* Radial glow center */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full pointer-events-none"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.08) 0%, rgba(0, 212, 255, 0.04) 40%, transparent 70%)',
-          }}
-        />
-
-        {/* Bottom gradient fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-48"
-          style={{
-            background:
-              'linear-gradient(to bottom, transparent, var(--color-surface-1))',
-          }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
+          className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] rounded-full blur-[100px] opacity-20"
+          style={{ background: 'radial-gradient(circle, var(--color-prism-cyan) 0%, transparent 60%)' }}
         />
       </div>
 
-      {/* Content */}
-      <div className="container relative z-10 flex flex-col items-center text-center pt-28 pb-20">
+      {/* 3. Main Content */}
+      <motion.div 
+        style={{ opacity, scale }}
+        className="container relative z-10 flex flex-col items-center text-center mt-20"
+      >
         <motion.div
-          variants={container}
-          initial="hidden"
-          animate="visible"
-          className="flex flex-col items-center gap-6 max-w-5xl w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8"
         >
-          {/* Event Badge */}
-          <motion.div variants={item}>
-            <div
-              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass border text-sm font-medium"
-              style={{ borderColor: 'rgba(139, 92, 246, 0.3)', color: 'rgba(255,255,255,0.8)' }}
-            >
-              <span
-                className="w-2 h-2 rounded-full animate-pulse"
-                style={{ background: '#8b5cf6' }}
-              />
-              IEEE KLH Aziz Nagar · September 26–27, 2026
-            </div>
-          </motion.div>
+          <Badge variant="outline" className="px-4 py-1.5 backdrop-blur-md bg-white/5 border-white/10 text-white/80">
+            <span className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-prism-cyan)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-prism-cyan)]"></span>
+              </span>
+              Registration opens August 1st, 2026
+            </span>
+          </Badge>
+        </motion.div>
 
-          {/* Main Headline */}
-          <motion.div variants={item} className="space-y-2">
-            <h1 className="font-display font-900 text-6xl sm:text-7xl md:text-8xl lg:text-9xl tracking-tight leading-none">
-              <span className="text-white">PRISM</span>
-              <span className="text-gradient-prism">TECH</span>
-            </h1>
-            <p
-              className="font-display font-400 text-lg sm:text-xl md:text-2xl"
-              style={{ color: 'rgba(255,255,255,0.5)' }}
-            >
-              A 24-Hour Sprint across the Tech Spectrum
-            </p>
-          </motion.div>
+        {/* Massive Typography */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="font-display font-bold text-5xl sm:text-6xl lg:text-8xl tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-6 drop-shadow-sm pb-2 px-1"
+        >
+          Build the future at <br /> IEEE PRISM<span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] via-[var(--color-ieee-blue-light)] to-[var(--color-prism-violet)] pb-2">TECH</span> Hackathon
+        </motion.h1>
 
-          {/* Three Tracks */}
-          <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-3">
-            {[
-              { name: 'The Optic Stream', subtitle: 'Photonics', color: '#00d4ff' },
-              { name: 'The Neural Stream', subtitle: 'AI & Software', color: '#8b5cf6' },
-              { name: 'The Social Stream', subtitle: 'WIE', color: '#f59e0b' },
-            ].map((track) => (
-              <div
-                key={track.name}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl glass border"
-                style={{ borderColor: `${track.color}25` }}
-              >
-                <div
-                  className="w-2.5 h-2.5 rounded-full"
-                  style={{ background: track.color }}
-                />
-                <span className="text-sm font-medium text-white/70">{track.name}</span>
-                <span
-                  className="text-xs px-2 py-0.5 rounded-full font-medium"
-                  style={{
-                    background: `${track.color}15`,
-                    color: track.color,
-                  }}
-                >
-                  {track.subtitle}
-                </span>
-              </div>
-            ))}
-          </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          className="text-lg sm:text-xl lg:text-2xl text-[var(--color-text-secondary)] max-w-3xl mb-12 font-medium"
+        >
+          Build bold, ethical technology for smarter campuses, safer communities, and sustainable futures.
+        </motion.p>
 
-          {/* Meta Info */}
-          <motion.div
-            variants={item}
-            className="flex flex-wrap items-center justify-center gap-6 text-sm text-white/50"
-          >
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#8b5cf6]" />
-              <span>September 26–27, 2026</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-white/20 hidden sm:block" />
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#00d4ff]" />
-              <span>KLH Hyderabad, Aziz Nagar</span>
-            </div>
-            <div className="w-1 h-1 rounded-full bg-white/20 hidden sm:block" />
-            <div className="flex items-center gap-2">
-              <span className="text-[#f59e0b]">⚡</span>
-              <span>105+ Teams Expected</span>
-            </div>
-          </motion.div>
+        {/* Event Meta Info */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mb-16 text-sm sm:text-base text-white/80"
+        >
+          <div className="flex items-center gap-2.5 bg-white/5 px-4 py-2 rounded-2xl backdrop-blur-md shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]">
+            <Calendar className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
+            <span>September 26–27, 2026</span>
+          </div>
+          <div className="flex items-center gap-2.5 bg-white/5 px-4 py-2 rounded-2xl backdrop-blur-md shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]">
+            <MapPin className="w-5 h-5 text-[var(--color-prism-cyan)]" />
+            <span>KLH Hyderabad, Aziz Nagar</span>
+          </div>
+        </motion.div>
 
-          {/* Countdown */}
-          <motion.div variants={item} className="py-4">
-            <p className="text-xs font-medium uppercase tracking-widest text-white/30 mb-5 text-center">
-              Hackathon Begins In
-            </p>
-            <CountdownTimer />
-          </motion.div>
+        {/* Countdown */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16 w-full max-w-4xl"
+        >
+          <CountdownTimer targetDate="2026-09-26T09:00:00+05:30" />
+        </motion.div>
 
-          {/* CTAs */}
-          <motion.div variants={item} className="flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/auth/register"
-              id="hero-register-cta"
-              className="group relative inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-medium text-white text-base overflow-hidden transition-all shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset]"
-              style={{ background: 'var(--color-surface-2)' }}
-            >
-              <span className="relative z-10">Register Your Team</span>
-              <ArrowRight className="relative z-10 w-4.5 h-4.5 group-hover:translate-x-1 transition-transform text-[#00d4ff]" />
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: 'radial-gradient(100px circle at center, rgba(0,212,255,0.15), transparent)',
-                }}
-              />
+        {/* CTAs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col sm:flex-row items-center gap-4"
+        >
+          <Button variant="magnetic" size="lg" asChild className="w-full sm:w-auto">
+            <Link href="/auth/register">
+              <Zap className="w-4 h-4 mr-1 text-[var(--color-ieee-blue)]" fill="currentColor" />
+              Register Your Team
             </Link>
-
-            <Link
-              href="/tracks"
-              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-medium text-white/70 text-base hover:bg-white/5 hover:text-white transition-all shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset]"
-            >
+          </Button>
+          <Button variant="secondary" size="lg" asChild className="w-full sm:w-auto">
+            <Link href="/tracks">
               Explore Tracks
-              <ArrowRight className="w-4.5 h-4.5 opacity-60" />
             </Link>
-          </motion.div>
-
-          {/* Society Logos / Attribution */}
-          <motion.div variants={item} className="mt-4">
-            <p className="text-xs text-white/25 text-center mb-3">
-              Organized by
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4">
-              {[
-                { name: 'IEEE KLH SB', color: '#006fba' },
-                { name: 'Photonics Society', color: '#00d4ff' },
-                { name: 'Computer Society', color: '#8b5cf6' },
-                { name: 'WIE', color: '#f59e0b' },
-              ].map((org) => (
-                <span
-                  key={org.name}
-                  className="text-xs font-medium px-3 py-1.5 rounded-lg"
-                  style={{
-                    color: org.color,
-                    background: `${org.color}10`,
-                    border: `1px solid ${org.color}20`,
-                  }}
-                >
-                  {org.name}
-                </span>
-              ))}
-            </div>
-          </motion.div>
+          </Button>
         </motion.div>
+      </motion.div>
 
-        {/* Scroll indicator */}
+      {/* Smooth Scroll Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 1 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+      >
+        <span className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Scroll to explore</span>
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          aria-hidden="true"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-8 h-12 rounded-full border border-white/10 flex items-start justify-center p-2 backdrop-blur-sm bg-white/5"
         >
-          <span className="text-xs text-white/25 tracking-widest uppercase">Scroll</span>
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-4 h-4 text-white/25" />
-          </motion.div>
+          <motion.div 
+            animate={{ height: ['20%', '60%', '20%'], opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            className="w-1 bg-white/50 rounded-full"
+          />
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }

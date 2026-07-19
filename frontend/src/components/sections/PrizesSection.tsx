@@ -1,228 +1,146 @@
 'use client';
 
-import Link from 'next/link';
-import { Trophy, Star, Award, ArrowRight } from 'lucide-react';
-import { FadeIn, StaggerChildren, StaggerItem } from '@/components/animations/FadeIn';
+import { motion } from 'framer-motion';
+import { Trophy, Star, Award, CheckCircle2 } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent } from '@/components/ui/Card';
 
 const prizes = [
   {
-    title: 'PrismTech Overall Champion',
-    subtitle: 'Best across all three streams',
+    title: 'PrismTech Champion',
+    subtitle: 'Best Overall Solution',
     icon: Trophy,
-    color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.02) 100%)',
-    border: 'rgba(245,158,11,0.1)',
+    color: 'var(--color-prism-gold)',
     rewards: [
       'IEEE PrismTech Champion Title',
       'Certificates of Excellence',
       'Featured on IEEE KLH Website',
       'LinkedIn Recognition + Badges',
-      'Networking with IEEE Leaders',
     ],
-    featured: true,
   },
   {
     title: 'Optic Stream Winner',
-    subtitle: 'IEEE Photonics Society Award',
+    subtitle: 'IEEE Photonics Society',
     icon: Star,
-    color: '#00d4ff',
-    gradient: 'linear-gradient(135deg, rgba(0,212,255,0.05) 0%, transparent 100%)',
-    border: 'rgba(0,212,255,0.08)',
+    color: 'var(--color-prism-cyan)',
     rewards: [
       'Track Winner Certificate',
       'IEEE Photonics Recognition',
-      'LinkedIn Endorsement',
       'Special Mention in Report',
     ],
-    featured: false,
   },
   {
     title: 'Neural Stream Winner',
-    subtitle: 'IEEE Computer Society Award',
+    subtitle: 'IEEE Computer Society',
     icon: Star,
-    color: '#8b5cf6',
-    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.05) 0%, transparent 100%)',
-    border: 'rgba(139,92,246,0.08)',
+    color: 'var(--color-prism-violet)',
     rewards: [
       'Track Winner Certificate',
       'IEEE CS Recognition',
-      'LinkedIn Endorsement',
       'Special Mention in Report',
     ],
-    featured: false,
   },
   {
     title: 'Social Stream Winner',
-    subtitle: 'IEEE WIE Affinity Award',
+    subtitle: 'IEEE WIE Affinity',
     icon: Star,
-    color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, rgba(245,158,11,0.05) 0%, transparent 100%)',
-    border: 'rgba(245,158,11,0.08)',
+    color: 'var(--color-prism-gold)',
     rewards: [
       'Track Winner Certificate',
       'IEEE WIE Recognition',
-      'LinkedIn Endorsement',
       'Special Mention in Report',
     ],
-    featured: false,
-  },
-  {
-    title: 'Special Awards',
-    subtitle: 'Best Pitch · Best Hardware · Most Innovative',
-    icon: Award,
-    color: '#6366f1',
-    gradient: 'linear-gradient(135deg, rgba(99,102,241,0.1) 0%, transparent 100%)',
-    border: 'rgba(99,102,241,0.2)',
-    rewards: [
-      'Special Category Certificates',
-      "Judge's Choice Recognition",
-      'Highlighted in Event Report',
-    ],
-    featured: false,
   },
 ];
 
 export default function PrizesSection() {
   const champion = prizes[0];
-  const trackWinners = prizes.slice(1);
+  const tracks = prizes.slice(1);
 
   return (
-    <section
-      className="section"
-      style={{ background: 'var(--color-surface-1)' }}
-      aria-labelledby="prizes-heading"
-    >
-      <div className="container">
-        {/* Header */}
-        <FadeIn className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 glass border border-white/10 mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#f59e0b]" />
-            Recognition & Rewards
-          </div>
-          <h2
-            id="prizes-heading"
-            className="font-display font-800 text-4xl sm:text-5xl text-white mb-4"
-          >
-            Win the{' '}
-            <span className="text-gradient-violet-gold">Spectrum</span>
+    <section id="prizes" className="section bg-[var(--color-surface-0)] overflow-hidden">
+      <div className="container max-w-6xl">
+        
+        <div className="flex flex-col items-center text-center mb-16 lg:mb-24">
+          <Badge variant="outline" className="mb-6">Rewards & Recognition</Badge>
+          <h2 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-6">
+            What&apos;s at Stake
           </h2>
-          <p className="text-white/50 text-lg max-w-2xl mx-auto">
-            PRISMTECH celebrates innovation and impact. Winners receive recognition
-            that lasts beyond the hackathon — certificates, IEEE endorsements, and opportunities
-            that open doors.
-          </p>
-          <div
-            className="inline-block mt-4 px-4 py-2 rounded-xl text-sm text-white/60 bg-[#111111] shadow-[0_0_0_1px_rgba(245,158,11,0.1)_inset]"
-          >
-            🎯 Recognition-based awards — the real prize is building something that matters.
-          </div>
-        </FadeIn>
+        </div>
 
-        {/* Champion Prize — Featured */}
-        <FadeIn className="mb-8" delay={0.1}>
-          <div
-            className="relative p-8 sm:p-10 rounded-2xl overflow-hidden bg-[#111111]"
-            style={{ background: champion.gradient, boxShadow: `inset 0 0 0 1px ${champion.border}, 0 12px 40px rgba(0,0,0,0.4)` }}
-          >
-            {/* Background glow */}
-            <div
-              className="absolute -top-20 -right-20 w-64 h-64 rounded-full pointer-events-none"
-              style={{
-                background: `radial-gradient(ellipse, ${champion.color}15 0%, transparent 70%)`,
-              }}
-            />
-
-            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center gap-8">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center"
-                    style={{ background: `${champion.color}20`, border: `1px solid ${champion.border}` }}
-                  >
-                    <Trophy className="w-6 h-6" style={{ color: champion.color }} />
-                  </div>
-                  <span
-                    className="px-3 py-1 rounded-full text-xs font-medium"
-                    style={{ color: champion.color, background: `${champion.color}15` }}
-                  >
-                    Top Prize
-                  </span>
-                </div>
-                <h3
-                  className="font-display font-800 text-2xl sm:text-3xl mb-2"
-                  style={{ color: champion.color }}
-                >
-                  {champion.title}
-                </h3>
-                <p className="text-white/50 text-sm mb-6">{champion.subtitle}</p>
+        <div className="space-y-8 lg:space-y-12">
+          
+          {/* Split Layout 1: The Champion (Image/Hero left, text right) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "0px" }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="relative aspect-square lg:aspect-auto lg:h-[400px] w-full rounded-3xl overflow-hidden bg-[var(--color-surface-1)] border border-white/5 flex items-center justify-center group">
+                <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-prism-gold)]/20 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
+                <Trophy className="w-32 h-32 text-[var(--color-prism-gold)] drop-shadow-[0_0_40px_rgba(245,158,11,0.5)] group-hover:scale-110 transition-transform duration-700" />
               </div>
-
-              <div className="lg:w-80">
-                <ul className="space-y-3">
-                  {champion.rewards.map((reward) => (
-                    <li key={reward} className="flex items-center gap-3">
-                      <div
-                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                        style={{ background: champion.color }}
-                      />
-                      <span className="text-sm text-white/70">{reward}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "0px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:pl-8"
+            >
+              <Badge variant="gold" className="mb-4">{champion.subtitle}</Badge>
+              <h3 className="font-display font-bold text-3xl sm:text-4xl text-white mb-6">
+                {champion.title}
+              </h3>
+              <p className="text-[var(--color-text-secondary)] text-lg mb-8">
+                The ultimate accolade. Awarded to the team that demonstrates exceptional convergence of hardware, software, and social impact.
+              </p>
+              <ul className="space-y-4">
+                {champion.rewards.map(reward => (
+                  <li key={reward} className="flex items-center gap-3 text-white/90">
+                    <CheckCircle2 className="w-5 h-5 text-[var(--color-prism-gold)] shrink-0" />
+                    <span>{reward}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
-        </FadeIn>
 
-        {/* Track Winner Cards */}
-        <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {trackWinners.map((prize) => {
-            const Icon = prize.icon;
-            return (
-              <StaggerItem key={prize.title}>
-                <div
-                  className="p-6 rounded-2xl h-full bg-[#111111]"
-                  style={{ background: prize.gradient, boxShadow: `inset 0 0 0 1px ${prize.border}` }}
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center"
-                      style={{ background: `${prize.color}20` }}
-                    >
-                      <Icon className="w-5 h-5" style={{ color: prize.color }} />
-                    </div>
+          {/* Grid Layout: Track Winners */}
+          <motion.div 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+          >
+            {tracks.map(track => (
+              <Card key={track.title} variant="glass" className="hover:scale-[1.02] transition-transform duration-300">
+                <CardContent className="p-8">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 bg-white/5 border border-white/10">
+                    <track.icon className="w-6 h-6" style={{ color: track.color }} />
                   </div>
-                  <h3 className="font-display font-700 text-lg text-white mb-1">
-                    {prize.title}
-                  </h3>
-                  <p className="text-xs text-white/40 mb-5">{prize.subtitle}</p>
-                  <ul className="space-y-2.5">
-                    {prize.rewards.map((reward) => (
-                      <li key={reward} className="flex items-start gap-2.5">
-                        <div
-                          className="w-1.5 h-1.5 rounded-full flex-shrink-0 mt-1.5"
-                          style={{ background: prize.color }}
-                        />
-                        <span className="text-xs text-white/60">{reward}</span>
+                  <h4 className="font-display font-semibold text-xl text-white mb-2">{track.title}</h4>
+                  <p className="text-[10px] font-bold uppercase tracking-widest mb-6" style={{ color: track.color }}>
+                    {track.subtitle}
+                  </p>
+                  <ul className="space-y-3">
+                    {track.rewards.map(reward => (
+                      <li key={reward} className="flex items-start gap-2 text-sm text-[var(--color-text-secondary)]">
+                        <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: track.color }} />
+                        <span>{reward}</span>
                       </li>
                     ))}
                   </ul>
-                </div>
-              </StaggerItem>
-            );
-          })}
-        </StaggerChildren>
+                </CardContent>
+              </Card>
+            ))}
+          </motion.div>
 
-        {/* CTA */}
-        <FadeIn className="text-center mt-10">
-          <Link
-            href="/prizes"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-white/70 glass border border-white/10 hover:text-white hover:bg-white/5 transition-all"
-          >
-            View All Prizes & Recognition
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </FadeIn>
+        </div>
       </div>
     </section>
   );

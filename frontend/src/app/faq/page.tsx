@@ -34,8 +34,7 @@ export default function FAQPage() {
                 Frequently Asked <span className="text-gradient-cyan-violet">Questions</span>
               </h1>
               <p className="text-white/50 text-lg max-w-2xl mx-auto">
-                Got a question? We've got answers. If you can't find what you're looking for,
-                feel free to reach out to us directly.
+                Got a question? We&apos;ve got answers. If you can&apos;t find what you&apos;re looking for, feel free to reach out to us directly.
               </p>
             </FadeIn>
           </div>

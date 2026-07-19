@@ -2,15 +2,17 @@ import Link from 'next/link';
 import { Zap, Mail, Phone, MapPin } from 'lucide-react';
 import { Instagram, Linkedin } from '@/components/icons/BrandIcons';
 
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
+
 const quickLinks = [
-  { href: '/tracks', label: 'Tracks' },
-  { href: '/schedule', label: 'Schedule' },
+  { href: '/about', label: 'About PRISMTECH' },
+  { href: '/tracks', label: 'Tracks & Themes' },
+  { href: '/schedule', label: 'Event Schedule' },
   { href: '/rules', label: 'Rules & Eligibility' },
-  { href: '/prizes', label: 'Prizes' },
   { href: '/team', label: 'Organizer Team' },
-  { href: '/sponsors', label: 'Sponsors' },
-  { href: '/faq', label: 'FAQs' },
-  { href: '/venue', label: 'Venue' },
+  { href: '/sponsors', label: 'Sponsors & Partners' },
+  { href: '/contact', label: 'Contact Us' },
 ];
 
 export default function Footer() {
@@ -55,23 +57,9 @@ export default function Footer() {
 
             {/* IEEE Society Badges */}
             <div className="flex flex-wrap gap-2 mb-8">
-              {[
-                { label: 'IEEE Photonics', color: '#00d4ff' },
-                { label: 'Computer Society', color: '#8b5cf6' },
-                { label: 'IEEE WIE', color: '#f59e0b' },
-              ].map((badge) => (
-                <span
-                  key={badge.label}
-                  className="px-3 py-1 rounded-full text-xs font-medium border"
-                  style={{
-                    color: badge.color,
-                    borderColor: `${badge.color}30`,
-                    background: `${badge.color}10`,
-                  }}
-                >
-                  {badge.label}
-                </span>
-              ))}
+              <Badge variant="cyan">IEEE Photonics</Badge>
+              <Badge variant="violet">Computer Society</Badge>
+              <Badge variant="gold">IEEE WIE</Badge>
             </div>
 
             {/* Social Links */}
@@ -152,12 +140,9 @@ export default function Footer() {
             </ul>
 
             <div className="mt-8">
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white glass hover:bg-white/10 transition-colors border border-white/10"
-              >
-                Get in Touch
-              </Link>
+              <Button variant="outline" size="md" asChild>
+                <Link href="/contact">Get in Touch</Link>
+              </Button>
             </div>
           </div>
         </div>
@@ -168,14 +153,11 @@ export default function Footer() {
             © 2026 IEEE KLH SB Aziz Nagar · PRISMTECH Hackathon. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/rules" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-              Rules
+            <Link href="/privacy-policy" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+              Privacy Policy
             </Link>
-            <Link href="/contact" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-              Privacy
-            </Link>
-            <Link href="/sitemap.xml" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-              Sitemap
+            <Link href="/terms" className="text-xs text-white/30 hover:text-white/60 transition-colors">
+              Terms & Conditions
             </Link>
           </div>
         </div>

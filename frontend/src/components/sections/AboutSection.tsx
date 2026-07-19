@@ -1,159 +1,120 @@
 'use client';
 
-import { FadeIn, StaggerChildren, StaggerItem } from '@/components/animations/FadeIn';
-import { Users, Globe, BookOpen } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Users, Globe, BookOpen, Lightbulb, Code, HeartHandshake } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
 
 const societies = [
   {
     name: 'IEEE Photonics Society',
     focus: 'Hardware & Light',
-    icon: '🔆',
+    icon: Lightbulb,
     color: '#00d4ff',
-    description: 'Advancing the understanding and applications of photonics and optoelectronics.',
+    bg: 'var(--color-prism-cyan)',
+    description: 'Advancing the understanding and applications of photonics and optoelectronics. Build with LEDs, LDRs, Arduinos, and optical systems.',
   },
   {
     name: 'IEEE Computer Society',
     focus: 'Software & AI',
-    icon: '💻',
-    color: '#8b5cf6',
-    description: 'Inspiring the global community through technology and innovation in computing.',
+    icon: Code,
+    color: '#7c3aed',
+    bg: 'var(--color-prism-violet)',
+    description: 'Inspiring the global community through technology and innovation in computing. Focus on machine learning, full-stack, and intelligent systems.',
   },
   {
     name: 'IEEE WIE',
     focus: 'Social Impact',
-    icon: '⚡',
+    icon: HeartHandshake,
     color: '#f59e0b',
-    description: 'Facilitating the global recruitment and retention of women in technical disciplines.',
+    bg: 'var(--color-prism-gold)',
+    description: 'Facilitating the global recruitment and retention of women in technical disciplines. Engineer technology for equity and accessibility.',
   },
 ];
 
 const highlights = [
-  { icon: Users, text: '105+ Registered Teams', color: '#00d4ff' },
-  { icon: Globe, text: 'Multi-College Participation', color: '#8b5cf6' },
-  { icon: BookOpen, text: '3 IEEE Societies Collaborating', color: '#f59e0b' },
+  { icon: Users, text: '105+ Teams Expected', value: '105+' },
+  { icon: Globe, text: 'Cross-College Event', value: 'Global' },
+  { icon: BookOpen, text: '3 IEEE Societies', value: '3 Tracks' },
 ];
 
 export default function AboutSection() {
   return (
-    <section
-      className="section"
-      style={{ background: 'var(--color-surface-1)' }}
-      aria-labelledby="about-heading"
-    >
+    <section id="about" className="section relative bg-[var(--color-surface-1)]">
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Text Side */}
-          <FadeIn direction="left">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 glass border border-white/10 mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00d4ff]" />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+          
+          {/* Left Side: Sticky Text (Storytelling) */}
+          <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-8">
+            <Badge variant="ghost" className="border border-white/10 px-3 py-1">
               About PRISMTECH
-            </div>
-            <h2
-              id="about-heading"
-              className="font-display font-800 text-4xl sm:text-5xl text-white mb-6 leading-tight"
-            >
-              Where Light, Logic &{' '}
-              <span className="text-gradient-prism">Equity Converge</span>
+            </Badge>
+            
+            <h2 className="font-display font-bold text-4xl sm:text-5xl text-white leading-[1.1]">
+              What is <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] to-[var(--color-prism-violet)] pb-2">PRISMTECH?</span>
             </h2>
-            <div className="space-y-4 text-white/55 text-[15px] leading-relaxed mb-8">
+            
+            <div className="space-y-6 text-lg text-[var(--color-text-secondary)]">
               <p>
-                PRISMTECH is a <strong className="text-white/80 font-medium">multidisciplinary 24-hour hackathon</strong> organized by 
-                the KLH Aziz Nagar IEEE Student Branch in collaboration with three powerful IEEE 
-                societies — bringing together the best minds in hardware, software, and social impact.
+                PRISMTECH is a 24-hour IEEE hackathon for practical innovation. Teams prototype solutions across AI, cybersecurity, sustainability, healthcare, smart infrastructure, and human-centered education with guidance from mentors, faculty, and industry experts.
               </p>
               <p>
-                Open to all engineering students across colleges, PRISMTECH challenges participants 
-                to build solutions that matter — whether that&apos;s bending light, training intelligence, 
-                or engineering a fairer world.
-              </p>
-              <p>
-                From the <strong className="text-white/80 font-medium">Blueprint Phase</strong> to the{' '}
-                <strong className="text-white/80 font-medium">Final Grand Pitch</strong> — 24 hours,
-                4 rounds, one champion.
+                The objective is to transform student ideas into credible prototypes with social, technical, and entrepreneurial value.
               </p>
             </div>
 
-            {/* Highlights */}
-            <div className="space-y-3">
-              {highlights.map((h) => {
-                const Icon = h.icon;
-                return (
-                  <div key={h.text} className="flex items-center gap-3">
-                    <div
-                      className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                      style={{ background: `${h.color}15` }}
-                    >
-                      <Icon className="w-4 h-4" style={{ color: h.color }} />
-                    </div>
-                    <span className="text-sm font-medium text-white/70">{h.text}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </FadeIn>
-
-          {/* Society Cards */}
-          <div>
-            <StaggerChildren className="space-y-4">
-              {societies.map((society) => (
-                <StaggerItem key={society.name}>
-                  <div
-                    className="flex items-start gap-5 p-5 rounded-2xl glass border border-white/5 group hover:border-white/10 transition-all card-hover"
-                  >
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center text-xl flex-shrink-0"
-                      style={{
-                        background: `${society.color}15`,
-                        border: `1px solid ${society.color}25`,
-                      }}
-                    >
-                      {society.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-display font-600 text-white text-sm">{society.name}</h3>
-                        <span
-                          className="text-xs px-2 py-0.5 rounded-full font-medium"
-                          style={{ color: society.color, background: `${society.color}15` }}
-                        >
-                          {society.focus}
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/45 leading-relaxed">{society.description}</p>
-                    </div>
-                    <div
-                      className="w-2 h-2 rounded-full flex-shrink-0 mt-1.5"
-                      style={{ background: society.color }}
-                    />
-                  </div>
-                </StaggerItem>
+            {/* Stats / Highlights inline */}
+            <div className="grid grid-cols-2 gap-4 pt-6 border-t border-white/5">
+              {highlights.map((h, i) => (
+                <div key={i} className="flex flex-col gap-2">
+                  <span className="font-display text-3xl font-bold text-white">{h.value}</span>
+                  <span className="text-sm font-medium text-[var(--color-text-muted)] flex items-center gap-2">
+                    <h.icon className="w-4 h-4" /> {h.text}
+                  </span>
+                </div>
               ))}
-            </StaggerChildren>
-
-            {/* IEEE Badge */}
-            <FadeIn delay={0.4} className="mt-6">
-              <div
-                className="flex items-center gap-4 p-4 rounded-2xl border"
-                style={{
-                  background: 'rgba(0, 111, 186, 0.08)',
-                  borderColor: 'rgba(0, 111, 186, 0.2)',
-                }}
-              >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-base flex-shrink-0"
-                  style={{ background: 'rgba(0, 111, 186, 0.15)' }}
-                >
-                  🏛️
-                </div>
-                <div>
-                  <p className="text-xs font-medium text-[#006fba] mb-0.5">Organized by</p>
-                  <p className="text-sm font-medium text-white/80">
-                    IEEE KLH Student Branch, Aziz Nagar, Hyderabad
-                  </p>
-                </div>
-              </div>
-            </FadeIn>
+            </div>
           </div>
+
+          {/* Right Side: Scrolling Visuals / Cards */}
+          <div className="lg:col-span-7 space-y-6 pt-12 lg:pt-0">
+            {societies.map((society, index) => (
+              <motion.div
+                key={society.name}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "0px" }}
+                transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <Card variant="solid" className="group relative overflow-hidden">
+                  <div 
+                    className="absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none" 
+                    style={{ background: `radial-gradient(circle at 50% 0%, ${society.color}, transparent 70%)` }}
+                  />
+                  <CardHeader className="flex flex-row items-center gap-4 pb-2">
+                    <div 
+                      className="w-12 h-12 rounded-xl flex items-center justify-center border border-white/10"
+                      style={{ background: `${society.color}15` }}
+                    >
+                      <society.icon className="w-6 h-6" style={{ color: society.color }} />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl mb-1">{society.name}</CardTitle>
+                      <Badge variant="secondary" className="text-[10px] font-bold uppercase tracking-wider bg-black/40">
+                        {society.focus}
+                      </Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-[var(--color-text-secondary)] leading-relaxed">
+                      {society.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
         </div>
       </div>
     </section>

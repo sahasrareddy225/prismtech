@@ -6,16 +6,16 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/tracks', label: 'Tracks' },
-  { href: '/schedule', label: 'Schedule' },
-  { href: '/rules', label: 'Rules' },
-  { href: '/prizes', label: 'Prizes' },
-  { href: '/team', label: 'Team' },
-  { href: '/sponsors', label: 'Sponsors' },
-  { href: '/faq', label: 'FAQ' },
+  { href: '/#about', label: 'About' },
+  { href: '/#tracks', label: 'Tracks' },
+  { href: '/#schedule', label: 'Schedule' },
+  { href: '/#prizes', label: 'Prizes' },
+  { href: '/#team', label: 'Team' },
+  { href: '/#sponsors', label: 'Sponsors' },
+  { href: '/#contact', label: 'Contact' },
 ];
 
 export default function Navbar() {
@@ -30,6 +30,7 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     setMobileOpen(false);
   }, [pathname]);
 
@@ -112,22 +113,12 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link
-              href="/auth/login"
-              className="px-4 py-2 text-sm font-medium text-white/70 hover:text-white transition-colors"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/auth/register"
-              className="relative px-5 py-2 text-sm font-medium text-white rounded-full overflow-hidden group shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset]"
-              style={{ background: 'var(--color-surface-2)' }}
-            >
-              <span className="relative z-10 group-hover:text-[#00d4ff] transition-colors">Register Now</span>
-              <div
-                className="absolute inset-0 bg-gradient-to-r from-[#00d4ff]/10 to-[#8b5cf6]/10 opacity-0 group-hover:opacity-100 transition-opacity"
-              />
-            </Link>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/auth/login">Log in</Link>
+            </Button>
+            <Button variant="magnetic" size="sm" asChild>
+              <Link href="/auth/register">Register Now</Link>
+            </Button>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -153,7 +144,7 @@ export default function Navbar() {
             exit={{ opacity: 0, x: '100%' }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-40 lg:hidden"
-            style={{ background: 'rgba(13, 17, 23, 0.98)', backdropFilter: 'blur(20px)' }}
+            style={{ background: 'rgba(0, 10, 24, 0.98)', backdropFilter: 'blur(20px)' }}
           >
             <div className="flex flex-col h-full pt-20 pb-8 px-6">
               <nav aria-label="Mobile navigation">
@@ -185,20 +176,13 @@ export default function Navbar() {
                 </ul>
               </nav>
 
-              <div className="mt-auto space-y-3">
-                <Link
-                  href="/auth/login"
-                  className="flex items-center justify-center w-full px-5 py-3.5 rounded-xl text-base font-medium text-white/80 border border-white/10 hover:bg-white/5 transition-colors"
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/auth/register"
-                  className="flex items-center justify-center w-full px-5 py-3.5 rounded-xl text-base font-semibold text-white"
-                  style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%)' }}
-                >
-                  Register Now
-                </Link>
+              <div className="mt-auto space-y-3 flex flex-col">
+                <Button variant="outline" size="lg" className="w-full" asChild>
+                  <Link href="/auth/login">Log in</Link>
+                </Button>
+                <Button variant="primary" size="lg" className="w-full" asChild>
+                  <Link href="/auth/register">Register Now</Link>
+                </Button>
               </div>
             </div>
           </motion.div>

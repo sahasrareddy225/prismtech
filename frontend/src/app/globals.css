@@ -7,37 +7,36 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: 'Outfit', system-ui, sans-serif;
 
-  /* Brand Colors — Prism Spectrum */
-  --color-prism-cyan: #00d4ff;
-  --color-prism-violet: #8b5cf6;
-  --color-prism-gold: #f59e0b;
-  --color-prism-indigo: #6366f1;
+  /* IEEE Brand Colors (Dominant) */
+  --color-ieee-blue: #00629b;
+  --color-ieee-blue-light: #007aff;
+  --color-ieee-blue-dark: #004670;
 
-  /* IEEE Blue Palette */
-  --color-ieee-blue: #006fba;
-  --color-ieee-blue-light: #0095e8;
-  --color-ieee-blue-dark: #004f87;
+  /* Accent Colors */
+  --color-prism-cyan: #00d4ff;
+  --color-prism-violet: #7c3aed;
+  --color-prism-gold: #f59e0b;
 
   /* Track Colors */
   --color-optic: #00d4ff;       /* Cyan — Photonics */
-  --color-neural: #8b5cf6;      /* Violet — CS / AI */
+  --color-neural: #7c3aed;      /* Violet — CS / AI */
   --color-social: #f59e0b;      /* Gold — WIE / Social */
 
-  /* Neutral Dark Palette - OLED / Vercel style */
-  --color-surface-0: #000000;    /* Pure black */
-  --color-surface-1: #0a0a0a;    /* Deep grey */
-  --color-surface-2: #111111;    /* Card bg */
-  --color-surface-3: #1a1a1a;    /* Elevated card */
-  --color-surface-4: #222222;    /* Border */
+  /* Neutral Dark Palette - IEEE Deep Blue tinted (Apple/Vercel premium feel) */
+  --color-surface-0: #00040a;    /* Deep space blue (Background) */
+  --color-surface-1: #000a18;    /* Surface / Base */
+  --color-surface-2: #021226;    /* Card bg */
+  --color-surface-3: #051c38;    /* Elevated card */
+  --color-surface-4: #0a284d;    /* Border */
 
   /* Text */
-  --color-text-primary: #ededed;
+  --color-text-primary: #ffffff;
   --color-text-secondary: #a1a1aa;
   --color-text-muted: #71717a;
 
   /* Glass - Subtler, more premium */
-  --color-glass-bg: rgba(255, 255, 255, 0.015);
-  --color-glass-border: rgba(255, 255, 255, 0.06);
+  --color-glass-bg: rgba(0, 98, 155, 0.03); /* Subtle IEEE blue tint */
+  --color-glass-border: rgba(255, 255, 255, 0.08);
 
   /* Border Radius */
   --radius-sm: 8px;
@@ -60,19 +59,21 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: var(--color-surface-0);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans), sans-serif;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-surface-1);
-  color: var(--color-text-primary);
-  line-height: 1.6;
-  overflow-x: hidden;
+html {
+  scroll-behavior: smooth;
 }
 
 /* ─── Typography ─────────────────────────────────────────────────────────────── */

@@ -1,185 +1,126 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowRight, Cpu, Eye, Heart } from 'lucide-react';
-import { FadeIn, StaggerChildren, StaggerItem } from '@/components/animations/FadeIn';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Lightbulb, Code, HeartHandshake, ArrowRight } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
 
 const tracks = [
   {
-    slug: 'optic-stream',
-    name: 'The Optic Stream',
-    subtitle: 'IEEE Photonics Society',
-    icon: Eye,
-    color: '#00d4ff',
-    tagColor: 'rgba(0, 212, 255, 0.10)',
-    borderColor: 'rgba(0, 212, 255, 0.08)',
-    description:
-      'Push the boundaries of photonics and hardware. Build with light — LEDs, LDRs, Arduinos, and beyond. Create systems where photons carry the solution.',
-    tags: ['Photonics', 'Hardware', 'Embedded Systems', 'LEDs & LDRs'],
-    facilities: ['Hardware Lab', 'Arduino Kits', 'Sensor Components'],
+    slug: 'optic',
+    name: 'Optic Stream',
+    subtitle: 'IEEE Photonics',
+    icon: Lightbulb,
+    color: 'var(--color-prism-cyan)',
+    glow: 'rgba(0, 212, 255, 0.4)',
+    description: 'Hardware, Embedded Systems, and Light-based solutions.',
+    tags: ['IoT', 'Arduino', 'Optics'],
   },
   {
-    slug: 'neural-stream',
-    name: 'The Neural Stream',
+    slug: 'neural',
+    name: 'Neural Stream',
     subtitle: 'IEEE Computer Society',
-    icon: Cpu,
-    color: '#8b5cf6',
-    tagColor: 'rgba(139, 92, 246, 0.10)',
-    borderColor: 'rgba(139, 92, 246, 0.08)',
-    description:
-      'Where software meets intelligence. Build AI/ML models, full-stack applications, and systems that think, learn, and solve real problems at scale.',
-    tags: ['Artificial Intelligence', 'Machine Learning', 'Web Dev', 'Data Science'],
-    facilities: ['Cloud Credits', 'GPU Access', 'API Datasets'],
+    icon: Code,
+    color: 'var(--color-prism-violet)',
+    glow: 'rgba(124, 58, 237, 0.4)',
+    description: 'Artificial Intelligence, Full-Stack Apps, and Algorithms.',
+    tags: ['AI/ML', 'Web3', 'Software'],
   },
   {
-    slug: 'social-stream',
-    name: 'The Social Stream',
-    subtitle: 'IEEE WIE Affinity Group',
-    icon: Heart,
-    color: '#f59e0b',
-    tagColor: 'rgba(245, 158, 11, 0.10)',
-    borderColor: 'rgba(245, 158, 11, 0.08)',
-    description:
-      'Engineer for equity. Build technology that creates real social impact — for communities, for accessibility, for a better and more inclusive world.',
-    tags: ['Social Impact', 'Accessibility', 'Equity', 'Community Tech'],
-    facilities: ['Impact Mentors', 'NGO Datasets', 'UX Tools'],
+    slug: 'social',
+    name: 'Social Stream',
+    subtitle: 'IEEE WIE',
+    icon: HeartHandshake,
+    color: 'var(--color-prism-gold)',
+    glow: 'rgba(245, 158, 11, 0.4)',
+    description: 'Tech for Social Good, Accessibility, and Equity.',
+    tags: ['Accessibility', 'Impact', 'Health'],
   },
 ];
 
 export default function TracksSection() {
-  return (
-    <section
-      className="section"
-      style={{ background: 'var(--color-surface-1)' }}
-      aria-labelledby="tracks-heading"
-    >
-      <div className="container">
-        {/* Header */}
-        <FadeIn className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 bg-white/5 mb-5 shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6]" />
-            Three Streams
-          </div>
-          <h2
-            id="tracks-heading"
-            className="font-display font-800 text-4xl sm:text-5xl text-white mb-4"
-          >
-            Choose Your{' '}
-            <span className="text-gradient-prism">Spectrum</span>
-          </h2>
-          <p className="text-white/50 text-lg max-w-2xl mx-auto">
-            PRISMTECH runs across three distinct tracks — each representing a unique convergence
-            of light, logic, and equity.
-          </p>
-        </FadeIn>
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start end', 'end start'],
+  });
 
-        {/* Track Cards */}
-        <StaggerChildren className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {tracks.map((track) => {
-            const Icon = track.icon;
-            return (
-              <StaggerItem key={track.slug}>
-                <Link
-                  href={`/tracks/${track.slug}`}
-                  className="group relative flex flex-col h-full p-7 rounded-2xl card-hover bg-[#111111]"
-                  style={{ boxShadow: `inset 0 0 0 1px ${track.borderColor}, 0 4px 24px rgba(0,0,0,0.4)` }}
-                  aria-label={`Learn more about ${track.name}`}
-                >
-                  {/* Glow background */}
-                  <div
-                    className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    style={{
-                      background: `radial-gradient(ellipse at top left, ${track.color}08 0%, transparent 60%)`,
-                    }}
+  const y1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [150, -150]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [200, -200]);
+
+  const transforms = [y1, y2, y3];
+
+  return (
+    <section id="tracks" className="section relative bg-[var(--color-surface-0)] overflow-hidden" ref={containerRef}>
+      {/* Decorative background blur */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[var(--color-ieee-blue)]/10 blur-[120px] pointer-events-none rounded-full" />
+
+      <div className="container relative z-10">
+        <div className="flex flex-col items-center text-center mb-16 lg:mb-24">
+          <Badge variant="outline" className="mb-6">The Spectrum</Badge>
+          <h2 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-6">
+            Choose Your Track
+          </h2>
+          <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl">
+            Three distinct engineering challenges. Three IEEE societies. Pick your domain and build the future.
+          </p>
+        </div>
+
+        {/* Parallax Bento Grid for Desktop, Stack for Mobile */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          {tracks.map((track, i) => (
+            <motion.div
+              key={track.slug}
+              style={{ y: typeof window !== 'undefined' && window.innerWidth >= 768 ? transforms[i] : 0 }}
+              className="group"
+            >
+              <Link href={`/tracks`} className="block h-full">
+                <div className="relative h-full rounded-3xl bg-[var(--color-surface-2)] shadow-[inset_0_0_0_1px_var(--color-surface-4)] p-8 overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)] flex flex-col">
+                  
+                  {/* Dynamic Glow Background */}
+                  <div 
+                    className="absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] opacity-20 group-hover:opacity-60 transition-opacity duration-700 pointer-events-none"
+                    style={{ background: track.color }}
                   />
 
-                  {/* Top: Icon + Society */}
-                  <div className="flex items-start justify-between mb-6 relative z-10">
-                    <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center"
-                      style={{ background: track.tagColor, border: `1px solid ${track.borderColor}` }}
+                  {/* Header */}
+                  <div className="flex justify-between items-start mb-12">
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white/5 border border-white/10 shadow-inner backdrop-blur-md"
                     >
-                      <Icon className="w-6 h-6" style={{ color: track.color }} />
+                      <track.icon className="w-7 h-7" style={{ color: track.color }} />
                     </div>
-                    <span
-                      className="text-xs font-medium px-3 py-1.5 rounded-full"
-                      style={{
-                        color: track.color,
-                        background: track.tagColor,
-                        border: `1px solid ${track.borderColor}`,
-                      }}
-                    >
-                      {track.subtitle}
-                    </span>
+                    <ArrowRight className="w-5 h-5 text-white/30 group-hover:text-white transition-colors -rotate-45 group-hover:rotate-0 duration-300" />
                   </div>
 
-                  {/* Track Name */}
-                  <div className="relative z-10 mb-4">
-                    <h3
-                      className="font-display font-700 text-xl text-white mb-2 group-hover:text-gradient-prism transition-all"
-                      style={{ color: track.color }}
-                    >
+                  {/* Content */}
+                  <div className="mt-auto">
+                    <div className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: track.color }}>
+                      {track.subtitle}
+                    </div>
+                    <h3 className="font-display font-bold text-2xl text-white mb-3 group-hover:translate-x-2 transition-transform duration-300">
                       {track.name}
                     </h3>
-                    <p className="text-sm text-white/50 leading-relaxed">{track.description}</p>
-                  </div>
-
-                  {/* Tags */}
-                  <div className="relative z-10 flex flex-wrap gap-2 mb-6">
-                    {track.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs px-2.5 py-1 rounded-lg text-white/50"
-                        style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Facilities */}
-                  <div className="relative z-10 mt-auto pt-5 border-t border-white/5">
-                    <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3">
-                      Provided
+                    <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-6">
+                      {track.description}
                     </p>
+                    
+                    {/* Tags */}
                     <div className="flex flex-wrap gap-2">
-                      {track.facilities.map((f) => (
-                        <span
-                          key={f}
-                          className="text-xs px-2.5 py-1 rounded-lg font-medium"
-                          style={{ color: track.color, background: track.tagColor }}
-                        >
-                          {f}
+                      {track.tags.map(tag => (
+                        <span key={tag} className="text-xs font-medium px-2.5 py-1 rounded-md bg-black/40 text-white/70 border border-white/5">
+                          {tag}
                         </span>
                       ))}
                     </div>
                   </div>
-
-                  {/* Arrow CTA */}
-                  <div
-                    className="relative z-10 flex items-center gap-2 mt-5 text-sm font-medium"
-                    style={{ color: track.color }}
-                  >
-                    <span>Explore track</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </Link>
-              </StaggerItem>
-            );
-          })}
-        </StaggerChildren>
-
-        {/* CTA */}
-        <FadeIn className="text-center mt-12">
-          <Link
-            href="/tracks"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-white/70 glass border border-white/10 hover:text-white hover:bg-white/5 transition-all"
-          >
-            Compare All Tracks
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </FadeIn>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

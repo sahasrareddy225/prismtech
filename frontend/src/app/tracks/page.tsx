@@ -1,296 +1,186 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { FadeIn, StaggerChildren, StaggerItem } from '@/components/animations/FadeIn';
-import Link from 'next/link';
-import { ArrowRight, Eye, Cpu, Heart, ChevronRight } from 'lucide-react';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Lightbulb, Code, HeartHandshake, Download, FileText, ArrowRight } from 'lucide-react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Tracks',
-  description: 'Explore the three PRISMTECH tracks — Optic Stream (Photonics), Neural Stream (AI & Software), and Social Stream (WIE & Social Impact).',
+  title: 'Tracks & Problems | PRISMTECH 2026',
+  description: 'Explore the domains and detailed problem statements for the PRISMTECH Hackathon.',
 };
 
-const tracks = [
+const domains = [
   {
-    slug: 'optic-stream',
-    name: 'The Optic Stream',
+    name: 'Optic Stream',
     subtitle: 'IEEE Photonics Society',
-    icon: Eye,
-    color: '#00d4ff',
-    gradient: 'linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 212, 255, 0.03) 100%)',
-    border: 'rgba(0, 212, 255, 0.2)',
-    description:
-      'The Optic Stream challenges teams to push the boundaries of photonics and hardware. Build systems where photons carry the solution — from basic light sensing to complex photonic circuits.',
-    focus: 'Hardware & Photonics',
-    tags: ['Photonics', 'Hardware', 'Embedded Systems', 'LEDs & LDRs', 'Arduinos', 'Sensors'],
-    facilities: ['Hardware Lab', 'Arduino Kits', 'Resistors & LEDs', 'LDR Sensors', '2x Power Sockets'],
-    criteria: [
-      'Technical Innovation in Hardware Design',
-      'Effective Use of Photonic Components',
-      'System Functionality & Stability',
-      'Presentation & Documentation Quality',
-      'Real-world Applicability',
-    ],
-    winnerTitle: 'Optic Stream Champion',
+    icon: Lightbulb,
+    color: 'var(--color-prism-cyan)',
+    description: 'Hardware, Embedded Systems, and Light-based solutions.',
   },
   {
-    slug: 'neural-stream',
-    name: 'The Neural Stream',
+    name: 'Neural Stream',
     subtitle: 'IEEE Computer Society',
-    icon: Cpu,
-    color: '#8b5cf6',
-    gradient: 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.03) 100%)',
-    border: 'rgba(139, 92, 246, 0.2)',
-    description:
-      'The Neural Stream is where software meets intelligence. Build AI/ML models, full-stack applications, APIs, and systems that think, learn, and solve real problems at scale.',
-    focus: 'AI & Software',
-    tags: ['Artificial Intelligence', 'Machine Learning', 'Web Development', 'Data Science', 'APIs', 'Cloud'],
-    facilities: ['High-speed Wi-Fi', '2x Power Sockets', 'Cloud Guidance', 'API Resources'],
-    criteria: [
-      'Technical Depth & Code Quality',
-      'AI/ML Model Performance',
-      'User Experience & Design',
-      'Scalability & Architecture',
-      'Real-world Impact Potential',
-    ],
-    winnerTitle: 'Neural Stream Champion',
+    icon: Code,
+    color: 'var(--color-prism-violet)',
+    description: 'Artificial Intelligence, Full-Stack Apps, and Algorithms.',
   },
   {
-    slug: 'social-stream',
-    name: 'The Social Stream',
-    subtitle: 'IEEE WIE Affinity Group',
-    icon: Heart,
-    color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.03) 100%)',
-    border: 'rgba(245, 158, 11, 0.2)',
-    description:
-      'The Social Stream challenges teams to engineer for equity. Build technology that creates real social impact — for communities, accessibility, gender equity, and a fairer world.',
-    focus: 'Social Impact & Equity',
-    tags: ['Social Impact', 'Accessibility', 'Gender Equity', 'Community Tech', 'Sustainability', 'Healthcare'],
-    facilities: ['High-speed Wi-Fi', '2x Power Sockets', 'Impact Mentors', 'Research Support'],
-    criteria: [
-      'Depth of Social Impact',
-      'Problem Identification & Research',
-      'Feasibility & Implementation Plan',
-      'Inclusivity & Accessibility of Solution',
-      'Community Engagement Potential',
-    ],
-    winnerTitle: 'Social Stream Champion',
+    name: 'Social Stream',
+    subtitle: 'IEEE WIE',
+    icon: HeartHandshake,
+    color: 'var(--color-prism-gold)',
+    description: 'Tech for Social Good, Accessibility, and Equity.',
+  }
+];
+
+const problems = [
+  {
+    id: 'PS-01',
+    title: 'AI Campus Copilot',
+    track: 'Neural Stream',
+    color: 'var(--color-prism-violet)',
+    description: 'Build an assistant for student services, events, academic support, and accessibility.',
+    tags: ['Artificial Intelligence', 'NLP', 'Education'],
   },
+  {
+    id: 'PS-02',
+    title: 'Phishing Shield',
+    track: 'Neural & Social Stream',
+    color: 'var(--color-prism-cyan)',
+    description: 'Detect suspicious messages and train users through explainable risk signals.',
+    tags: ['Cybersecurity', 'Machine Learning', 'Social Impact'],
+  },
+  {
+    id: 'PS-03',
+    title: 'Smart Energy Lab',
+    track: 'Optic Stream',
+    color: 'var(--color-prism-gold)',
+    description: 'Monitor and optimize electricity usage in campus laboratories.',
+    tags: ['IoT', 'Hardware', 'Sustainability'],
+  },
+  {
+    id: 'PS-04',
+    title: 'Healthcare Track',
+    track: 'Optic & Neural Stream',
+    color: 'var(--color-ieee-blue-light)',
+    description: 'Problem statement will be released during the opening ceremony.',
+    tags: ['Healthcare', 'Hardware', 'AI'],
+  }
 ];
 
 export default function TracksPage() {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="pt-20">
+      <main id="main-content" className="pt-24 pb-20 bg-[var(--color-surface-0)] min-h-screen">
+        
         {/* Page Hero */}
-        <section
-          className="relative py-20 overflow-hidden"
-          style={{ background: 'var(--color-surface-0)' }}
-        >
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse at 50% 0%, rgba(139, 92, 246, 0.12) 0%, transparent 60%)',
-            }}
-          />
-          <div className="container relative z-10 text-center">
-            <FadeIn>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 glass border border-white/10 mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6]" />
-                Three Streams
-              </div>
-              <h1 className="font-display font-800 text-5xl sm:text-6xl text-white mb-5">
-                Choose Your{' '}
-                <span className="text-gradient-prism">Spectrum</span>
-              </h1>
-              <p className="text-white/50 text-lg max-w-2xl mx-auto">
-                PRISMTECH runs across three distinct tracks — each powered by a unique IEEE society.
-                Hardware, Software, and Social Impact. Where does your passion lie?
-              </p>
-            </FadeIn>
-
-            {/* Track quick-nav */}
-            <FadeIn delay={0.2} className="flex flex-wrap justify-center gap-3 mt-8">
-              {tracks.map((t) => (
-                <a
-                  key={t.slug}
-                  href={`#${t.slug}`}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl glass border text-sm font-medium text-white/70 hover:text-white transition-colors"
-                  style={{ borderColor: `${t.color}25` }}
-                >
-                  <div className="w-2 h-2 rounded-full" style={{ background: t.color }} />
-                  {t.name}
-                </a>
-              ))}
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* Track Detail Sections */}
-        <div style={{ background: 'var(--color-surface-1)' }}>
-          {tracks.map((track, i) => {
-            const Icon = track.icon;
-            const isEven = i % 2 === 0;
-            return (
-              <section
-                key={track.slug}
-                id={track.slug}
-                className="section border-t border-white/5"
-                style={{ background: isEven ? 'var(--color-surface-1)' : 'var(--color-surface-0)' }}
-              >
-                <div className="container">
-                  <div className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-start ${!isEven ? 'lg:flex-row-reverse' : ''}`}>
-                    {/* Left: Info */}
-                    <FadeIn direction={isEven ? 'left' : 'right'}>
-                      <div className="flex items-center gap-4 mb-6">
-                        <div
-                          className="w-14 h-14 rounded-2xl flex items-center justify-center"
-                          style={{ background: `${track.color}20`, border: `2px solid ${track.color}30` }}
-                        >
-                          <Icon className="w-7 h-7" style={{ color: track.color }} />
-                        </div>
-                        <div>
-                          <span
-                            className="text-xs font-medium px-3 py-1 rounded-full"
-                            style={{ color: track.color, background: `${track.color}15` }}
-                          >
-                            {track.subtitle}
-                          </span>
-                          <p className="text-xs text-white/30 mt-1">{track.focus}</p>
-                        </div>
-                      </div>
-
-                      <h2
-                        className="font-display font-800 text-3xl sm:text-4xl mb-4"
-                        style={{ color: track.color }}
-                      >
-                        {track.name}
-                      </h2>
-
-                      <p className="text-white/55 text-[15px] leading-relaxed mb-7">
-                        {track.description}
-                      </p>
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-2 mb-8">
-                        {track.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="text-xs px-3 py-1.5 rounded-lg font-medium text-white/60"
-                            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-
-                      <Link
-                        href="/auth/register"
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white"
-                        style={{ background: `linear-gradient(135deg, ${track.color} 0%, ${track.color}bb 100%)` }}
-                      >
-                        Register for {track.name.split(' ')[2]}
-                        <ArrowRight className="w-4 h-4" />
-                      </Link>
-                    </FadeIn>
-
-                    {/* Right: Cards */}
-                    <FadeIn direction={isEven ? 'right' : 'left'} delay={0.15}>
-                      <div className="space-y-4">
-                        {/* Facilities */}
-                        <div
-                          className="p-5 rounded-2xl border"
-                          style={{ background: track.gradient, borderColor: track.border }}
-                        >
-                          <h3 className="font-display font-700 text-sm text-white/80 uppercase tracking-wider mb-4">
-                            ⚡ Facilities Provided
-                          </h3>
-                          <ul className="space-y-2.5">
-                            {track.facilities.map((f) => (
-                              <li key={f} className="flex items-center gap-2.5 text-sm text-white/65">
-                                <ChevronRight className="w-3.5 h-3.5 flex-shrink-0" style={{ color: track.color }} />
-                                {f}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {/* Evaluation Criteria */}
-                        <div className="p-5 rounded-2xl glass border border-white/5">
-                          <h3 className="font-display font-700 text-sm text-white/80 uppercase tracking-wider mb-4">
-                            🎯 Evaluation Criteria
-                          </h3>
-                          <ul className="space-y-2.5">
-                            {track.criteria.map((c, ci) => (
-                              <li key={c} className="flex items-start gap-2.5 text-sm text-white/60">
-                                <span
-                                  className="w-5 h-5 rounded-md flex-shrink-0 flex items-center justify-center text-xs font-bold mt-0.5"
-                                  style={{ background: `${track.color}20`, color: track.color }}
-                                >
-                                  {ci + 1}
-                                </span>
-                                {c}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {/* Winner Badge */}
-                        <div
-                          className="p-4 rounded-xl border flex items-center gap-3"
-                          style={{ background: `${track.color}08`, borderColor: `${track.color}20` }}
-                        >
-                          <span className="text-2xl">🏆</span>
-                          <div>
-                            <p className="text-xs text-white/30">Top Award</p>
-                            <p className="text-sm font-medium" style={{ color: track.color }}>
-                              {track.winnerTitle}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </FadeIn>
-                  </div>
-                </div>
-              </section>
-            );
-          })}
+        <div className="container relative z-10 pt-10 pb-16 border-b border-white/5">
+          <Badge variant="outline" className="mb-6">The Challenges</Badge>
+          <h1 className="font-display font-bold text-5xl md:text-7xl text-white tracking-tight mb-6">
+            Domains & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] to-[var(--color-prism-violet)] pb-2 px-1">Problems</span>
+          </h1>
+          <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl">
+            Choose a stream that aligns with your skills. Solve real-world problem statements provided by our industry partners and IEEE societies.
+          </p>
         </div>
 
-        {/* CTA Banner */}
-        <section
-          className="section border-t border-white/5"
-          style={{ background: 'var(--color-surface-0)' }}
-        >
-          <div className="container">
-            <FadeIn className="text-center">
-              <h2 className="font-display font-800 text-3xl sm:text-4xl text-white mb-4">
-                Ready to Sprint?
-              </h2>
-              <p className="text-white/50 mb-8 max-w-lg mx-auto">
-                Problem statements are revealed at the Opening Ceremony. Choose your stream and start hacking!
-              </p>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Link
-                  href="/auth/register"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-semibold text-white"
-                  style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%)' }}
-                >
-                  Register Now
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link
-                  href="/schedule"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-medium text-white/70 glass border border-white/10 hover:text-white transition-all"
-                >
-                  View Schedule
-                </Link>
+        <div className="container py-20 space-y-32">
+          
+          {/* Domains Section */}
+          <section>
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="font-display font-bold text-3xl text-white">The Three Streams</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {domains.map((domain) => (
+                <Card key={domain.name} variant="glass" className="hover:border-white/20 transition-colors">
+                  <CardHeader>
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-[var(--color-surface-1)] shadow-inner border border-white/5">
+                      <domain.icon className="w-6 h-6" style={{ color: domain.color }} />
+                    </div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: domain.color }}>
+                      {domain.subtitle}
+                    </div>
+                    <CardTitle className="text-2xl">{domain.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base text-[var(--color-text-secondary)]">
+                      {domain.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </section>
+
+          {/* Problem Statements Section */}
+          <section>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+              <div>
+                <h2 className="font-display font-bold text-3xl text-white mb-2">Official Problem Statements</h2>
+                <p className="text-[var(--color-text-secondary)]">Detailed briefs for the 24-hour sprint.</p>
               </div>
-            </FadeIn>
-          </div>
-        </section>
+              <Button variant="outline" asChild>
+                <Link href="https://ieee-prismtech.onrender.com/downloads/problem-statements.pdf" target="_blank">
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Full PDF
+                </Link>
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-6">
+              {problems.map((problem) => (
+                <div key={problem.id} className="group relative rounded-3xl bg-[var(--color-surface-1)] border border-white/5 overflow-hidden flex flex-col md:flex-row transition-all hover:border-white/10 hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]">
+                  
+                  {/* Left Edge Color indicator */}
+                  <div className="absolute left-0 top-0 bottom-0 w-1 opacity-50 group-hover:opacity-100 transition-opacity" style={{ background: problem.color }} />
+
+                  <div className="p-8 md:p-10 flex-1">
+                    <div className="flex items-center gap-4 mb-4">
+                      <Badge variant="secondary" className="font-mono">{problem.id}</Badge>
+                      <span className="text-sm font-semibold tracking-wide uppercase" style={{ color: problem.color }}>
+                        {problem.track}
+                      </span>
+                    </div>
+                    <h3 className="font-display font-bold text-2xl md:text-3xl text-white mb-4">
+                      {problem.title}
+                    </h3>
+                    <p className="text-[var(--color-text-secondary)] text-lg leading-relaxed mb-8 max-w-4xl">
+                      {problem.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {problem.tags.map(tag => (
+                        <span key={tag} className="px-3 py-1 rounded-md text-xs font-medium bg-white/5 border border-white/5 text-white/70">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Actions Area */}
+                  <div className="p-8 md:p-10 bg-[var(--color-surface-2)]/50 border-t md:border-t-0 md:border-l border-white/5 flex flex-col justify-center min-w-[250px]">
+                    <Button variant="primary" className="w-full mb-3" asChild>
+                      <Link href="#register">
+                        Select this Problem
+                      </Link>
+                    </Button>
+                    <Button variant="ghost" className="w-full" asChild>
+                      <Link href="https://ieee-prismtech.onrender.com/downloads/problem-statements.pdf" target="_blank">
+                        <FileText className="w-4 h-4 mr-2" />
+                        View Brief
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+        </div>
       </main>
       <Footer />
     </>
