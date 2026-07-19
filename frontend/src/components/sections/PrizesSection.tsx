@@ -75,7 +75,7 @@ const prizes = [
     border: 'rgba(99,102,241,0.2)',
     rewards: [
       'Special Category Certificates',
-      'Judge's Choice Recognition',
+      "Judge's Choice Recognition",
       'Highlighted in Event Report',
     ],
     featured: false,
