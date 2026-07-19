@@ -179,19 +179,22 @@ export default function HeroSection() {
             <Link
               href="/auth/register"
               id="hero-register-cta"
-              className="group relative inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl font-semibold text-white text-base overflow-hidden"
-              style={{ background: 'linear-gradient(135deg, #00d4ff 0%, #8b5cf6 60%, #8b5cf6 100%)' }}
+              className="group relative inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-medium text-white text-base overflow-hidden transition-all shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset]"
+              style={{ background: 'var(--color-surface-2)' }}
             >
               <span className="relative z-10">Register Your Team</span>
-              <ArrowRight className="relative z-10 w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{ background: 'linear-gradient(135deg, #00b8dd 0%, #7c3aed 100%)' }}
+              <ArrowRight className="relative z-10 w-4.5 h-4.5 group-hover:translate-x-1 transition-transform text-[#00d4ff]" />
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: 'radial-gradient(100px circle at center, rgba(0,212,255,0.15), transparent)',
+                }}
               />
             </Link>
 
             <Link
               href="/tracks"
-              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl font-semibold text-white/80 text-base glass border border-white/10 hover:bg-white/10 hover:text-white transition-all"
+              className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full font-medium text-white/70 text-base hover:bg-white/5 hover:text-white transition-all shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset]"
             >
               Explore Tracks
               <ArrowRight className="w-4.5 h-4.5 opacity-60" />

@@ -51,13 +51,13 @@ export default function Navbar() {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           scrolled
-            ? 'glass border-b border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.5)]'
+            ? 'glass border-b border-white/5 shadow-none'
             : 'bg-transparent'
         )}
         role="banner"
       >
         <nav
-          className="container flex items-center justify-between h-16 md:h-18"
+          className="container flex items-center justify-between h-14 md:h-16"
           aria-label="Main navigation"
         >
           {/* Logo */}
@@ -120,13 +120,13 @@ export default function Navbar() {
             </Link>
             <Link
               href="/auth/register"
-              className="relative px-5 py-2.5 text-sm font-semibold text-white rounded-xl overflow-hidden group"
-              style={{
-                background: 'linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%)',
-              }}
+              className="relative px-5 py-2 text-sm font-medium text-white rounded-full overflow-hidden group shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset]"
+              style={{ background: 'var(--color-surface-2)' }}
             >
-              <span className="relative z-10">Register Now</span>
-              <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <span className="relative z-10 group-hover:text-[#00d4ff] transition-colors">Register Now</span>
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-[#00d4ff]/10 to-[#8b5cf6]/10 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
             </Link>
           </div>
 

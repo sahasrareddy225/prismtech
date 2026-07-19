@@ -12,8 +12,8 @@ const tracks = [
     subtitle: 'IEEE Photonics Society',
     icon: Eye,
     color: '#00d4ff',
-    tagColor: 'rgba(0, 212, 255, 0.15)',
-    borderColor: 'rgba(0, 212, 255, 0.2)',
+    tagColor: 'rgba(0, 212, 255, 0.10)',
+    borderColor: 'rgba(0, 212, 255, 0.08)',
     description:
       'Push the boundaries of photonics and hardware. Build with light — LEDs, LDRs, Arduinos, and beyond. Create systems where photons carry the solution.',
     tags: ['Photonics', 'Hardware', 'Embedded Systems', 'LEDs & LDRs'],
@@ -25,8 +25,8 @@ const tracks = [
     subtitle: 'IEEE Computer Society',
     icon: Cpu,
     color: '#8b5cf6',
-    tagColor: 'rgba(139, 92, 246, 0.15)',
-    borderColor: 'rgba(139, 92, 246, 0.2)',
+    tagColor: 'rgba(139, 92, 246, 0.10)',
+    borderColor: 'rgba(139, 92, 246, 0.08)',
     description:
       'Where software meets intelligence. Build AI/ML models, full-stack applications, and systems that think, learn, and solve real problems at scale.',
     tags: ['Artificial Intelligence', 'Machine Learning', 'Web Dev', 'Data Science'],
@@ -38,8 +38,8 @@ const tracks = [
     subtitle: 'IEEE WIE Affinity Group',
     icon: Heart,
     color: '#f59e0b',
-    tagColor: 'rgba(245, 158, 11, 0.15)',
-    borderColor: 'rgba(245, 158, 11, 0.2)',
+    tagColor: 'rgba(245, 158, 11, 0.10)',
+    borderColor: 'rgba(245, 158, 11, 0.08)',
     description:
       'Engineer for equity. Build technology that creates real social impact — for communities, for accessibility, for a better and more inclusive world.',
     tags: ['Social Impact', 'Accessibility', 'Equity', 'Community Tech'],
@@ -57,7 +57,7 @@ export default function TracksSection() {
       <div className="container">
         {/* Header */}
         <FadeIn className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 glass border border-white/10 mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium uppercase tracking-widest text-white/50 bg-white/5 mb-5 shadow-[0_0_0_1px_rgba(255,255,255,0.05)_inset]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6]" />
             Three Streams
           </div>
@@ -82,8 +82,8 @@ export default function TracksSection() {
               <StaggerItem key={track.slug}>
                 <Link
                   href={`/tracks/${track.slug}`}
-                  className="group relative flex flex-col h-full p-7 rounded-2xl card-hover glass border"
-                  style={{ borderColor: track.borderColor }}
+                  className="group relative flex flex-col h-full p-7 rounded-2xl card-hover bg-[#111111]"
+                  style={{ boxShadow: `inset 0 0 0 1px ${track.borderColor}, 0 4px 24px rgba(0,0,0,0.4)` }}
                   aria-label={`Learn more about ${track.name}`}
                 >
                   {/* Glow background */}

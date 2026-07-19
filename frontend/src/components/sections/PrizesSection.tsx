@@ -10,8 +10,8 @@ const prizes = [
     subtitle: 'Best across all three streams',
     icon: Trophy,
     color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(245,158,11,0.05) 100%)',
-    border: 'rgba(245,158,11,0.3)',
+    gradient: 'linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.02) 100%)',
+    border: 'rgba(245,158,11,0.1)',
     rewards: [
       'IEEE PrismTech Champion Title',
       'Certificates of Excellence',
@@ -26,8 +26,8 @@ const prizes = [
     subtitle: 'IEEE Photonics Society Award',
     icon: Star,
     color: '#00d4ff',
-    gradient: 'linear-gradient(135deg, rgba(0,212,255,0.1) 0%, transparent 100%)',
-    border: 'rgba(0,212,255,0.2)',
+    gradient: 'linear-gradient(135deg, rgba(0,212,255,0.05) 0%, transparent 100%)',
+    border: 'rgba(0,212,255,0.08)',
     rewards: [
       'Track Winner Certificate',
       'IEEE Photonics Recognition',
@@ -41,8 +41,8 @@ const prizes = [
     subtitle: 'IEEE Computer Society Award',
     icon: Star,
     color: '#8b5cf6',
-    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, transparent 100%)',
-    border: 'rgba(139,92,246,0.2)',
+    gradient: 'linear-gradient(135deg, rgba(139,92,246,0.05) 0%, transparent 100%)',
+    border: 'rgba(139,92,246,0.08)',
     rewards: [
       'Track Winner Certificate',
       'IEEE CS Recognition',
@@ -56,8 +56,8 @@ const prizes = [
     subtitle: 'IEEE WIE Affinity Award',
     icon: Star,
     color: '#f59e0b',
-    gradient: 'linear-gradient(135deg, rgba(245,158,11,0.1) 0%, transparent 100%)',
-    border: 'rgba(245,158,11,0.2)',
+    gradient: 'linear-gradient(135deg, rgba(245,158,11,0.05) 0%, transparent 100%)',
+    border: 'rgba(245,158,11,0.08)',
     rewards: [
       'Track Winner Certificate',
       'IEEE WIE Recognition',
@@ -112,8 +112,7 @@ export default function PrizesSection() {
             that open doors.
           </p>
           <div
-            className="inline-block mt-4 px-4 py-2 rounded-xl text-sm text-white/60 border"
-            style={{ background: 'rgba(245, 158, 11, 0.05)', borderColor: 'rgba(245, 158, 11, 0.15)' }}
+            className="inline-block mt-4 px-4 py-2 rounded-xl text-sm text-white/60 bg-[#111111] shadow-[0_0_0_1px_rgba(245,158,11,0.1)_inset]"
           >
             🎯 Recognition-based awards — the real prize is building something that matters.
           </div>
@@ -122,8 +121,8 @@ export default function PrizesSection() {
         {/* Champion Prize — Featured */}
         <FadeIn className="mb-8" delay={0.1}>
           <div
-            className="relative p-8 sm:p-10 rounded-2xl border overflow-hidden"
-            style={{ background: champion.gradient, borderColor: champion.border }}
+            className="relative p-8 sm:p-10 rounded-2xl overflow-hidden bg-[#111111]"
+            style={{ background: champion.gradient, boxShadow: `inset 0 0 0 1px ${champion.border}, 0 12px 40px rgba(0,0,0,0.4)` }}
           >
             {/* Background glow */}
             <div
@@ -182,8 +181,8 @@ export default function PrizesSection() {
             return (
               <StaggerItem key={prize.title}>
                 <div
-                  className="p-6 rounded-2xl border h-full"
-                  style={{ background: prize.gradient, borderColor: prize.border }}
+                  className="p-6 rounded-2xl h-full bg-[#111111]"
+                  style={{ background: prize.gradient, boxShadow: `inset 0 0 0 1px ${prize.border}` }}
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <div
