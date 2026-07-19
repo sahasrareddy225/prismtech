@@ -2,7 +2,7 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Badge } from '@/components/ui/Badge';
 import { Card, CardContent } from '@/components/ui/Card';
-import { Instagram, Mail, Linkedin, Phone } from 'lucide-react';
+import { Mail, Phone, Camera, Briefcase, MessageCircle } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -84,14 +84,14 @@ export default function TeamPage() {
                   
                   <div className="flex items-center justify-center gap-3">
                     {member.socials.insta && (
-                      <Link href={member.socials.insta} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-colors">
-                        <Instagram className="w-4 h-4" />
-                      </Link>
+                      <a href={member.socials.insta} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[var(--color-prism-cyan)]/20 hover:border-[var(--color-prism-cyan)] hover:text-[var(--color-prism-cyan)] transition-all">
+                        <Camera className="w-4 h-4" />
+                      </a>
                     )}
                     {member.socials.linkedin && (
-                      <Link href={member.socials.linkedin} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-[var(--color-ieee-blue-light)] transition-colors">
-                        <Linkedin className="w-4 h-4" />
-                      </Link>
+                      <a href={member.socials.linkedin} className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-[var(--color-prism-violet)]/20 hover:border-[var(--color-prism-violet)] hover:text-[var(--color-prism-violet)] transition-all">
+                        <Briefcase className="w-4 h-4" />
+                      </a>
                     )}
                     {member.socials.whatsapp && (
                       <Link href={member.socials.whatsapp} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-emerald-400 transition-colors">
