@@ -150,7 +150,7 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="mb-16 w-full max-w-4xl"
         >
-          <CountdownTimer targetDate="2026-09-26T09:00:00+05:30" />
+          <CountdownTimer />
         </motion.div>
 
         {/* CTAs */}
