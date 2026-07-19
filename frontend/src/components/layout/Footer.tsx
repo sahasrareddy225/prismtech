@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { Zap, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Zap, Mail, Phone, MapPin } from 'lucide-react';
+import { Instagram, Linkedin } from '@/components/icons/BrandIcons';
 
 const quickLinks = [
   { href: '/tracks', label: 'Tracks' },

@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Instagram, Linkedin, ArrowRight, Users } from 'lucide-react';
+import { ArrowRight, Users } from 'lucide-react';
+import { Instagram, Linkedin } from '@/components/icons/BrandIcons';
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/animations/FadeIn';
 
 const societyColors: Record<string, string> = {

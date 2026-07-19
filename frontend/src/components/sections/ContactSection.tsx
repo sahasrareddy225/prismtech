@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Mail, Phone, Instagram, Linkedin, MapPin, CheckCircle } from 'lucide-react';
+import { Send, Mail, Phone, MapPin, CheckCircle } from 'lucide-react';
+import { Instagram, Linkedin } from '@/components/icons/BrandIcons';
 import { FadeIn } from '@/components/animations/FadeIn';
 
 export default function ContactSection() {

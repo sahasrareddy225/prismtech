@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { ArrowRight, Calendar, MapPin, ChevronDown } from 'lucide-react';
 import CountdownTimer from '@/components/features/countdown/CountdownTimer';
 
@@ -11,12 +11,12 @@ const PrismParticleBackground = dynamic(
   { ssr: false }
 );
 
-const container = {
+const container: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } },
 };
 
-const item = {
+const item: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
 };
