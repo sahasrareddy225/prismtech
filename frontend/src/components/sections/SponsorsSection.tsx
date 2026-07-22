@@ -1,78 +1,79 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import Link from 'next/link';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Building2 } from 'lucide-react';
+import SectionHeader from '@/components/ui/SectionHeader';
+
+const TIERS = [
+  { label: 'Title Sponsor', placeholders: 1, large: true },
+  { label: 'Cloud Partner', placeholders: 2 },
+  { label: 'AI Partner', placeholders: 2 },
+  { label: 'Community Partner', placeholders: 3 },
+];
 
 export default function SponsorsSection() {
-  // We'll create two rows of placeholders for the infinite marquee
-  const sponsorPlaceholders = Array.from({ length: 8 }).map((_, i) => `Sponsor 0${i + 1}`);
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref, { once: true, margin: '0px' });
 
   return (
-    <section id="sponsors" className="section bg-[var(--color-surface-1)] overflow-hidden relative">
-      <div className="container relative z-10 mb-16">
-        <div className="flex flex-col items-center text-center">
-          <Badge variant="outline" className="mb-6">Our Partners</Badge>
-          <h2 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-6">
-            Powered By <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] to-[var(--color-prism-violet)]">Leaders</span>
-          </h2>
-          <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl mb-10">
-            PRISMTECH is made possible by organizations that believe in the next generation of engineers and innovators.
-          </p>
-          <Button variant="magnetic" asChild>
-            <Link href="mailto:ieeeaziznagarklh@gmail.com?subject=PRISMTECH 2026 Sponsorship Inquiry">
-              <ExternalLink className="w-4 h-4 mr-2 text-[var(--color-ieee-blue)]" />
-              Become a Sponsor
-            </Link>
-          </Button>
-        </div>
-      </div>
+    <section id="sponsors" className="section bg-[var(--color-surface-1)]" ref={ref} aria-labelledby="sponsors-heading">
+      <div className="container">
+        <SectionHeader
+          eyebrow="Sponsors & Partners"
+          title={<>Industry & community <span className="text-gradient-ieee">partnership.</span></>}
+          description="We are proud to partner with organizations driving innovation in India's technology ecosystem. Sponsor announcements coming soon."
+          align="center"
+        />
 
-      {/* Infinite Marquees */}
-      <div className="relative w-full flex flex-col gap-6 pt-10 pb-20">
-        
-        {/* Fading edges for marquee */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[var(--color-surface-1)] to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[var(--color-surface-1)] to-transparent z-10 pointer-events-none" />
-
-        {/* Row 1: Moves Left */}
-        <div className="flex overflow-hidden">
-          <motion.div
-            className="flex gap-6 min-w-max pr-6"
-            animate={{ x: ['0%', '-50%'] }}
-            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-          >
-            {[...sponsorPlaceholders, ...sponsorPlaceholders].map((name, i) => (
-              <div
-                key={`row1-${i}`}
-                className="w-48 h-24 rounded-2xl bg-[var(--color-surface-2)] shadow-[inset_0_0_0_1px_var(--color-surface-4)] flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:scale-[1.02]"
-              >
-                <span className="font-display font-bold text-xl text-white/20">{name}</span>
+        <div className="space-y-8 mb-10">
+          {TIERS.map((tier, ti) => (
+            <motion.div
+              key={tier.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.45, delay: 0.15 + ti * 0.08 }}
+            >
+              <div className="text-[10px] font-bold tracking-widest uppercase mb-3 text-[var(--color-text-muted)]">
+                {tier.label}
               </div>
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Row 2: Moves Right */}
-        <div className="flex overflow-hidden">
-          <motion.div
-            className="flex gap-6 min-w-max pr-6"
-            animate={{ x: ['-50%', '0%'] }}
-            transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-          >
-            {[...sponsorPlaceholders, ...sponsorPlaceholders].map((name, i) => (
-              <div
-                key={`row2-${i}`}
-                className="w-48 h-24 rounded-2xl bg-[var(--color-surface-2)] shadow-[inset_0_0_0_1px_var(--color-surface-4)] flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-500 hover:scale-[1.02]"
-              >
-                <span className="font-display font-bold text-xl text-white/20">{name}</span>
+              <div className="flex flex-wrap gap-3">
+                {Array.from({ length: tier.placeholders }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="glass-card flex items-center justify-center"
+                    style={{
+                      flex: tier.large ? '1 1 100%' : '1 1 180px',
+                      maxWidth: tier.large ? '100%' : '260px',
+                      height: tier.large ? '100px' : '76px',
+                    }}
+                  >
+                    <span className="text-xs text-[var(--color-text-muted)] flex items-center gap-2">
+                      <Building2 style={{ width: '14px', height: '14px' }} />
+                      Sponsor TBA
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+          ))}
         </div>
 
+        {/* CTA */}
+        <motion.div
+          className="glass-card p-6 flex flex-col sm:flex-row items-center justify-between gap-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.45, delay: 0.45 }}
+        >
+          <div>
+            <div className="font-semibold text-sm text-[var(--color-text-primary)] mb-1">Become a Sponsor</div>
+            <div className="text-sm text-[var(--color-text-secondary)]">Reach the next generation of innovators at this flagship IEEE event.</div>
+          </div>
+          <a href="/contact" className="btn-magnetic btn-primary text-sm shrink-0">
+            Get in Touch
+          </a>
+        </motion.div>
       </div>
     </section>
   );

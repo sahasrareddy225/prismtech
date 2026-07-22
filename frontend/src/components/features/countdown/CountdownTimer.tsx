@@ -1,119 +1,97 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getCountdownValues, EVENT_DATE } from '@/lib/utils';
 
-interface TimeUnitProps {
-  value: number;
-  label: string;
-  color: string;
-}
+const REGISTRATION_DEADLINE = new Date('2026-09-21T23:59:59+05:30');
 
-function TimeUnit({ value, label, color }: TimeUnitProps) {
-  const displayValue = String(value).padStart(2, '0');
-  const digits = displayValue.split('');
-
+function TimeBlock({ value, label }: { value: number; label: string }) {
+  const formatted = String(value).padStart(2, '0');
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="flex gap-1">
-        {digits.map((digit, i) => (
-          <div
-            key={i}
-            className="relative w-12 h-16 sm:w-16 sm:h-20 md:w-20 md:h-24 rounded-xl overflow-hidden glass"
-            style={{ borderColor: `${color}20` }}
-          >
-            {/* Shine effect */}
-            <div
-              className="absolute inset-0 opacity-10"
-              style={{ background: `linear-gradient(180deg, ${color}40 0%, transparent 50%)` }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={digit}
-                  initial={{ y: -30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: 30, opacity: 0 }}
-                  transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  className="font-display font-800 text-3xl sm:text-4xl md:text-5xl"
-                  style={{ color }}
-                >
-                  {digit}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-            {/* Divider line */}
-            <div
-              className="absolute left-0 right-0 top-1/2 h-px"
-              style={{ background: `${color}15` }}
-            />
-          </div>
-        ))}
+      <div
+        className="flex items-center justify-center"
+        style={{
+          width: 'clamp(64px, 9vw, 84px)',
+          height: 'clamp(64px, 9vw, 84px)',
+          background: 'var(--color-surface-2)',
+          border: '1px solid rgba(255, 255, 255, 0.09)',
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+        }}
+      >
+        <span
+          className="font-display font-bold tabular-nums text-[var(--color-text-primary)]"
+          style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', letterSpacing: '-0.03em' }}
+          aria-label={`${formatted} ${label}`}
+        >
+          {formatted}
+        </span>
       </div>
-      <span className="text-xs sm:text-sm font-medium uppercase tracking-widest text-white/40">
+      <span
+        className="font-medium uppercase text-[var(--color-text-muted)]"
+        style={{ fontSize: '0.65rem', letterSpacing: '0.09em' }}
+      >
         {label}
       </span>
     </div>
   );
 }
 
-export default function CountdownTimer() {
+export function CountdownTimer({ deadline = REGISTRATION_DEADLINE }: { deadline?: Date }) {
   const [mounted, setMounted] = useState(false);
-  const [values, setValues] = useState(getCountdownValues(EVENT_DATE));
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
     setMounted(true);
-    const interval = setInterval(() => {
-      setValues(getCountdownValues(EVENT_DATE));
-    }, 1000);
+    const calc = () => {
+      const diff = Math.max(0, deadline.getTime() - Date.now());
+      setTimeLeft({
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    calc();
+    const interval = setInterval(calc, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [deadline]);
 
   if (!mounted) {
     return (
-      <div className="flex justify-center items-end gap-3 sm:gap-5 md:gap-6 min-h-[120px]">
-        {/* Placeholder skeleton */}
-      </div>
-    );
-  }
-
-  if (values.isExpired) {
-    return (
-      <div className="text-center py-4">
-        <p className="font-display text-2xl font-700 text-gradient-prism">
-          🚀 PRISMTECH 2026 is LIVE!
-        </p>
-      </div>
+      <div
+        className="flex items-center justify-center gap-3 sm:gap-4"
+        style={{ minHeight: '96px' }}
+        aria-hidden="true"
+      />
     );
   }
 
   const units = [
-    { value: values.days, label: 'Days', color: '#00d4ff' },
-    { value: values.hours, label: 'Hours', color: '#8b5cf6' },
-    { value: values.minutes, label: 'Minutes', color: '#f59e0b' },
-    { value: values.seconds, label: 'Seconds', color: '#6366f1' },
+    { value: timeLeft.days, label: 'Days' },
+    { value: timeLeft.hours, label: 'Hours' },
+    { value: timeLeft.minutes, label: 'Mins' },
+    { value: timeLeft.seconds, label: 'Secs' },
   ];
 
   return (
     <div
-      className="flex justify-center items-end gap-2 sm:gap-4 md:gap-6"
+      className="flex items-center justify-center gap-3 sm:gap-5"
       role="timer"
-      aria-label="Countdown to PRISMTECH 2026"
+      aria-label="Countdown to registration deadline"
       aria-live="polite"
     >
       {units.map((unit, i) => (
-        <div key={unit.label} className="flex items-end gap-3 sm:gap-5 md:gap-6">
-          <TimeUnit value={unit.value} label={unit.label} color={unit.color} />
+        <div key={unit.label} className="flex items-center gap-3 sm:gap-5">
+          <TimeBlock value={unit.value} label={unit.label} />
           {i < units.length - 1 && (
-            <motion.span
-              animate={{ opacity: [1, 0.2, 1] }}
-              transition={{ duration: 1, repeat: Infinity, ease: 'easeInOut' }}
-              className="font-display font-800 text-3xl sm:text-4xl text-white/20 mb-5 sm:mb-7"
+            <span
+              className="font-display font-bold text-[var(--color-text-muted)] mb-4 select-none"
+              style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)' }}
               aria-hidden="true"
             >
               :
-            </motion.span>
+            </span>
           )}
         </div>
       ))}

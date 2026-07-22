@@ -1,164 +1,125 @@
 import Link from 'next/link';
-import { Zap, Mail, Phone, MapPin } from 'lucide-react';
-import { Instagram, Linkedin } from '@/components/icons/BrandIcons';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+const FOOTER_LINKS = {
+  Event: [
+    { label: 'About', href: '/about' },
+    { label: 'Tracks', href: '/tracks' },
+    { label: 'Schedule', href: '/schedule' },
+    { label: 'Rules', href: '/rules' },
+    { label: 'Prizes', href: '/prizes' },
+  ],
+  Participate: [
+    { label: 'Register', href: '/auth/register' },
+    { label: 'Dashboard', href: '/dashboard' },
+    { label: 'Resources', href: '/resources' },
+    { label: 'Gallery', href: '/gallery' },
+    { label: 'FAQ', href: '/faq' },
+  ],
+  Organization: [
+    { label: 'Team', href: '/team' },
+    { label: 'Sponsors', href: '/sponsors' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Privacy Policy', href: '/privacy' },
+    { label: 'Terms', href: '/terms' },
+  ],
+};
 
-const quickLinks = [
-  { href: '/about', label: 'About PRISMTECH' },
-  { href: '/tracks', label: 'Tracks & Themes' },
-  { href: '/schedule', label: 'Event Schedule' },
-  { href: '/rules', label: 'Rules & Eligibility' },
-  { href: '/team', label: 'Organizer Team' },
-  { href: '/sponsors', label: 'Sponsors & Partners' },
-  { href: '/contact', label: 'Contact Us' },
+const CONTACT_INFO = [
+  { icon: Mail, label: 'ieeeaziznagarklh@gmail.com' },
+  { icon: Phone, label: '+91 97047 10888' },
+  { icon: MapPin, label: 'KLH Aziz Nagar Campus, Hyderabad' },
 ];
 
 export default function Footer() {
-  return (
-    <footer
-      className="relative border-t border-white/5 overflow-hidden"
-      style={{ background: 'var(--color-surface-0)' }}
-      role="contentinfo"
-      aria-label="Site footer"
-    >
-      {/* Background gradient */}
-      <div
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse at 50% 100%, rgba(139, 92, 246, 0.15) 0%, transparent 60%)',
-        }}
-      />
+  const year = new Date().getFullYear();
 
-      <div className="container relative z-10 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Brand */}
+  return (
+    <footer className="border-t border-white/[0.06] bg-[var(--color-surface-0)]" role="contentinfo">
+
+      {/* Main Footer */}
+      <div className="container py-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+
+          {/* Brand Column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
-              <div className="relative w-9 h-9 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-[#00d4ff] via-[#8b5cf6] to-[#f59e0b]" />
-                <Zap className="relative z-10 w-5 h-5 text-white" fill="white" />
+            <Link href="/" className="flex items-center gap-2.5 mb-5" aria-label="PRISMTECH 2026 Home">
+              <div className="w-8 h-8 rounded-lg bg-[var(--color-ieee-blue)] flex items-center justify-center shrink-0">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="text-white" aria-hidden="true">
+                  <polygon points="12,2 22,7 22,17 12,22 2,17 2,7" stroke="currentColor" strokeWidth="2" fill="rgba(255,255,255,0.15)" />
+                  <line x1="12" y1="2" x2="12" y2="22" stroke="currentColor" strokeWidth="1.5" />
+                  <line x1="2" y1="7" x2="22" y2="7" stroke="currentColor" strokeWidth="1" opacity="0.6" />
+                  <line x1="2" y1="17" x2="22" y2="17" stroke="currentColor" strokeWidth="1" opacity="0.6" />
+                </svg>
               </div>
-              <div>
-                <span className="font-display font-800 text-xl text-white tracking-tight">
-                  PRISM<span className="text-gradient-cyan-violet">TECH</span>
-                </span>
-                <div className="text-[10px] text-white/40 font-medium tracking-widest uppercase leading-none">
-                  IEEE · 2026
-                </div>
+              <div className="leading-none">
+                <div className="text-sm font-bold text-[var(--color-text-primary)] tracking-tight font-display">PRISMTECH 2026</div>
+                <div className="text-[9px] text-[var(--color-text-muted)] font-medium tracking-widest uppercase">IEEE KLH Student Branch · Aziz Nagar</div>
               </div>
             </Link>
-            <p className="text-white/50 text-sm leading-relaxed max-w-md mb-6">
-              A multidisciplinary 24-hour hackathon where hardware (Light), software (Logic),
-              and social impact (Equity) converge. Organized by IEEE KLH SB Aziz Nagar.
+
+            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-5 max-w-xs">
+              A 24-hour sprint across the tech spectrum. Build bold, ethical technology for smarter campuses, safer communities, and sustainable futures.
             </p>
 
-            {/* IEEE Society Badges */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              <Badge variant="cyan">IEEE Photonics</Badge>
-              <Badge variant="violet">Computer Society</Badge>
-              <Badge variant="gold">IEEE WIE</Badge>
+            {/* Contact */}
+            <div className="space-y-2.5">
+              {CONTACT_INFO.map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-2.5 text-sm text-[var(--color-text-secondary)]">
+                  <Icon className="text-[var(--color-text-muted)] shrink-0" style={{ width: '13px', height: '13px' }} />
+                  <span>{label}</span>
+                </div>
+              ))}
             </div>
 
-            {/* Social Links */}
-            <div className="flex items-center gap-4">
+            {/* Social */}
+            <div className="flex items-center gap-2 mt-5 flex-wrap">
               <a
                 href="https://instagram.com/ieee_prismtech"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-xl glass flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-colors"
-                aria-label="Follow PRISMTECH on Instagram"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg border border-white/08 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:border-white/18 transition-all"
               >
-                <Instagram className="w-4.5 h-4.5" />
+                @ieee_prismtech
               </a>
               <a
-                href="https://www.linkedin.com/company/ieee-prismtech-klh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-xl glass flex items-center justify-center text-white/50 hover:text-white hover:border-white/20 transition-colors"
-                aria-label="Follow PRISMTECH on LinkedIn"
+                href="#"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg border border-white/08 text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:border-white/18 transition-all"
               >
-                <Linkedin className="w-4.5 h-4.5" />
+                LinkedIn
               </a>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-display font-600 text-sm text-white/80 uppercase tracking-widest mb-5">
-              Quick Links
-            </h3>
-            <ul className="space-y-3" role="list">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/50 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="font-display font-600 text-sm text-white/80 uppercase tracking-widest mb-5">
-              Contact
-            </h3>
-            <ul className="space-y-4" role="list">
-              <li>
-                <a
-                  href="mailto:ieeeaziznagarklh@gmail.com"
-                  className="flex items-start gap-3 text-sm text-white/50 hover:text-white transition-colors group"
-                >
-                  <Mail className="w-4 h-4 mt-0.5 shrink-0 text-[#8b5cf6] group-hover:text-[#8b5cf6]" />
-                  <span>ieeeaziznagarklh@gmail.com</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="tel:+919704710888"
-                  className="flex items-start gap-3 text-sm text-white/50 hover:text-white transition-colors group"
-                >
-                  <Phone className="w-4 h-4 mt-0.5 shrink-0 text-[#00d4ff] group-hover:text-[#00d4ff]" />
-                  <span>+91 97047 10888</span>
-                </a>
-              </li>
-              <li>
-                <Link
-                  href="/venue"
-                  className="flex items-start gap-3 text-sm text-white/50 hover:text-white transition-colors group"
-                >
-                  <MapPin className="w-4 h-4 mt-0.5 shrink-0 text-[#f59e0b] group-hover:text-[#f59e0b]" />
-                  <span>KL University (KLH) Hyderabad, Aziz Nagar, Hyderabad – 500075</span>
-                </Link>
-              </li>
-            </ul>
-
-            <div className="mt-8">
-              <Button variant="outline" size="md" asChild>
-                <Link href="/contact">Get in Touch</Link>
-              </Button>
+          {/* Links Columns */}
+          {Object.entries(FOOTER_LINKS).map(([group, links]) => (
+            <div key={group}>
+              <h3 className="text-[10px] font-bold tracking-widest uppercase text-[var(--color-text-muted)] mb-4">{group}</h3>
+              <ul className="space-y-2.5">
+                {links.map(link => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          ))}
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-white/30">
-            © 2026 IEEE KLH SB Aziz Nagar · PRISMTECH Hackathon. All rights reserved.
-          </p>
-          <div className="flex items-center gap-6">
-            <Link href="/privacy-policy" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="text-xs text-white/30 hover:text-white/60 transition-colors">
-              Terms & Conditions
-            </Link>
+      {/* Bottom Bar */}
+      <div className="border-t border-white/[0.06]">
+        <div className="container py-5 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-text-muted)]">
+          <p>© {year} IEEE PRISMTECH Hackathon · IEEE KLH Student Branch, Aziz Nagar. All rights reserved.</p>
+          <div className="flex items-center gap-5">
+            <Link href="/privacy" className="hover:text-[var(--color-text-primary)] transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-[var(--color-text-primary)] transition-colors">Terms</Link>
+            <span>Accessibility</span>
           </div>
         </div>
       </div>

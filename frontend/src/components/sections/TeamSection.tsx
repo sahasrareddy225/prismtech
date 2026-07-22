@@ -1,90 +1,125 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Badge } from '@/components/ui/Badge';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Linkedin } from '@/components/icons/BrandIcons';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import Link from 'next/link';
+import { ExternalLink } from 'lucide-react';
+import SectionHeader from '@/components/ui/SectionHeader';
 
-const team = [
-  {
-    name: 'Dr. Sai Sudha Gadde',
-    title: 'Branch Counselor',
-    society: 'IEEE Student Branch',
-    color: 'var(--color-ieee-blue-light)',
-    bg: 'var(--color-surface-2)',
-  },
-  {
-    name: 'Optic Lead',
-    title: 'Track Head',
-    society: 'IEEE Photonics',
-    color: 'var(--color-prism-cyan)',
-    bg: 'var(--color-surface-2)',
-  },
-  {
-    name: 'Neural Lead',
-    title: 'Track Head',
-    society: 'IEEE CS',
-    color: 'var(--color-prism-violet)',
-    bg: 'var(--color-surface-2)',
-  },
-  {
-    name: 'Social Lead',
-    title: 'Track Head',
-    society: 'IEEE WIE',
-    color: 'var(--color-prism-gold)',
-    bg: 'var(--color-surface-2)',
-  },
+const TEAM = [
+  { initials: 'SGC', role: 'Student General Chair', org: 'IEEE KLH Student Branch, Aziz Nagar' },
+  { initials: 'VC', role: 'Vice Chair – Technical', org: 'IEEE KLH Student Branch' },
+  { initials: 'VC', role: 'Vice Chair – Operations', org: 'IEEE KLH Student Branch' },
+  { initials: 'SSG', role: 'Dr. Sai Sudha Gadde', org: 'Branch Counselor, IEEE KLH SB Aziz Nagar' },
+  { initials: 'MJ', role: 'Mentors & Judges', org: 'Industry, academia, and IEEE experts' },
+];
+
+const COMMITTEES = [
+  'Technical', 'Registration', 'Hospitality', 'Sponsorship',
+  'Publicity & Media', 'Event Operations', 'Logistics',
+  'Participant Engagement', 'Mentor & Judge Coordination', 'Finance', 'Photography',
+];
+
+const STREAMS = [
+  { name: 'Optic Stream', sub: 'IEEE Photonics Society' },
+  { name: 'Neural Stream', sub: 'IEEE Computer Society' },
+  { name: 'Social Stream', sub: 'Women in Engineering (WIE)' },
 ];
 
 export default function TeamSection() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '0px' });
+
   return (
-    <section id="team" className="section bg-[var(--color-surface-0)] relative overflow-hidden">
+    <section id="people" className="section bg-[var(--color-surface-0)]" ref={ref} aria-labelledby="team-heading">
       <div className="container">
-        
-        <div className="flex flex-col items-center text-center mb-16 lg:mb-24">
-          <Badge variant="outline" className="mb-6">The Brains Behind the Operation</Badge>
-          <h2 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-6">
-            Meet the Organizers
-          </h2>
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 mb-10 md:mb-12">
+          <SectionHeader
+            eyebrow="Organizing Committee"
+            title={<>People powering <span className="text-gradient-ieee">PRISMTECH.</span></>}
+            align="left"
+            className="mb-0"
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="shrink-0"
+          >
+            <Link href="/team" className="btn-magnetic btn-secondary text-sm group">
+              View Full Team
+              <ExternalLink style={{ width: '13px', height: '13px' }} />
+            </Link>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {team.map((member, i) => (
+        {/* People cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10">
+          {TEAM.map((person, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.12 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+              className="glass-card p-5 flex flex-col items-center text-center gap-3"
             >
-              <Card variant="glass" className="h-full group hover:border-white/10 transition-colors">
-                <CardContent className="p-6 text-center flex flex-col items-center">
-                  <div 
-                    className="w-24 h-24 rounded-full mb-6 flex items-center justify-center text-3xl font-display font-bold text-white relative"
-                  >
-                    <div className="absolute inset-0 rounded-full border border-white/10 group-hover:scale-110 transition-transform duration-500" style={{ borderColor: member.color }} />
-                    <div className="absolute inset-0 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-500" style={{ background: member.color }} />
-                    <span className="relative z-10">{member.name.charAt(0)}</span>
-                  </div>
-                  <h3 className="font-display font-semibold text-lg text-white mb-1">{member.name}</h3>
-                  <p className="text-sm text-[var(--color-text-secondary)] mb-4">{member.title}</p>
-                  
-                  <div className="mt-auto flex flex-col items-center gap-4">
-                    <span 
-                      className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded bg-black/40 border border-white/5"
-                      style={{ color: member.color }}
-                    >
-                      {member.society}
-                    </span>
-                    <a href="#" className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors">
-                      <Linkedin className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-                </CardContent>
-              </Card>
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold font-display bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue)]/20 text-[var(--color-ieee-blue-light)]"
+              >
+                {person.initials}
+              </div>
+              <div>
+                <div className="text-xs font-semibold text-[var(--color-text-primary)] leading-tight mb-1">{person.role}</div>
+                <div className="text-[10px] text-[var(--color-text-muted)] leading-snug">{person.org}</div>
+              </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Streams */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="mb-8"
+        >
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-1">Event Streams</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-4">
+            PRISMTECH is organized across three streams, supported by dedicated coordination teams.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {STREAMS.map(stream => (
+              <div key={stream.name} className="glass-card p-4">
+                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-ieee-blue-light)] mb-3" />
+                <div className="font-semibold text-sm text-[var(--color-text-primary)]">{stream.name}</div>
+                <div className="text-xs text-[var(--color-text-secondary)] mt-0.5">{stream.sub}</div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Committee tags */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.5, delay: 0.55 }}
+        >
+          <h3 className="text-[10px] font-bold tracking-widest uppercase text-[var(--color-text-muted)] mb-3">Committees</h3>
+          <div className="flex flex-wrap gap-2">
+            {COMMITTEES.map((c, i) => (
+              <motion.span
+                key={c}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={inView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ duration: 0.25, delay: 0.55 + i * 0.03 }}
+                className="badge badge-neutral"
+              >
+                {c}
+              </motion.span>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </section>
   );

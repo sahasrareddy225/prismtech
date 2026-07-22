@@ -1,199 +1,121 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDown, Calendar, MapPin, Zap } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import CountdownTimer from '@/components/features/countdown/CountdownTimer';
+import { motion } from 'framer-motion';
+import { ArrowRight, MapPin, Calendar } from 'lucide-react';
+import { CountdownTimer } from '@/components/features/countdown/CountdownTimer';
 
 export default function HeroSection() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-      });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
   return (
     <section
-      ref={containerRef}
-      className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-[var(--color-surface-0)]"
+      id="home"
+      className="relative flex flex-col items-center justify-center pt-28 pb-20 min-h-[82vh]"
+      aria-label="Hero section"
     >
-      {/* 1. Grid Background */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none opacity-20"
+      {/* Background */}
+      <div className="absolute inset-0 bg-[var(--color-bg)]" aria-hidden="true" />
+      <div className="absolute inset-0 grid-pattern opacity-[0.12] pointer-events-none" aria-hidden="true" />
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[360px] pointer-events-none"
+        aria-hidden="true"
         style={{
-          backgroundImage: `
-            linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: '4rem 4rem',
-          maskImage: 'radial-gradient(ellipse 80% 50% at 50% 50%, black 20%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 80% 50% at 50% 50%, black 20%, transparent 100%)',
+          background: 'radial-gradient(ellipse at center, rgba(0, 98, 155, 0.12) 0%, transparent 70%)',
         }}
       />
 
-      {/* 2. Aurora & Spotlight Effects */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Spotlight following mouse */}
-        <motion.div
-          className="absolute w-[600px] h-[600px] rounded-full"
-          style={{
-            background: 'radial-gradient(circle, rgba(0, 98, 155, 0.15) 0%, transparent 70%)',
-            left: mousePosition.x - 300,
-            top: mousePosition.y - 300,
-          }}
-          transition={{ type: 'tween', ease: 'easeOut', duration: 0.15 }}
-        />
-        
-        {/* Animated Aurora Orbs */}
-        <motion.div
-          animate={{
-            rotate: [0, 360],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full blur-[120px] opacity-30"
-          style={{ background: 'radial-gradient(circle, var(--color-ieee-blue-light) 0%, transparent 60%)' }}
-        />
-        <motion.div
-          animate={{
-            rotate: [360, 0],
-            scale: [1, 1.3, 1],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: 'linear' }}
-          className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] rounded-full blur-[100px] opacity-20"
-          style={{ background: 'radial-gradient(circle, var(--color-prism-cyan) 0%, transparent 60%)' }}
-        />
-      </div>
+      <div className="relative z-10 w-full container flex flex-col items-center text-center">
 
-      {/* 3. Main Content */}
-      <motion.div 
-        style={{ opacity, scale }}
-        className="container relative z-10 flex flex-col items-center text-center mt-20"
-      >
+        {/* IEEE Badge */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-8"
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-7"
         >
-          <Badge variant="outline" className="px-4 py-1.5 backdrop-blur-md bg-white/5 border-white/10 text-white/80">
-            <span className="flex items-center gap-2">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-prism-cyan)] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-prism-cyan)]"></span>
-              </span>
-              Registration opens August 1st, 2026
-            </span>
-          </Badge>
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase border border-[var(--color-ieee-blue)]/40 bg-[var(--color-ieee-blue)]/10 text-[var(--color-ieee-blue-light)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-ieee-blue-light)] animate-pulse-dot" />
+            Official IEEE KLH Student Branch Event
+          </span>
         </motion.div>
 
-        {/* Massive Typography */}
+        {/* Headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
+          className="font-display font-bold text-[var(--color-text-primary)] mb-5 tracking-tight max-w-4xl mx-auto"
+          style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: '1.1', letterSpacing: '-0.03em' }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="font-display font-bold text-5xl sm:text-6xl lg:text-8xl tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-6 drop-shadow-sm pb-2 px-1"
+          transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
         >
-          Build the future at <br /> IEEE PRISM<span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] via-[var(--color-ieee-blue-light)] to-[var(--color-prism-violet)] pb-2">TECH</span> Hackathon
+          IEEE PRISMTECH{' '}
+          <span className="text-gradient-ieee">Hackathon 2026</span>
         </motion.h1>
 
+        {/* Tagline */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          className="text-base md:text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-xl mx-auto mb-8"
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="text-lg sm:text-xl lg:text-2xl text-[var(--color-text-secondary)] max-w-3xl mb-12 font-medium"
+          transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
         >
-          Build bold, ethical technology for smarter campuses, safer communities, and sustainable futures.
+          A 24-hour sprint to build bold, ethical technology for smarter campuses, safer communities, and sustainable futures.
         </motion.p>
 
-        {/* Event Meta Info */}
+        {/* Event Meta */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-8 text-sm text-[var(--color-text-secondary)]"
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mb-16 text-sm sm:text-base text-white/80"
+          transition={{ duration: 0.5, delay: 0.24, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="flex items-center gap-2.5 bg-white/5 px-4 py-2 rounded-2xl backdrop-blur-md shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]">
-            <Calendar className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-[var(--color-ieee-blue-light)]" />
             <span>September 26–27, 2026</span>
           </div>
-          <div className="flex items-center gap-2.5 bg-white/5 px-4 py-2 rounded-2xl backdrop-blur-md shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)]">
-            <MapPin className="w-5 h-5 text-[var(--color-prism-cyan)]" />
-            <span>KLH Hyderabad, Aziz Nagar</span>
+          <span className="hidden sm:block w-px h-4 bg-white/15" />
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-[var(--color-ieee-blue-light)]" />
+            <span>KLH Aziz Nagar Campus, Hyderabad</span>
           </div>
-        </motion.div>
-
-        {/* Countdown */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-16 w-full max-w-4xl"
-        >
-          <CountdownTimer />
         </motion.div>
 
         {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-14"
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="flex flex-col sm:flex-row items-center gap-4"
+          transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
-          <Button variant="magnetic" size="lg" asChild className="w-full sm:w-auto">
-            <Link href="/auth/register">
-              <Zap className="w-4 h-4 mr-1 text-[var(--color-ieee-blue)]" fill="currentColor" />
-              Register Your Team
-            </Link>
-          </Button>
-          <Button variant="secondary" size="lg" asChild className="w-full sm:w-auto">
-            <Link href="/tracks">
-              Explore Tracks
-            </Link>
-          </Button>
+          <Link
+            href="/auth/register"
+            className="btn-magnetic btn-primary px-7 py-2.5 text-sm"
+          >
+            Register Your Team
+          </Link>
+          <Link
+            href="/tracks"
+            className="btn-magnetic btn-ghost text-sm group"
+          >
+            Explore Domains
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
         </motion.div>
-      </motion.div>
 
-      {/* Smooth Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-      >
-        <span className="text-[10px] uppercase tracking-widest text-white/30 font-medium">Scroll to explore</span>
+        {/* Countdown */}
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-8 h-12 rounded-full border border-white/10 flex items-start justify-center p-2 backdrop-blur-sm bg-white/5"
+          className="w-full max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.div 
-            animate={{ height: ['20%', '60%', '20%'], opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-1 bg-white/50 rounded-full"
-          />
+          <div className="border-t border-white/[0.06] pt-8">
+            <p className="text-[10px] font-bold tracking-widest uppercase text-[var(--color-text-muted)] mb-5 text-center">
+              Registration Closes In
+            </p>
+            <CountdownTimer />
+          </div>
         </motion.div>
-      </motion.div>
+
+      </div>
     </section>
   );
 }

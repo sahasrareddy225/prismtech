@@ -1,230 +1,114 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Mail, Phone, MapPin, CheckCircle, Loader2 } from 'lucide-react';
-import { Instagram, Linkedin } from '@/components/icons/BrandIcons';
-import { Badge } from '@/components/ui/Badge';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Mail, Phone, MapPin, Send, MessageSquare } from 'lucide-react';
+import SectionHeader from '@/components/ui/SectionHeader';
+
+const CONTACT_ITEMS = [
+  { icon: Mail, label: 'General Enquiry', value: 'ieeeaziznagarklh@gmail.com' },
+  { icon: Phone, label: 'WhatsApp Help Desk', value: '+91 97047 10888' },
+  { icon: Phone, label: 'Emergency Desk', value: '+91 97047 10888' },
+  { icon: MapPin, label: 'Venue', value: 'KLH Aziz Nagar Campus, Hyderabad' },
+  { icon: MessageSquare, label: 'Instagram', value: '@ieee_prismtech' },
+];
 
 export default function ContactSection() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '0px' });
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('loading');
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      if (res.ok) {
-        setStatus('success');
-        setForm({ name: '', email: '', subject: '', message: '' });
-      } else {
-        setStatus('error');
-      }
-    } catch {
-      setStatus('error');
-    }
+    setSubmitted(true);
   };
 
   return (
-    <section id="contact" className="section bg-[var(--color-surface-0)] relative overflow-hidden">
-      
-      {/* Decorative Blur */}
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[var(--color-ieee-blue)]/10 blur-[120px] pointer-events-none rounded-full translate-x-1/2 translate-y-1/2" />
+    <section id="contact" className="section bg-[var(--color-surface-0)]" ref={ref} aria-labelledby="contact-heading">
+      <div className="container">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
-      <div className="container max-w-6xl relative z-10">
-        <div className="flex flex-col items-center text-center mb-16 lg:mb-24">
-          <Badge variant="outline" className="mb-6">Reach Out</Badge>
-          <h2 className="font-display font-bold text-4xl sm:text-5xl lg:text-6xl text-white tracking-tight mb-6">
-            Let&apos;s Connect
-          </h2>
-          <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl">
-            Have questions about PRISMTECH? Want to sponsor or partner with us? We&apos;re here to help.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          
-          {/* Left: Contact Info */}
+          {/* Left: Contact info */}
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col justify-center space-y-8"
+            initial={{ opacity: 0, x: -20 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div>
-              <h3 className="font-display font-bold text-2xl text-white mb-2">Contact Information</h3>
-              <p className="text-[var(--color-text-secondary)]">Reach out directly via email or phone.</p>
-            </div>
-            
-            <div className="space-y-6">
-              <a href="mailto:ieeeaziznagarklh@gmail.com" className="group flex items-center gap-5 p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-surface-2)] shadow-inner border border-white/5 group-hover:scale-110 transition-transform">
-                  <Mail className="w-5 h-5 text-[var(--color-prism-violet)]" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-1">Email</div>
-                  <div className="text-white font-medium group-hover:text-[var(--color-prism-violet)] transition-colors">ieeeaziznagarklh@gmail.com</div>
-                </div>
-              </a>
+            <SectionHeader
+              eyebrow="Contact"
+              title={<>Reach the <span className="text-gradient-ieee">PRISMTECH team.</span></>}
+              description="Have questions about registration, problem domains, or sponsorship? We'd love to hear from you."
+              align="left"
+            />
 
-              <a href="tel:+919704710888" className="group flex items-center gap-5 p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-surface-2)] shadow-inner border border-white/5 group-hover:scale-110 transition-transform">
-                  <Phone className="w-5 h-5 text-[var(--color-prism-cyan)]" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-1">Phone</div>
-                  <div className="text-white font-medium group-hover:text-[var(--color-prism-cyan)] transition-colors">+91 97047 10888</div>
-                </div>
-              </a>
-
-              <div className="group flex items-center gap-5 p-4 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-surface-2)] shadow-inner border border-white/5 group-hover:scale-110 transition-transform">
-                  <MapPin className="w-5 h-5 text-[var(--color-prism-gold)]" />
-                </div>
-                <div>
-                  <div className="text-sm font-medium text-[var(--color-text-secondary)] mb-1">Location</div>
-                  <div className="text-white font-medium">KL University (KLH), Aziz Nagar, Hyderabad</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8 border-t border-white/5">
-              <div className="flex gap-4">
-                <a href="https://instagram.com/ieee_prismtech" className="w-12 h-12 rounded-xl bg-[var(--color-surface-2)] border border-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all">
-                  <Instagram className="w-5 h-5" />
-                </a>
-                <a href="https://www.linkedin.com/company/ieee-prismtech-klh" className="w-12 h-12 rounded-xl bg-[var(--color-surface-2)] border border-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 hover:border-white/20 transition-all">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right: Contact Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Card variant="glass" className="h-full">
-              <CardContent className="p-8 lg:p-10">
-                {status === 'success' ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center py-12">
-                    <div className="w-16 h-16 rounded-full bg-[var(--color-ieee-blue-light)]/20 flex items-center justify-center mb-6">
-                      <CheckCircle className="w-8 h-8 text-[var(--color-ieee-blue-light)]" />
-                    </div>
-                    <h3 className="font-display font-bold text-2xl text-white mb-2">Message Sent!</h3>
-                    <p className="text-[var(--color-text-secondary)] mb-8">
-                      Thank you for reaching out. We will get back to you shortly.
-                    </p>
-                    <Button variant="outline" onClick={() => setStatus('idle')}>
-                      Send Another Message
-                    </Button>
+            <div className="space-y-3">
+              {CONTACT_ITEMS.map(({ icon: Icon, label, value }) => (
+                <div key={label} className="glass-card p-4 flex items-center gap-3">
+                  <div className="icon-container shrink-0">
+                    <Icon style={{ width: '16px', height: '16px' }} />
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium text-white/80">Name</label>
-                        <input
-                          id="name"
-                          name="name"
-                          type="text"
-                          required
-                          value={form.name}
-                          onChange={handleChange}
-                          className="w-full h-12 px-4 rounded-xl bg-black/40 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-ieee-blue-light)] focus:ring-1 focus:ring-[var(--color-ieee-blue-light)] transition-colors"
-                          placeholder="John Doe"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium text-white/80">Email</label>
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          required
-                          value={form.email}
-                          onChange={handleChange}
-                          className="w-full h-12 px-4 rounded-xl bg-black/40 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-ieee-blue-light)] focus:ring-1 focus:ring-[var(--color-ieee-blue-light)] transition-colors"
-                          placeholder="john@example.com"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="subject" className="text-sm font-medium text-white/80">Subject</label>
-                      <select
-                        id="subject"
-                        name="subject"
-                        required
-                        value={form.subject}
-                        onChange={handleChange}
-                        className="w-full h-12 px-4 rounded-xl bg-black/40 border border-white/10 text-white focus:outline-none focus:border-[var(--color-ieee-blue-light)] focus:ring-1 focus:ring-[var(--color-ieee-blue-light)] transition-colors appearance-none"
-                      >
-                        <option value="" disabled className="bg-[var(--color-surface-2)]">Select a topic...</option>
-                        <option value="Sponsorship" className="bg-[var(--color-surface-2)]">Sponsorship Inquiry</option>
-                        <option value="Partnership" className="bg-[var(--color-surface-2)]">Community Partnership</option>
-                        <option value="General" className="bg-[var(--color-surface-2)]">General Question</option>
-                        <option value="Support" className="bg-[var(--color-surface-2)]">Participant Support</option>
-                      </select>
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="text-sm font-medium text-white/80">Message</label>
-                      <textarea
-                        id="message"
-                        name="message"
-                        required
-                        rows={4}
-                        value={form.message}
-                        onChange={handleChange}
-                        className="w-full p-4 rounded-xl bg-black/40 border border-white/10 text-white placeholder:text-white/30 focus:outline-none focus:border-[var(--color-ieee-blue-light)] focus:ring-1 focus:ring-[var(--color-ieee-blue-light)] transition-colors resize-none"
-                        placeholder="How can we help you?"
-                      />
-                    </div>
-                    
-                    {status === 'error' && (
-                      <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
-                        Failed to send message. Please try again or use the email link.
-                      </div>
-                    )}
-
-                    <Button 
-                      type="submit" 
-                      variant="primary" 
-                      className="w-full h-12"
-                      disabled={status === 'loading'}
-                    >
-                      {status === 'loading' ? (
-                        <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          Send Message
-                          <Send className="w-4 h-4 ml-2" />
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                )}
-              </CardContent>
-            </Card>
+                  <div>
+                    <div className="text-[10px] text-[var(--color-text-muted)] font-medium uppercase tracking-wider mb-0.5">{label}</div>
+                    <div className="text-sm font-medium text-[var(--color-text-primary)]">{value}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
 
+          {/* Right: Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {submitted ? (
+              <div className="glass-card p-10 flex flex-col items-center justify-center text-center h-full min-h-[360px]">
+                <div className="w-14 h-14 rounded-xl bg-[var(--color-surface-3)] border border-white/08 flex items-center justify-center mb-5">
+                  <Send className="text-[var(--color-ieee-blue-light)]" style={{ width: '22px', height: '22px' }} />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">Message Sent!</h3>
+                <p className="text-sm text-[var(--color-text-secondary)]">We'll get back to you within 24–48 hours.</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="glass-card p-7 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="form-label" htmlFor="contact-name">Name</label>
+                    <input id="contact-name" type="text" required className="form-input" placeholder="Your name" />
+                  </div>
+                  <div>
+                    <label className="form-label" htmlFor="contact-email">Email</label>
+                    <input id="contact-email" type="email" required className="form-input" placeholder="you@college.edu" />
+                  </div>
+                </div>
+                <div>
+                  <label className="form-label" htmlFor="contact-subject">Subject</label>
+                  <select id="contact-subject" className="form-input">
+                    <option value="general">General Inquiry</option>
+                    <option value="registration">Registration Help</option>
+                    <option value="sponsorship">Sponsorship</option>
+                    <option value="mentorship">Mentorship</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="form-label" htmlFor="contact-message">Message</label>
+                  <textarea
+                    id="contact-message"
+                    required
+                    rows={5}
+                    className="form-input resize-none"
+                    placeholder="How can we help you?"
+                  />
+                </div>
+                <button type="submit" className="btn-magnetic btn-primary w-full justify-center text-sm">
+                  <Send style={{ width: '14px', height: '14px' }} />
+                  Send Message
+                </button>
+              </form>
+            )}
+          </motion.div>
         </div>
       </div>
     </section>

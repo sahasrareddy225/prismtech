@@ -1,152 +1,126 @@
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Badge } from '@/components/ui/Badge';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Clock } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Schedule | PRISMTECH 2026',
-  description: 'The complete 24-hour itinerary for PRISMTECH 2026. From the opening ceremony to the grand pitch and awards.',
+  description: 'Full timeline for PRISMTECH 2026: from check-in at 08:15 to the awards ceremony. 26–27 September 2026.',
 };
 
-const day1Schedule = [
-  { time: '08:15 AM - 09:00 AM', title: 'Check-in & Kit Distribution', desc: 'Arrive at the venue, verify ID, and collect your participant kit and team badges.', color: 'var(--color-prism-cyan)' },
-  { time: '09:00 AM - 10:00 AM', title: 'Opening Ceremony', desc: 'Welcome address by IEEE leaders, rules overview, and the official release of Problem Statements.', color: 'var(--color-prism-violet)' },
-  { time: '10:00 AM onwards', title: '🚀 Hacking Commences', desc: 'The 24-hour clock starts! Teams move to their designated hacking zones.', highlight: true, color: 'var(--color-prism-gold)' },
-  { time: '12:00 PM - 12:30 PM', title: 'Round 1: Idea Scrutiny', desc: 'Mentors visit teams for a quick sanity check of your proposed solution architecture.', color: 'var(--color-ieee-blue-light)' },
-  { time: '12:30 PM - 01:00 PM', title: 'Round 1 Results', desc: 'Teams advancing to Round 2 announced.', color: 'var(--color-prism-cyan)' },
-  { time: '01:00 PM - 01:30 PM', title: 'Lunch Break', desc: 'Refuel and recharge.', color: 'rgba(255,255,255,0.4)' },
-  { time: '01:30 PM - 02:15 PM', title: 'The Spectrum Panel', desc: 'A 45-minute interactive panel with industry experts on the intersection of Hardware, Software, and Impact. Open to all participants.', color: 'var(--color-prism-violet)' },
-  { time: '03:00 PM - 03:45 PM', title: 'Round 2: Technical Review', desc: 'Deep dive into your codebase and hardware schematics with technical mentors.', color: 'var(--color-prism-gold)' },
-  { time: '03:45 PM - 04:00 PM', title: 'Round 2 Results', desc: 'Teams advancing to continue hacking.', color: 'var(--color-prism-cyan)' },
-  { time: '07:30 PM - 08:30 PM', title: 'Dinner & Networking', desc: 'Dinner served at the venue.', color: 'rgba(255,255,255,0.4)' },
-  { time: '09:00 PM - 10:00 PM', title: 'Round 3: Progress Check', desc: 'Late-night review of your MVP progress.', color: 'var(--color-prism-violet)' },
-  { time: '10:00 PM - 10:30 PM', title: 'Round 3 Results', desc: 'Top teams advance to the final sprint.', color: 'var(--color-prism-gold)' },
+const SCHEDULE = [
+  { time: '08:15', title: 'Check-in & Kit Distribution', desc: 'College ID verification; teams receive Prism Packs (badges, Wi-Fi codes, swag).', phase: 'Pre-Hackathon', day: 'Day 1' },
+  { time: '09:00', title: 'Opening Ceremony', desc: 'High-energy kickoff, IEEE society intros, and problem statement release.', phase: 'Pre-Hackathon', day: 'Day 1' },
+  { time: '10:00', title: 'Hacking Commences', desc: 'The 24-hour build clock starts. Round 1: Blueprint Phase begins.', phase: 'Round 1', day: 'Day 1' },
+  { time: '12:30', title: 'Round 1 Results', desc: 'Teams advancing to Round 2 announced, followed by networking lunch.', phase: 'Round 1', day: 'Day 1' },
+  { time: '15:00', title: 'Round 2: Technical Deep Dive', desc: 'Qualified teams present architecture and progress to a senior jury.', phase: 'Round 2', day: 'Day 1' },
+  { time: '23:00', title: 'Round 3', desc: 'Qualified teams present updated work to the jury.', phase: 'Round 3', day: 'Day 1' },
+  { time: '00:00', title: 'The Graveyard Shift', desc: 'Focus time with quiet zones active; coffee and tea served through 06:30.', phase: 'Overnight', day: 'Day 2' },
+  { time: '06:00', title: 'Round 4: Finalists Circle', desc: 'Final evaluation round to select teams for the grand pitch.', phase: 'Round 4', day: 'Day 2' },
+  { time: '09:00', title: 'Hacking Ends + Grand Pitch', desc: 'All code pushed to repositories; top teams present on the main stage.', phase: 'Finals', day: 'Day 2' },
+  { time: '10:15', title: 'Awards Ceremony', desc: 'Prizes for track winners, runners-up, and the PrismTech Overall Champion.', phase: 'Closing', day: 'Day 2' },
 ];
 
-const day2Schedule = [
-  { time: '00:00 AM - 06:00 AM', title: 'The Graveyard Shift', desc: 'Deep focus time. Midnight snacks and coffee served continuously.', color: 'var(--color-prism-violet)' },
-  { time: '06:00 AM - 07:10 AM', title: 'Round 4: Final Evaluation', desc: 'Jury evaluates the near-complete projects.', color: 'var(--color-prism-cyan)' },
-  { time: '07:10 AM - 07:30 AM', title: 'Finalists Announced', desc: 'The top 4 teams are selected for the Grand Pitch.', highlight: true, color: 'var(--color-prism-gold)' },
-  { time: '07:30 AM - 08:30 AM', title: 'Breakfast', desc: 'Morning fuel for the final stretch.', color: 'rgba(255,255,255,0.4)' },
-  { time: '09:00 AM', title: 'Code Freeze', desc: 'Hacking ends. No more commits or hardware modifications allowed.', color: 'var(--color-ieee-blue-light)' },
-  { time: '09:15 AM - 10:15 AM', title: 'The Grand Pitch', desc: 'The top 4 teams pitch their solutions live to the grand jury and audience.', color: 'var(--color-prism-violet)' },
-  { time: '10:15 AM - 10:45 AM', title: '🏆 Awards Ceremony', desc: 'Winners announced, prizes distributed, and closing remarks.', highlight: true, color: 'var(--color-prism-gold)' },
-  { time: '10:45 AM', title: 'Event Concludes', desc: 'See you next year!', color: 'rgba(255,255,255,0.4)' },
-];
+const PHASE_BADGE: Record<string, string> = {
+  'Pre-Hackathon': 'badge-blue',
+  'Round 1': 'badge-violet',
+  'Round 2': 'badge-gold',
+  'Round 3': 'badge-gold',
+  'Overnight': 'badge-neutral',
+  'Round 4': 'badge-cyan',
+  'Finals': 'badge-neutral',
+  'Closing': 'badge-gold',
+};
+
+// Group by day
+const day1 = SCHEDULE.filter(s => s.day === 'Day 1');
+const day2 = SCHEDULE.filter(s => s.day === 'Day 2');
+
+function ScheduleGroup({ items, title }: { items: typeof SCHEDULE; title: string }) {
+  return (
+    <div className="mb-10">
+      <div className="flex items-center gap-3 mb-5">
+        <span className="text-xs font-bold tracking-widest uppercase text-[var(--color-ieee-blue-light)]">{title}</span>
+        <div className="flex-1 h-px bg-white/[0.06]" />
+      </div>
+
+      <div className="relative">
+        {/* Vertical line */}
+        <div
+          className="absolute top-5 bottom-5"
+          style={{
+            left: '15px',
+            width: '1px',
+            background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.07) 10%, rgba(255,255,255,0.07) 90%, transparent)',
+          }}
+        />
+
+        <div className="space-y-3">
+          {items.map((item, i) => (
+            <div key={i} className="flex gap-5">
+              {/* Dot */}
+              <div className="flex flex-col items-center shrink-0 pt-[22px]">
+                <div
+                  className="w-[7px] h-[7px] rounded-full bg-[var(--color-ieee-blue-light)] relative z-10"
+                  style={{ boxShadow: '0 0 0 2px var(--color-surface-0)' }}
+                />
+              </div>
+
+              {/* Card */}
+              <div className="flex-1 glass-card p-4 sm:p-5">
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span className="font-mono text-sm font-bold text-white tabular-nums">{item.time}</span>
+                  <span className={`badge ${PHASE_BADGE[item.phase] || 'badge-neutral'}`}>{item.phase}</span>
+                </div>
+                <h2 className="font-semibold text-[var(--color-text-primary)] text-sm mb-1.5">{item.title}</h2>
+                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function SchedulePage() {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="pt-24 pb-20 bg-[var(--color-surface-0)] min-h-screen">
-        
+      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+
         {/* Page Hero */}
-        <div className="container relative z-10 pt-10 pb-16 border-b border-white/5">
-          <Badge variant="outline" className="mb-6">The Itinerary</Badge>
-          <h1 className="font-display font-bold text-5xl md:text-7xl text-white tracking-tight mb-6">
-            Event <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] to-[var(--color-prism-violet)] pb-2 px-1">Schedule</span>
-          </h1>
-          <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl">
-            A non-stop 24-hour journey from ideation to execution. Four rounds of intense scrutiny, expert panels, and the ultimate test of endurance.
-          </p>
-        </div>
+        <section className="pt-28 pb-12 border-b border-white/[0.05]">
+          <div className="container">
+            <span className="eyebrow">26–27 September 2026</span>
+            <h1
+              className="text-[var(--color-text-primary)] mt-2 mb-4"
+              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
+            >
+              Hackathon <span className="text-gradient-ieee">Schedule.</span>
+            </h1>
+            <p className="text-[var(--color-text-secondary)] text-base leading-relaxed max-w-xl">
+              From check-in to prize distribution. Every moment counts in a 24-hour sprint.
+            </p>
+          </div>
+        </section>
 
-        <div className="container py-16 space-y-24">
-          
-          {/* Day 1 Section */}
-          <section>
-            <div className="flex items-center gap-4 mb-12">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-prism-cyan)]/10 border border-[var(--color-prism-cyan)]/20 shadow-inner">
-                <span className="font-display font-bold text-[var(--color-prism-cyan)]">01</span>
-              </div>
-              <div>
-                <h2 className="font-display font-bold text-3xl text-white">Day 1: The Launch</h2>
-                <p className="text-[var(--color-text-secondary)] font-medium tracking-wide">September 26, 2026</p>
-              </div>
+        {/* Timeline */}
+        <div className="section">
+          <div className="container">
+            <div className="max-w-2xl">
+              <ScheduleGroup items={day1} title="Day 1 — September 26, 2026" />
+              <ScheduleGroup items={day2} title="Day 2 — September 27, 2026" />
             </div>
 
-            <div className="relative border-l border-white/5 ml-6 pl-8 space-y-10">
-              {day1Schedule.map((item, i) => (
-                <div key={i} className="relative group">
-                  {/* Timeline Dot */}
-                  <div 
-                    className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full border-2 bg-[var(--color-surface-0)] z-10 transition-colors"
-                    style={{ borderColor: item.color }}
-                  >
-                    {item.highlight && (
-                      <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ background: item.color }} />
-                    )}
-                  </div>
-
-                  <Card variant="glass" className={`hover:border-white/10 transition-colors ${item.highlight ? 'border-[var(--color-prism-gold)]/20' : ''}`}>
-                    <CardContent className="p-6 md:p-8">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                        <h3 className={`font-display font-semibold text-xl ${item.highlight ? 'text-white' : 'text-white/90'}`}>
-                          {item.title}
-                        </h3>
-                        <Badge variant="secondary" className="w-fit flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5" />
-                          {item.time}
-                        </Badge>
-                      </div>
-                      <p className="text-[var(--color-text-secondary)] leading-relaxed">
-                        {item.desc}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Day 2 Section */}
-          <section>
-            <div className="flex items-center gap-4 mb-12">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-prism-gold)]/10 border border-[var(--color-prism-gold)]/20 shadow-inner">
-                <span className="font-display font-bold text-[var(--color-prism-gold)]">02</span>
-              </div>
-              <div>
-                <h2 className="font-display font-bold text-3xl text-white">Day 2: The Finale</h2>
-                <p className="text-[var(--color-text-secondary)] font-medium tracking-wide">September 27, 2026</p>
+            {/* Note */}
+            <div className="max-w-2xl mt-4">
+              <div className="glass-card p-4 border-[var(--color-ieee-blue)]/20">
+                <p className="text-sm text-[var(--color-text-secondary)]">
+                  <strong className="text-[var(--color-text-primary)]">Note:</strong> The schedule is subject to minor adjustments. Final timings will be communicated to registered teams via email and WhatsApp closer to the event date.
+                </p>
               </div>
             </div>
-
-            <div className="relative border-l border-white/5 ml-6 pl-8 space-y-10">
-              {day2Schedule.map((item, i) => (
-                <div key={i} className="relative group">
-                  {/* Timeline Dot */}
-                  <div 
-                    className="absolute -left-[41px] top-1.5 w-4 h-4 rounded-full border-2 bg-[var(--color-surface-0)] z-10 transition-colors"
-                    style={{ borderColor: item.color }}
-                  >
-                    {item.highlight && (
-                      <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ background: item.color }} />
-                    )}
-                  </div>
-
-                  <Card variant="glass" className={`hover:border-white/10 transition-colors ${item.highlight ? 'border-[var(--color-prism-gold)]/20' : ''}`}>
-                    <CardContent className="p-6 md:p-8">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                        <h3 className={`font-display font-semibold text-xl ${item.highlight ? 'text-white' : 'text-white/90'}`}>
-                          {item.title}
-                        </h3>
-                        <Badge variant="secondary" className="w-fit flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5" />
-                          {item.time}
-                        </Badge>
-                      </div>
-                      <p className="text-[var(--color-text-secondary)] leading-relaxed">
-                        {item.desc}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          </section>
-
+          </div>
         </div>
       </main>
       <Footer />

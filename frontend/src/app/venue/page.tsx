@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { MapPin, Navigation, Car, Bus, Plane, Train } from 'lucide-react';
 import type { Metadata } from 'next';
+import SectionHeader from '@/components/ui/SectionHeader';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -17,25 +18,21 @@ const transportModes = [
     mode: 'By Air',
     icon: Plane,
     details: 'Rajiv Gandhi International Airport (HYD) is approximately 30-40 minutes away by cab. You can book an Airport Taxi or use Ola/Uber directly to the campus.',
-    color: 'var(--color-prism-cyan)',
   },
   {
     mode: 'By Train',
     icon: Train,
     details: 'Secunderabad Junction (SC) and Hyderabad Deccan (HYB) are the major railway stations. From there, take a cab (45-60 mins) or Metro to MGBS, followed by a bus/cab.',
-    color: 'var(--color-prism-violet)',
   },
   {
     mode: 'By Bus',
     icon: Bus,
     details: 'TSRTC buses ply towards Moinabad (e.g., 288 series from Mehdipatnam). Get down at the Aziz Nagar/VIF College stop. The campus is a short walk from the main road.',
-    color: 'var(--color-prism-gold)',
   },
   {
     mode: 'By Car / Cab',
     icon: Car,
     details: 'Search for "KL University Hyderabad" on Google Maps. The campus is located on Moinabad Road, near TS Police Academy. Ample parking space is available.',
-    color: 'var(--color-ieee-blue-light)',
   },
 ];
 
@@ -43,29 +40,40 @@ export default function VenuePage() {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="pt-24 pb-20 bg-[var(--color-surface-0)] min-h-screen">
+      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
         
-        {/* Page Hero */}
-        <div className="container relative z-10 pt-10 pb-16 border-b border-white/5">
-          <Badge variant="outline" className="mb-6">Location</Badge>
-          <h1 className="font-display font-bold text-5xl md:text-7xl text-white tracking-tight mb-6">
-            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-prism-cyan)] to-[var(--color-prism-violet)] pb-2 px-1">Venue</span>
-          </h1>
-          <p className="text-xl text-[var(--color-text-secondary)] max-w-3xl">
-            Join us at the state-of-the-art KL University (KLH) Hyderabad campus in Aziz Nagar. Equipped with modern labs, high-speed Wi-Fi, and 24/7 facilities.
-          </p>
-        </div>
+        {/* Hero */}
+        <section className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+            aria-hidden="true"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.08) 0%, transparent 70%)' }}
+          />
+          <div className="container relative z-10 text-center">
+            <span className="eyebrow justify-center">Location</span>
+            <h1
+              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-2xl mx-auto"
+              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
+            >
+              The <span className="text-gradient-ieee">Venue.</span>
+            </h1>
+            <p className="text-base text-[var(--color-text-secondary)] max-w-xl mx-auto leading-relaxed">
+              Join us at the state-of-the-art KL University (KLH) Hyderabad campus in Aziz Nagar. Equipped with modern labs, high-speed Wi-Fi, and 24/7 facilities.
+            </p>
+          </div>
+        </section>
 
-        <div className="container py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
-            
-            {/* Left: Map & Address (Sticky on Desktop) */}
-            <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
-              <Card variant="glass" className="overflow-hidden border-[var(--color-prism-cyan)]/20">
+        <div className="section">
+          <div className="container space-y-24">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+              
+              {/* Left: Map & Address (Sticky on Desktop) */}
+              <div className="lg:col-span-2 space-y-6 lg:sticky lg:top-32">
+                <div className="glass-card overflow-hidden">
                 {/* Actual Map Embed */}
                 <div className="h-64 w-full bg-[var(--color-surface-2)] relative border-b border-white/5">
                   <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3809.1171804791336!2d78.3305417!3d17.3486307!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcbbba81e7d23f7%3A0xdaebcc168ccfa497!2sK.L.%20Deemed%20to%20be%20University%2C%20Hyderabad%20Off-Campus!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                    src="https://maps.google.com/maps?q=KL+University+(KLH)+Hyderabad+%E2%80%93+Off+Campus,+R.V.S.+Nagar,+Moinabad+Road,+Aziz+Nagar,+Hyderabad+%E2%80%93+500075,+Telangana,+India&t=&z=13&ie=UTF8&iwloc=&output=embed"
                     width="100%" 
                     height="100%" 
                     style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(80%)' }} 
@@ -74,44 +82,40 @@ export default function VenuePage() {
                     referrerPolicy="no-referrer-when-downgrade"
                   />
                 </div>
-                <CardContent className="p-8">
-                  <h2 className="font-display font-bold text-2xl text-white mb-4">KL University (KLH)</h2>
-                  <p className="text-[var(--color-text-secondary)] leading-relaxed mb-8">
-                    R.V.S Nagar, Moinabad Road,<br />
-                    Near TS Police Academy,<br />
-                    Aziz Nagar, Hyderabad,<br />
-                    Telangana - 500075, India.
-                  </p>
-                  <Button variant="primary" className="w-full" asChild>
-                    <Link href="https://maps.google.com" target="_blank">
+                  <div className="p-8">
+                    <h2 className="font-display font-bold text-2xl text-[var(--color-text-primary)] mb-4">KL University (KLH) Hyderabad – Off Campus</h2>
+                    <p className="text-[var(--color-text-secondary)] leading-relaxed mb-8">
+                      R.V.S. Nagar, Moinabad Road,<br />
+                      Aziz Nagar, Hyderabad – 500075,<br />
+                      Telangana, India.
+                    </p>
+                    <Link href="https://maps.google.com" target="_blank" className="btn-magnetic btn-primary w-full text-center flex justify-center">
                       <Navigation className="w-4 h-4 mr-2" />
                       Open in Google Maps
                     </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+                  </div>
+                </div>
+              </div>
 
-            {/* Right: Transport Modes Bento Grid */}
-            <div className="lg:col-span-3">
-              <h2 className="font-display font-bold text-3xl text-white mb-8">Getting Here</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {transportModes.map((transport, idx) => (
-                  <Card key={idx} variant="glass" className="hover:border-white/10 transition-colors h-full">
-                    <CardContent className="p-8 flex flex-col h-full">
-                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-surface-1)] shadow-inner border border-white/5 mb-6">
-                        <transport.icon className="w-6 h-6" style={{ color: transport.color }} />
+              {/* Right: Transport Modes Bento Grid */}
+              <div className="lg:col-span-3">
+                <h2 className="font-display font-bold text-3xl text-[var(--color-text-primary)] mb-8">Getting Here</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {transportModes.map((transport, idx) => (
+                    <div key={idx} className="glass-card p-8 flex flex-col h-full hover:border-white/10 transition-colors">
+                      <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 mb-6">
+                        <transport.icon className="w-6 h-6 text-[var(--color-ieee-blue-light)]" />
                       </div>
-                      <h3 className="font-display font-semibold text-xl text-white mb-3">{transport.mode}</h3>
+                      <h3 className="font-display font-semibold text-xl text-[var(--color-text-primary)] mb-3">{transport.mode}</h3>
                       <p className="text-[var(--color-text-secondary)] leading-relaxed mt-auto">
                         {transport.details}
                       </p>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </main>

@@ -1,104 +1,98 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Minus } from 'lucide-react';
-import { Badge } from '@/components/ui/Badge';
+import { useRef, useState } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
+import SectionHeader from '@/components/ui/SectionHeader';
 
-const faqs = [
-  {
-    category: 'Eligibility',
-    q: 'Who can participate in PRISMTECH?',
-    a: 'PRISMTECH is open to all engineering students across colleges. You need to bring a valid college ID for verification at check-in on Day 1.',
-  },
-  {
-    category: 'Teams',
-    q: 'How many members can be in a team?',
-    a: 'Teams can have 2 to 4 members. You can register solo and find teammates through our Team Formation board on the platform.',
-  },
-  {
-    category: 'Tracks',
-    q: 'Can we switch tracks after registering?',
-    a: 'Track selection is made during registration. Switching tracks after confirmation is not possible, so choose carefully based on your team\'s strengths.',
-  },
-  {
-    category: 'Event Day',
-    q: 'When are problem statements released?',
-    a: 'Problem statements for all three tracks are released at the Opening Ceremony on September 26 at 9:00 AM. No statements will be shared beforehand.',
-  },
-  {
-    category: 'Facilities',
-    q: 'What hardware is provided for the Optic Stream?',
-    a: 'The Hardware Lab provides basic resistors, LEDs, Arduinos, and LDRs for the Photonics track. All teams also get at least 2 power sockets and high-speed dedicated Wi-Fi.',
-  },
-  {
-    category: 'Judging',
-    q: 'How are teams evaluated?',
-    a: 'Judging emphasizes fair innovation and evaluation. Criteria include creativity, technical execution, feasibility, and presentation quality. A senior jury conducts desk-side scrutiny in Round 1 and deeper technical reviews in subsequent rounds.',
-  }
+const FAQS = [
+  { q: 'Is there a registration fee?', a: 'Fee details will be announced soon. Scholarships or waivers may be available for eligible participants.' },
+  { q: 'Can I form a team after registering?', a: 'Yes, team details can be edited before the registration deadline of 21 September 2026.' },
+  { q: 'Are food and accommodation provided?', a: 'Meals, breaks, first-aid, and sick-room support are planned. Accommodation depends on availability and will be communicated to registered teams.' },
+  { q: 'What should participants bring?', a: 'Laptop, charger, institutional ID card, required software pre-installed, and backup internet access.' },
+  { q: 'Who is eligible to participate?', a: 'Students from recognized colleges and universities with a valid institutional ID. Both undergraduate and postgraduate students can participate.' },
+  { q: 'What is the refund policy?', a: 'Refund or cancellation terms will be published with the official rulebook before the registration deadline.' },
+  { q: 'What is the team size?', a: 'Teams must have 2 to 4 members. One member acts as the team leader who handles primary communications.' },
+  { q: 'Will there be mentors available during the hackathon?', a: 'Yes, experienced mentors from industry, academia, and IEEE will be available throughout the 24-hour sprint to provide technical and ideation support.' },
 ];
 
+function FAQItem({ q, a, isOpen, onClick }: { q: string; a: string; isOpen: boolean; onClick: () => void }) {
+  return (
+    <div
+      className={`border rounded-xl overflow-hidden transition-colors duration-200 cursor-pointer ${
+        isOpen
+          ? 'border-[var(--color-ieee-blue)]/30 bg-[var(--color-surface-3)]'
+          : 'border-white/[0.07] bg-[var(--color-surface-2)] hover:border-white/[0.12]'
+      }`}
+    >
+      <button
+        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+        onClick={onClick}
+        aria-expanded={isOpen}
+      >
+        <span className={`font-medium text-sm transition-colors leading-relaxed ${isOpen ? 'text-white' : 'text-[var(--color-text-secondary)]'}`}>
+          {q}
+        </span>
+        <motion.div
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+          className="shrink-0"
+        >
+          <ChevronDown
+            className={`transition-colors ${isOpen ? 'text-[var(--color-ieee-blue-light)]' : 'text-[var(--color-text-muted)]'}`}
+            style={{ width: '16px', height: '16px' }}
+          />
+        </motion.div>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <p className="px-5 pb-4 text-sm text-[var(--color-text-secondary)] leading-relaxed">
+              {a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function FAQSection() {
+  const ref = useRef(null);
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="section bg-[var(--color-surface-1)]">
-      <div className="container max-w-3xl">
-        <div className="flex flex-col items-center text-center mb-16">
-          <Badge variant="outline" className="mb-6">FAQ</Badge>
-          <h2 className="font-display font-bold text-4xl sm:text-5xl text-white tracking-tight mb-4">
-            Common Questions
-          </h2>
-        </div>
+    <section id="faq" className="section bg-[var(--color-surface-1)]" ref={ref} aria-labelledby="faq-heading">
+      <div className="container">
+        <div className="flex flex-col lg:flex-row gap-12">
 
-        <div className="space-y-4">
-          {faqs.map((faq, index) => {
-            const isOpen = openIndex === index;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group border border-white/5 bg-[var(--color-surface-2)] rounded-2xl overflow-hidden transition-colors hover:border-white/10"
-              >
-                <button
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full flex items-center justify-between p-6 text-left"
-                >
-                  <div className="flex items-center gap-4">
-                    <Badge variant="secondary" className="hidden sm:inline-flex shrink-0">
-                      {faq.category}
-                    </Badge>
-                    <span className={`font-medium text-lg transition-colors ${isOpen ? 'text-white' : 'text-white/80 group-hover:text-white'}`}>
-                      {faq.q}
-                    </span>
-                  </div>
-                  <div 
-                    className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center shrink-0 ml-4 transition-colors"
-                    style={{ background: isOpen ? 'var(--color-ieee-blue-light)' : 'transparent', borderColor: isOpen ? 'transparent' : '' }}
-                  >
-                    {isOpen ? <Minus className="w-4 h-4 text-white" /> : <Plus className="w-4 h-4 text-white/50 group-hover:text-white" />}
-                  </div>
-                </button>
-                <AnimatePresence initial={false}>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: 'easeInOut' }}
-                    >
-                      <div className="px-6 pb-6 pt-2 text-[var(--color-text-secondary)] leading-relaxed">
-                        {faq.a}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+          {/* Left: Header */}
+          <div className="lg:w-72 shrink-0">
+            <SectionHeader
+              eyebrow="FAQ"
+              title="Common participant questions."
+              description="Can't find what you're looking for? Reach out to our team directly."
+              align="left"
+            />
+          </div>
+
+          {/* Right: Accordion */}
+          <div className="flex-1 space-y-2">
+            {FAQS.map((faq, i) => (
+              <FAQItem
+                key={i}
+                q={faq.q}
+                a={faq.a}
+                isOpen={openIndex === i}
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
