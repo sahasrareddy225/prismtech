@@ -142,7 +142,7 @@ export default function Navbar() {
               </Link>
             )}
             <Link href="/auth/register" className="btn-magnetic btn-primary text-sm py-2 px-4">
-              Register Now
+              Register Your Team
             </Link>
             {username && (
               <div className="relative" ref={dropdownRef}>
@@ -317,7 +317,7 @@ export default function Navbar() {
                     Sign In
                   </Link>
                   <Link href="/auth/register" className="btn-magnetic btn-primary w-full justify-center text-sm">
-                    Register Now
+                    Register Your Team
                   </Link>
                 </div>
               </div>
