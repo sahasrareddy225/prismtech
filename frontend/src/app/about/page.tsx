@@ -5,52 +5,68 @@ import Footer from '@/components/layout/Footer';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import {
-  CheckCircle2, Award, BookOpen, Users, Lightbulb,
-  Brain, Shield, Cpu, HeartPulse, Leaf, Sparkles, Globe, Target, Clock
+  CheckCircle2,
+  Brain, Shield, Cpu, HeartPulse, Leaf, Sparkles, Globe, Target, Clock,
+  Zap, Users
 } from 'lucide-react';
 import Link from 'next/link';
+import HeroIllustration from '@/components/sections/HeroIllustration';
 
 const STATS = [
-  { value: '105', label: 'Expected Teams' },
-  { value: '75', label: 'Round 1 Qualified' },
-  { value: '45', label: 'Round 2 Qualified' },
-  { value: '4', label: 'Grand Pitch Teams' },
+  { value: '105', suffix: '+', label: 'Expected Teams',     sub: 'Registered participants' },
+  { value: '75',  suffix: '',  label: 'Round 1 Qualified',  sub: 'Blueprint phase teams'   },
+  { value: '45',  suffix: '',  label: 'Round 2 Qualified',  sub: 'Technical deep-dive'     },
+  { value: '4',   suffix: '',  label: 'Grand Pitch Teams',  sub: 'Main stage finalists'    },
+];
+
+const FEATURE_CARDS = [
+  {
+    icon: Zap,
+    title: 'Innovation',
+    desc: 'Pushing boundaries with cutting-edge technology and creative problem-solving across every domain.',
+  },
+  {
+    icon: Target,
+    title: 'Impact',
+    desc: 'Building solutions that create measurable, real-world change for communities and industries.',
+  },
+  {
+    icon: Users,
+    title: 'Collaboration',
+    desc: 'Uniting diverse minds — engineers, designers, and thinkers — to build something greater together.',
+  },
+  {
+    icon: Leaf,
+    title: 'Sustainability',
+    desc: 'Designing with the future in mind, ensuring technology serves both people and the planet.',
+  },
 ];
 
 const DOMAINS = [
-  { icon: Brain, label: 'AI / Machine Learning' },
-  { icon: Shield, label: 'Cybersecurity' },
-  { icon: Cpu, label: 'IoT & Smart Systems' },
-  { icon: HeartPulse, label: 'Healthcare Technology' },
-  { icon: Leaf, label: 'Sustainability & Green Tech' },
-  { icon: Globe, label: 'FinTech & EdTech' },
-  { icon: Target, label: 'Accessibility Solutions' },
-  { icon: Sparkles, label: 'Open Innovation' },
-];
-
-const BENEFITS = [
-  { icon: Award, title: 'Portfolio Projects', desc: 'Walk away with a credible prototype and hands-on experience that strengthens your resume and GitHub profile.' },
-  { icon: BookOpen, title: 'IEEE Certificates', desc: 'All eligible teams receive official IEEE participation certificates — a globally recognized credential.' },
-  { icon: Users, title: 'Expert Mentorship', desc: 'Real-time technical and ideation support from IEEE mentors, faculty, and industry professionals.' },
-  { icon: Lightbulb, title: 'Industry Interaction', desc: "Direct engagement with companies and organizations shaping India's technology landscape." },
+  { icon: Brain,     label: 'AI / Machine Learning',      sub: 'Models, inference & intelligent systems' },
+  { icon: Shield,    label: 'Cybersecurity',               sub: 'Threat detection, privacy & resilience'  },
+  { icon: Cpu,       label: 'IoT & Smart Systems',         sub: 'Embedded, edge & connected devices'      },
+  { icon: HeartPulse,label: 'Healthcare Technology',       sub: 'Diagnostics, wearables & digital health' },
+  { icon: Leaf,      label: 'Sustainability & Green Tech', sub: 'Clean energy, climate & eco-systems'     },
+  { icon: Globe,     label: 'FinTech & EdTech',            sub: 'Finance, learning & access platforms'    },
+  { icon: Target,    label: 'Accessibility Solutions',     sub: 'Inclusive design for every user'         },
+  { icon: Sparkles,  label: 'Open Innovation',             sub: 'Any domain, any bold idea'               },
 ];
 
 const STREAMS = [
-  { name: 'Optic Stream', sub: 'IEEE Photonics Society', desc: 'Hardware-focused challenges exploring light-based computing, sensors, and photonic systems.' },
-  { name: 'Neural Stream', sub: 'IEEE Computer Society', desc: 'Software and AI challenges — from machine learning systems to security and smart applications.' },
-  { name: 'Social Stream', sub: 'IEEE Women in Engineering (WIE)', desc: 'Impact-first challenges focused on education, accessibility, sustainability, and social equity.' },
+  { name: 'Optic Stream',  sub: 'IEEE Photonics Society',            desc: 'Hardware-focused challenges exploring light-based computing, sensors, and photonic systems.',                          accent: 'rgba(34,211,238,1)',   glow: 'rgba(34,211,238,0.15)',  tag: 'Hardware' },
+  { name: 'Neural Stream', sub: 'IEEE Computer Society',             desc: 'Software and AI challenges — from machine learning systems to security and smart applications.',                      accent: 'rgba(99,102,241,1)',   glow: 'rgba(99,102,241,0.15)',  tag: 'Software & AI' },
+  { name: 'Social Stream', sub: 'IEEE Women in Engineering (WIE)',   desc: 'Impact-first challenges focused on education, accessibility, sustainability, and social equity.',                    accent: 'rgba(52,211,153,1)',   glow: 'rgba(52,211,153,0.15)',  tag: 'Social Impact' },
 ];
 
 export default function AboutPage() {
   const heroRef = useRef(null);
-  const statsRef = useRef(null);
   const missionRef = useRef(null);
   const domainsRef = useRef(null);
   const streamsRef = useRef(null);
   const benefitsRef = useRef(null);
 
   const heroInView = useInView(heroRef, { once: true });
-  const statsInView = useInView(statsRef, { once: true, margin: '-40px' });
   const missionInView = useInView(missionRef, { once: true, margin: '-40px' });
   const domainsInView = useInView(domainsRef, { once: true, margin: '-40px' });
   const streamsInView = useInView(streamsRef, { once: true, margin: '-40px' });
@@ -59,181 +75,337 @@ export default function AboutPage() {
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+      <main id="main-content" className="min-h-screen" style={{ background: 'var(--color-surface-0)', position: 'relative' }}>
 
-        {/* Hero */}
-        <section ref={heroRef} className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.09) 0%, transparent 70%)' }}
-          />
-          <div className="container relative z-10 flex flex-col items-center text-center">
-            <motion.span
-              className="eyebrow justify-center"
-              initial={{ opacity: 0, y: 12 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4 }}
-            >
-              About PRISMTECH 2026
-            </motion.span>
+        {/* ── Single full-page background — covers every section ── */}
+        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
+          <div style={{ position: 'absolute', top: '10%', left: '30%', width: '700px', height: '700px', background: 'radial-gradient(ellipse at center, rgba(0,136,204,0.13) 0%, rgba(14,165,233,0.06) 35%, transparent 70%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />
+          <div style={{ position: 'absolute', top: '-5%', right: '-8%', width: '520px', height: '520px', background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.09) 0%, transparent 65%)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.06) 0%, transparent 50%, rgba(34,211,238,0.04) 100%)' }} />
+        </div>
 
-            <motion.h1
-              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-3xl"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, delay: 0.08 }}
-            >
-              A 24-hour IEEE hackathon for{' '}
-              <span className="text-gradient-prism">practical innovation.</span>
-            </motion.h1>
+        {/* ── Hero + Stats unified zone ── */}
+        <div ref={heroRef} className="relative" style={{ zIndex: 1 }}>
 
-            <motion.p
-              className="text-base text-[var(--color-text-secondary)] max-w-xl leading-relaxed mb-8"
-              initial={{ opacity: 0, y: 14 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.16 }}
-            >
-              Teams prototype solutions across AI, cybersecurity, sustainability, healthcare, smart infrastructure,
-              and human-centered education — with guidance from mentors, faculty, and industry experts.
-            </motion.p>
+          {/* Hero content */}
+          <div className="relative z-10 w-full mx-auto px-6 lg:px-16" style={{ maxWidth: '1280px', paddingTop: '40px', paddingLeft: '120px' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-            <motion.div
-              className="flex flex-col sm:flex-row gap-3 justify-center"
-              initial={{ opacity: 0, y: 12 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.45, delay: 0.24 }}
-            >
-              <Link href="/auth/register" className="btn-magnetic btn-primary text-sm">
-                Register Your Team
-              </Link>
-              <Link href="/tracks" className="btn-magnetic btn-secondary text-sm">
-                Explore Domains
-              </Link>
-            </motion.div>
+              {/* ── LEFT COLUMN ── */}
+              <div>
+                <motion.div
+                  className="flex items-center gap-2 mb-8"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.4 }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse-dot" />
+                  <span className="text-[11px] font-bold tracking-[0.25em] uppercase text-cyan-400/80">
+                    About IEEE PRISMTECH
+                  </span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse-dot" />
+                </motion.div>
+
+                <motion.h1
+                  className="mb-7"
+                  style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05, fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.55, delay: 0.08 }}
+                >
+                  <span className="block text-white">Building Technology.</span>
+                  <span className="block text-gradient-prism">Creating Impact.</span>
+                </motion.h1>
+
+                <motion.p
+                  className="text-[15.5px] text-[var(--color-text-secondary)] leading-[1.8] mb-10"
+                  style={{ maxWidth: '500px' }}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 0.18 }}
+                >
+                  A 24-hour IEEE hackathon where student teams prototype solutions across AI, cybersecurity,
+                  sustainability, healthcare, and smart infrastructure — guided by mentors and industry experts.
+                </motion.p>
+
+                <motion.div
+                  className="flex flex-col sm:flex-row gap-4"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.45, delay: 0.28 }}
+                >
+                  <Link href="/auth/register" className="btn-magnetic btn-primary text-sm px-8 py-3">
+                    Register Your Team
+                  </Link>
+                  <Link href="/tracks" className="btn-magnetic btn-secondary text-sm px-8 py-3">
+                    Explore Domains
+                  </Link>
+                </motion.div>
+              </div>
+
+              {/* ── RIGHT COLUMN — Premium Hero Illustration ── */}
+              <div className="hidden lg:flex items-center justify-center">
+                <HeroIllustration inView={heroInView} />
+              </div>
+
+            </div>
           </div>
-        </section>
 
-        {/* Stats */}
-        <section ref={statsRef} className="py-10 bg-[var(--color-surface-1)] border-b border-white/[0.05]" aria-label="Key facts">
-          <div className="container">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Stats cards — same background zone, no gap */}
+          <div className="relative z-10 w-full mx-auto px-6 lg:px-16" style={{ maxWidth: '1280px', paddingTop: '56px', paddingBottom: '72px', paddingLeft: '120px' }}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
               {STATS.map((s, i) => (
                 <motion.div
                   key={s.label}
-                  className="stat-card text-center"
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: i * 0.07 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.45, delay: 0.38 + i * 0.09 }}
+                  whileHover={{ y: -3, boxShadow: '0 0 32px rgba(0,136,204,0.18), 0 8px 24px rgba(0,0,0,0.35)' }}
+                  style={{
+                    borderRadius: '16px',
+                    background: 'linear-gradient(160deg, rgba(14,165,233,0.08) 0%, rgba(8,16,32,0.6) 100%)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    backdropFilter: 'blur(20px)',
+                    padding: '24px 24px 20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 0,
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                  }}
                 >
-                  <div
-                    className="font-bold text-white font-display mb-1.5"
-                    style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', letterSpacing: '-0.03em', lineHeight: 1 }}
-                  >
-                    {s.value}
+                  {/* Top cyan accent bar */}
+                  <div style={{
+                    position: 'absolute', top: 0, left: '24px', right: '24px', height: '2px',
+                    background: 'linear-gradient(90deg, rgba(34,211,238,0.7), rgba(59,130,246,0.4), transparent)',
+                    borderRadius: '0 0 2px 2px',
+                  }} />
+
+                  {/* Value */}
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px', marginBottom: '8px' }}>
+                    <span style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 'clamp(2.25rem, 3.5vw, 3rem)',
+                      fontWeight: 800,
+                      letterSpacing: '-0.05em',
+                      lineHeight: 1,
+                      color: '#ffffff',
+                    }}>
+                      {s.value}
+                    </span>
+                    {s.suffix && (
+                      <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 700, color: 'rgba(34,211,238,0.8)', letterSpacing: '-0.02em' }}>
+                        {s.suffix}
+                      </span>
+                    )}
                   </div>
-                  <div className="text-xs text-[var(--color-text-secondary)] uppercase tracking-widest font-medium">{s.label}</div>
+
+                  {/* Label */}
+                  <span style={{
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'rgba(241,245,249,0.85)',
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.3,
+                    marginBottom: '6px',
+                  }}>
+                    {s.label}
+                  </span>
+
+                  {/* Sub-label */}
+                  <span style={{
+                    fontSize: '11px',
+                    fontWeight: 500,
+                    color: 'rgba(139,158,192,0.7)',
+                    letterSpacing: '0.01em',
+                  }}>
+                    {s.sub}
+                  </span>
+
+                  {/* Bottom divider line */}
+                  <div style={{
+                    marginTop: '16px',
+                    height: '1px',
+                    background: 'linear-gradient(90deg, rgba(34,211,238,0.15), rgba(59,130,246,0.08), transparent)',
+                  }} />
                 </motion.div>
               ))}
             </div>
           </div>
-        </section>
+
+          {/* Smooth fade into next section */}
+        </div>
+        {/* ── end hero+stats zone ── */}
 
         {/* Mission */}
-        <section ref={missionRef} className="section" aria-labelledby="mission-heading">
+        <section ref={missionRef} className="section" aria-labelledby="mission-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '32px', paddingBottom: '48px' }}>
           <div className="container">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+
+            {/* Section header */}
+            <div className="text-center mb-20">
+              <motion.div
+                className="inline-flex items-center gap-2 mb-5"
+                initial={{ opacity: 0, y: 10 }}
+                animate={missionInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4 }}
+              >
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+                <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Our Mission</span>
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              </motion.div>
+              <motion.h2
+                id="mission-heading"
+                className="text-[var(--color-text-primary)] mb-5"
+                style={{ fontSize: 'clamp(1.875rem, 4vw, 2.75rem)', fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={missionInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.08 }}
+              >
+                Why We Do It
+              </motion.h2>
+              <motion.p
+                style={{ fontSize: '15px', lineHeight: 1.8, maxWidth: '560px', margin: '0 auto', color: 'var(--color-text-secondary)' }}
+                initial={{ opacity: 0, y: 12 }}
+                animate={missionInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.16 }}
+              >
+                PRISMTECH bridges the gap between classroom learning and real-world impact — giving students a
+                structured, mentor-guided environment to build, validate, and present technology solutions.
+              </motion.p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start" style={{ paddingTop: '32px' }}>
+
+              {/* Left — about + eligibility */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={missionInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6 }}
               >
-                <span className="eyebrow">Our Mission</span>
-                <h2
-                  id="mission-heading"
-                  className="text-[var(--color-text-primary)] mt-2 mb-4"
-                  style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.15 }}
-                >
-                  Transform ideas into{' '}
-                  <span className="text-gradient-ieee">credible prototypes.</span>
-                </h2>
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4">
-                  PRISMTECH's objective is to help students transform raw ideas into credible prototypes with
-                  social, technical, and entrepreneurial value. Participants work through a structured 4-round
-                  evaluation process supported by dedicated mentors and faculty advisors.
-                </p>
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6">
-                  Organized by the IEEE KLH Student Branch (Aziz Nagar campus), PRISMTECH brings together the
-                  Optic Stream (Photonics), Neural Stream (Computer Society), and Social Stream (WIE) to create
-                  a truly multidisciplinary experience.
-                </p>
-                <ul className="space-y-2.5">
-                  {[
-                    'Open to UG and PG students from any recognized institution',
-                    'Teams of 2–4 members with one designated leader',
-                    'Hybrid-ready format with in-person event at KLH Hyderabad',
-                    '4-round evaluation by industry and IEEE expert jury',
-                  ].map((item, i) => (
-                    <motion.li
-                      key={i}
-                      className="flex items-start gap-3 text-sm text-[var(--color-text-secondary)]"
-                      initial={{ opacity: 0, x: -12 }}
-                      animate={missionInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ duration: 0.35, delay: 0.25 + i * 0.06 }}
-                    >
-                      <CheckCircle2 className="text-[var(--color-ieee-blue-light)] shrink-0 mt-0.5" style={{ width: '15px', height: '15px' }} />
-                      <span>{item}</span>
-                    </motion.li>
-                  ))}
-                </ul>
+                {/* About block */}
+                <div style={{
+                  borderRadius: '14px',
+                  background: 'rgba(26,34,53,0.55)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  padding: '24px 28px',
+                  marginBottom: '16px',
+                }}>
+                  <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', lineHeight: 1.85, margin: 0 }}>
+                    Organized by the <span style={{ color: 'var(--color-text-primary)', fontWeight: 600 }}>IEEE KLH Student Branch</span> (Aziz Nagar campus),
+                    PRISMTECH unites the Optic Stream (Photonics), Neural Stream (Computer Society), and Social
+                    Stream (WIE) into a single 24-hour multidisciplinary hackathon — evaluated across four
+                    structured rounds by industry and IEEE expert juries.
+                  </p>
+                </div>
+
+                {/* Eligibility list */}
+                <div style={{
+                  borderRadius: '14px',
+                  background: 'rgba(26,34,53,0.55)',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  padding: '20px 28px',
+                }}>
+                  <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.7)', marginBottom: '14px' }}>Eligibility &amp; Format</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {[
+                      'Open to UG and PG students from any recognized institution',
+                      'Teams of 2–4 members with one designated leader',
+                      'Hybrid-ready — in-person event at KLH Hyderabad',
+                      '4-round evaluation by industry and IEEE expert jury',
+                    ].map((item, i) => (
+                      <motion.li
+                        key={i}
+                        style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={missionInView ? { opacity: 1, x: 0 } : {}}
+                        transition={{ duration: 0.3, delay: 0.3 + i * 0.06 }}
+                      >
+                        <CheckCircle2 style={{ width: '14px', height: '14px', color: 'var(--color-ieee-blue-light)', flexShrink: 0, marginTop: '2px' }} />
+                        <span style={{ fontSize: '13.5px', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>{item}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
               </motion.div>
 
-              {/* Format timeline */}
+              {/* Right — evaluation timeline */}
               <motion.div
-                className="space-y-3"
                 initial={{ opacity: 0, x: 20 }}
                 animate={missionInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.15 }}
               >
-                {[
-                  { round: 'Round 1', name: 'Blueprint Phase', desc: 'Teams present their problem approach, research, and initial architecture.', time: '10:00 – 12:30', day: 'Day 1' },
-                  { round: 'Round 2', name: 'Technical Deep Dive', desc: 'Qualified teams showcase architecture progress to a senior technical jury.', time: '15:00', day: 'Day 1' },
-                  { round: 'Round 3', name: 'Progress Evaluation', desc: 'Teams present updated, working features to the jury.', time: '23:00', day: 'Day 1' },
-                  { round: 'Round 4', name: 'Finalists Circle', desc: 'Final round to select teams for the grand main-stage pitch.', time: '06:00', day: 'Day 2' },
-                  { round: 'Grand Finale', name: 'Main Stage Pitch', desc: 'Top teams present to the full jury and audience on the main stage.', time: '09:00', day: 'Day 2' },
-                ].map((r, i) => (
-                  <div key={i} className="glass-card p-4 flex gap-4">
-                    <div className="w-0.5 rounded-full bg-[var(--color-ieee-blue)] shrink-0" />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-bold text-[var(--color-ieee-blue-light)]">{r.round}</span>
-                        <span className="text-[10px] text-[var(--color-text-muted)] flex items-center gap-1">
-                          <Clock style={{ width: '10px', height: '10px' }} />
-                          {r.day} · {r.time}
-                        </span>
+                <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.7)', marginBottom: '16px' }}>Evaluation Schedule</p>
+                <div style={{ position: 'relative' }}>
+                  {/* Vertical connector line */}
+                  <div style={{ position: 'absolute', left: '15px', top: '24px', bottom: '24px', width: '1px', background: 'linear-gradient(to bottom, rgba(0,136,204,0.5), rgba(0,136,204,0.15))' }} />
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {[
+                      { round: 'R1', name: 'Blueprint Phase',    desc: 'Problem approach, research, and initial architecture.', time: '10:00 – 12:30', day: 'Day 1', finale: false },
+                      { round: 'R2', name: 'Technical Deep Dive', desc: 'Architecture progress reviewed by senior technical jury.', time: '15:00',         day: 'Day 1', finale: false },
+                      { round: 'R3', name: 'Progress Evaluation', desc: 'Updated, working features presented to the jury.',       time: '23:00',         day: 'Day 1', finale: false },
+                      { round: 'R4', name: 'Finalists Circle',    desc: 'Selection of teams for the grand main-stage pitch.',    time: '06:00',         day: 'Day 2', finale: false },
+                      { round: '★',  name: 'Grand Finale',        desc: 'Top teams pitch live to the full jury and audience.',   time: '09:00',         day: 'Day 2', finale: true  },
+                    ].map((r, i) => (
+                      <div key={i} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '14px 16px 14px 0' }}>
+                        {/* Node */}
+                        <div style={{
+                          width: '30px', height: '30px', borderRadius: '50%', flexShrink: 0,
+                          background: r.finale ? 'rgba(34,211,238,0.15)' : 'rgba(0,136,204,0.12)',
+                          border: r.finale ? '1.5px solid rgba(34,211,238,0.6)' : '1px solid rgba(0,136,204,0.35)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontSize: r.finale ? '13px' : '10px',
+                          fontWeight: 700,
+                          color: r.finale ? 'rgba(34,211,238,0.95)' : 'rgba(0,136,204,0.9)',
+                          fontFamily: 'var(--font-display)',
+                          boxShadow: r.finale ? '0 0 12px rgba(34,211,238,0.2)' : 'none',
+                          zIndex: 1,
+                        }}>
+                          {r.round}
+                        </div>
+                        {/* Content */}
+                        <div style={{ flex: 1, paddingTop: '3px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '3px', flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: '13px', fontWeight: 700, color: r.finale ? 'rgba(241,245,249,0.95)' : 'var(--color-text-primary)', fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>{r.name}</span>
+                            <span style={{ fontSize: '10px', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '3px' }}>
+                              <Clock style={{ width: '9px', height: '9px' }} />
+                              {r.day} · {r.time}
+                            </span>
+                          </div>
+                          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', lineHeight: 1.6, margin: 0 }}>{r.desc}</p>
+                        </div>
                       </div>
-                      <div className="font-semibold text-sm text-[var(--color-text-primary)]">{r.name}</div>
-                      <div className="text-xs text-[var(--color-text-secondary)] mt-0.5 leading-relaxed">{r.desc}</div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </motion.div>
+
             </div>
           </div>
         </section>
 
         {/* Domains */}
-        <section ref={domainsRef} className="section bg-[var(--color-surface-1)]" aria-labelledby="domains-heading">
+        <section ref={domainsRef} className="section" aria-labelledby="domains-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
           <div className="container">
-            <div className="text-center mb-10">
-              <motion.span className="eyebrow justify-center" initial={{ opacity: 0, y: 12 }} animate={domainsInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
-                Problem Domains
-              </motion.span>
+
+            {/* Header */}
+            <div className="text-center mb-12">
+              <motion.div
+                className="inline-flex items-center gap-2 mb-4"
+                initial={{ opacity: 0, y: 10 }}
+                animate={domainsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4 }}
+              >
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+                <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Problem Domains</span>
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              </motion.div>
               <motion.h2
                 id="domains-heading"
-                className="text-[var(--color-text-primary)] mt-2"
-                style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.15 }}
+                className="text-[var(--color-text-primary)]"
+                style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={domainsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.08 }}
@@ -242,116 +414,299 @@ export default function AboutPage() {
               </motion.h2>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {/* Domain cards grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" style={{ marginTop: '28px' }}>
               {DOMAINS.map((d, i) => (
                 <motion.div
                   key={d.label}
-                  className="glass-card p-4 flex flex-col items-center text-center gap-3"
-                  initial={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, y: 18 }}
                   animate={domainsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.35, delay: i * 0.05 }}
+                  transition={{ duration: 0.38, delay: i * 0.055 }}
+                  whileHover={{ y: -3, boxShadow: '0 0 28px rgba(0,136,204,0.18), 0 8px 24px rgba(0,0,0,0.3)' }}
+                  style={{
+                    borderRadius: '14px',
+                    background: 'linear-gradient(145deg, rgba(14,165,233,0.07) 0%, rgba(8,16,32,0.55) 100%)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    backdropFilter: 'blur(16px)',
+                    padding: '20px 20px 18px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                    cursor: 'default',
+                  }}
                 >
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[var(--color-surface-3)] border border-white/08">
-                    <d.icon className="text-[var(--color-ieee-blue-light)]" style={{ width: '17px', height: '17px' }} />
+                  {/* Left accent bar */}
+                  <div style={{
+                    position: 'absolute', top: '18px', left: 0, width: '3px', height: '32px',
+                    background: 'linear-gradient(to bottom, rgba(34,211,238,0.75), rgba(59,130,246,0.35))',
+                    borderRadius: '0 2px 2px 0',
+                  }} />
+
+                  {/* Icon + index row */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <div style={{
+                      width: '38px', height: '38px', borderRadius: '10px',
+                      background: 'rgba(0,136,204,0.12)',
+                      border: '1px solid rgba(0,136,204,0.22)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <d.icon style={{ width: '17px', height: '17px', color: 'rgba(34,211,238,0.9)' }} />
+                    </div>
+                    <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(34,211,238,0.3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>
+                      0{i + 1}
+                    </span>
                   </div>
-                  <span className="text-sm font-medium text-[var(--color-text-secondary)] leading-snug">{d.label}</span>
+
+                  {/* Text */}
+                  <div>
+                    <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-display)', letterSpacing: '-0.01em', marginBottom: '4px' }}>
+                      {d.label}
+                    </div>
+                    <div style={{ fontSize: '11.5px', color: 'rgba(139,158,192,0.75)', lineHeight: 1.5 }}>
+                      {d.sub}
+                    </div>
+                  </div>
+
+                  {/* Bottom shimmer line */}
+                  <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(34,211,238,0.12), rgba(59,130,246,0.06), transparent)', marginTop: 'auto' }} />
                 </motion.div>
               ))}
             </div>
-            <div className="text-center mt-8">
-              <Link href="/tracks" className="btn-magnetic btn-secondary text-sm">
+
+            {/* CTA */}
+            <motion.div
+              className="flex justify-center"
+              style={{ marginTop: '72px' }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={domainsInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.5 }}
+            >
+              <Link
+                href="/tracks"
+                className="btn-magnetic btn-secondary"
+                style={{
+                  fontSize: '0.9375rem',
+                  padding: '14px 40px',
+                  borderRadius: '14px',
+                  border: '1px solid rgba(34,211,238,0.25)',
+                  boxShadow: '0 0 24px rgba(34,211,238,0.08)',
+                  transition: 'all 0.25s ease',
+                }}
+              >
                 View Full Problem Statements
               </Link>
-            </div>
+            </motion.div>
+
           </div>
         </section>
 
         {/* Streams */}
-        <section ref={streamsRef} className="section" aria-labelledby="streams-heading">
+        <section ref={streamsRef} className="section" aria-labelledby="streams-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
           <div className="container">
-            <div className="text-center mb-10">
-              <motion.span className="eyebrow justify-center" initial={{ opacity: 0, y: 12 }} animate={streamsInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
-                Event Streams
-              </motion.span>
+
+            {/* Header */}
+            <div className="text-center mb-12">
+              <motion.div
+                className="inline-flex items-center gap-2 mb-4"
+                initial={{ opacity: 0, y: 10 }}
+                animate={streamsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4 }}
+              >
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+                <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Event Streams</span>
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              </motion.div>
               <motion.h2
                 id="streams-heading"
-                className="text-[var(--color-text-primary)] mt-2"
-                style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.15 }}
+                className="text-[var(--color-text-primary)]"
+                style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={streamsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: 0.08 }}
               >
-                Three streams,{' '}
-                <span className="text-gradient-ieee">one mission.</span>
+                Three streams, <span className="text-gradient-ieee">one mission.</span>
               </motion.h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            {/* Stream cards */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5" style={{ marginTop: '28px' }}>
               {STREAMS.map((s, i) => (
                 <motion.div
                   key={s.name}
-                  className="glass-card p-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={streamsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.4, delay: i * 0.08 }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  whileHover={{ y: -4, boxShadow: `0 0 32px ${s.glow}, 0 8px 32px rgba(0,0,0,0.35)` }}
+                  style={{
+                    borderRadius: '16px',
+                    background: 'linear-gradient(145deg, rgba(14,20,36,0.8) 0%, rgba(8,16,32,0.6) 100%)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    backdropFilter: 'blur(20px)',
+                    padding: '28px 28px 24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '16px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                    cursor: 'default',
+                  }}
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-ieee-blue-light)] mb-4" />
-                  <h3 className="font-bold text-[var(--color-text-primary)] text-base mb-1">{s.name}</h3>
-                  <div className="text-xs font-semibold mb-3 text-[var(--color-ieee-blue-light)]">{s.sub}</div>
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{s.desc}</p>
+                  {/* Top accent bar */}
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+                    background: `linear-gradient(90deg, ${s.accent}, transparent)`,
+                  }} />
+
+                  {/* Tag */}
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', alignSelf: 'flex-start',
+                    padding: '3px 10px', borderRadius: '999px',
+                    background: `${s.glow}`,
+                    border: `1px solid ${s.accent}30`,
+                    fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em',
+                    textTransform: 'uppercase', color: s.accent,
+                  }}>
+                    {s.tag}
+                  </div>
+
+                  {/* Name + society */}
+                  <div>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.125rem', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', marginBottom: '4px' }}>
+                      {s.name}
+                    </h3>
+                    <div style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: s.accent, opacity: 0.8 }}>
+                      {s.sub}
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
+
+                  {/* Description */}
+                  <p style={{ fontSize: '13.5px', color: 'var(--color-text-secondary)', lineHeight: 1.75, margin: 0 }}>
+                    {s.desc}
+                  </p>
                 </motion.div>
               ))}
             </div>
+
           </div>
         </section>
 
-        {/* Benefits */}
-        <section ref={benefitsRef} className="section bg-[var(--color-surface-1)]" aria-labelledby="benefits-heading">
+        {/* Feature Cards */}
+        <section ref={benefitsRef} className="section" aria-labelledby="features-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
           <div className="container">
-            <div className="flex flex-col lg:flex-row gap-12 items-start">
-              <div className="lg:w-72 shrink-0">
-                <motion.span className="eyebrow" initial={{ opacity: 0, y: 12 }} animate={benefitsInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
-                  Participant Benefits
-                </motion.span>
-                <motion.h2
-                  id="benefits-heading"
-                  className="text-[var(--color-text-primary)] mt-2 mb-4"
-                  style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.15 }}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={benefitsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.08 }}
-                >
-                  More than just a hackathon.
-                </motion.h2>
-                <motion.p
-                  className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6"
-                  initial={{ opacity: 0 }}
-                  animate={benefitsInView ? { opacity: 1 } : {}}
-                  transition={{ duration: 0.45, delay: 0.16 }}
-                >
-                  PRISMTECH is a launchpad for student careers. Walk away with projects, connections, and credentials that last a lifetime.
-                </motion.p>
-                <Link href="/auth/register" className="btn-magnetic btn-primary text-sm">
-                  Register Today
-                </Link>
-              </div>
-              <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {BENEFITS.map((b, i) => (
-                  <motion.div
-                    key={b.title}
-                    className="glass-card p-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={benefitsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.08 + i * 0.07 }}
-                  >
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center mb-4 bg-[var(--color-surface-3)] border border-white/08">
-                      <b.icon className="text-[var(--color-ieee-blue-light)]" style={{ width: '17px', height: '17px' }} />
-                    </div>
-                    <h3 className="font-bold text-sm text-[var(--color-text-primary)] mb-2">{b.title}</h3>
-                    <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{b.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
+
+            {/* Header */}
+            <div className="text-center mb-12">
+              <motion.div
+                className="inline-flex items-center gap-2 mb-4"
+                initial={{ opacity: 0, y: 10 }}
+                animate={benefitsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.4 }}
+              >
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+                <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>What Drives Us</span>
+                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              </motion.div>
+              <motion.h2
+                id="features-heading"
+                className="text-[var(--color-text-primary)]"
+                style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={benefitsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.5, delay: 0.08 }}
+              >
+                More than just <span className="text-gradient-ieee">a hackathon.</span>
+              </motion.h2>
             </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" style={{ marginTop: '32px' }}>
+              {FEATURE_CARDS.map((card, i) => (
+                <motion.div
+                  key={card.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={benefitsInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.4, delay: 0.08 + i * 0.08 }}
+                  whileHover={{ y: -4, boxShadow: '0 0 32px rgba(0,136,204,0.2), 0 8px 32px rgba(0,0,0,0.35)', borderColor: 'rgba(34,211,238,0.2)' }}
+                  style={{
+                    borderRadius: '16px',
+                    background: 'linear-gradient(145deg, rgba(14,165,233,0.07) 0%, rgba(8,16,32,0.6) 100%)',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    backdropFilter: 'blur(20px)',
+                    padding: '28px 24px 24px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '14px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    transition: 'box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease',
+                    cursor: 'default',
+                  }}
+                >
+                  {/* Top accent bar */}
+                  <div style={{
+                    position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+                    background: 'linear-gradient(90deg, rgba(34,211,238,0.6), rgba(59,130,246,0.3), transparent)',
+                  }} />
+
+                  {/* Icon */}
+                  <div style={{
+                    width: '44px', height: '44px', borderRadius: '12px',
+                    background: 'rgba(0,136,204,0.12)',
+                    border: '1px solid rgba(0,136,204,0.22)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 0 16px rgba(0,136,204,0.12)',
+                  }}>
+                    <card.icon style={{ width: '20px', height: '20px', color: 'rgba(34,211,238,0.9)' }} />
+                  </div>
+
+                  {/* Divider */}
+                  <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)' }} />
+
+                  {/* Title */}
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.0625rem', color: 'var(--color-text-primary)', letterSpacing: '-0.02em' }}>
+                    {card.title}
+                  </div>
+
+                  {/* Description */}
+                  <p style={{ fontSize: '13.5px', color: 'var(--color-text-secondary)', lineHeight: 1.75, margin: 0 }}>
+                    {card.desc}
+                  </p>
+
+                  {/* Bottom shimmer */}
+                  <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(34,211,238,0.1), rgba(59,130,246,0.05), transparent)', marginTop: 'auto' }} />
+                </motion.div>
+              ))}
+            </div>
+
+            {/* CTA */}
+            <motion.div
+              className="flex justify-center"
+              style={{ marginTop: '72px' }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={benefitsInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.5 }}
+            >
+              <Link
+                href="/auth/register"
+                className="btn-magnetic btn-primary"
+                style={{
+                  fontSize: '0.9375rem',
+                  padding: '14px 40px',
+                  borderRadius: '14px',
+                  boxShadow: '0 0 24px rgba(0,136,204,0.25)',
+                  transition: 'all 0.25s ease',
+                }}
+              >
+                Register Today
+              </Link>
+            </motion.div>
+
           </div>
         </section>
 

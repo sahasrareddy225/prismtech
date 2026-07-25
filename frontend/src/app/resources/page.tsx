@@ -4,8 +4,10 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Download, ExternalLink, Link2, FileText, CheckCircle2, ChevronRight, BookOpen, Presentation, AlertCircle, FileImage, ShieldCheck, Code2, Play, Lock, Info } from 'lucide-react';
-import SectionHeader from '@/components/ui/SectionHeader';
+import {
+  Download, ExternalLink, FileText, CheckCircle2,
+  BookOpen, ShieldCheck, FileImage, Code2, Play, Lock, Info, ArrowUpRight,
+} from 'lucide-react';
 import Link from 'next/link';
 
 const DOWNLOADS = [
@@ -13,41 +15,29 @@ const DOWNLOADS = [
     title: 'Official Rulebook',
     desc: 'Complete guidelines, eligibility criteria, code of conduct, and participation rules for PRISMTECH 2026.',
     icon: ShieldCheck,
-    color: 'var(--color-prism-cyan)',
-    href: '/downloads/rulebook.pdf',
-    size: 'PDF • ~2.5 MB',
-    available: false,
-    badge: 'Coming Soon',
+    accent: 'rgba(34,211,238,1)',   glow: 'rgba(34,211,238,0.12)',
+    size: 'PDF • ~2.5 MB', available: false, badge: 'Coming Soon',
   },
   {
     title: 'Problem Statements',
     desc: 'Detailed breakdown of all problem domains. Released officially at the opening ceremony on September 26.',
     icon: BookOpen,
-    color: '#a78bfa',
-    href: '/downloads/problem-statements.pdf',
-    size: 'PDF • ~4 MB',
-    available: false,
-    badge: 'Released at Opening',
+    accent: 'rgba(99,102,241,1)',   glow: 'rgba(99,102,241,0.12)',
+    size: 'PDF • ~4 MB',   available: false, badge: 'Released at Opening',
   },
   {
     title: 'Judging Rubric',
     desc: 'Scoring sheet and evaluation criteria used by judges across all six dimensions.',
     icon: FileText,
-    color: 'var(--color-prism-gold)',
-    href: '/downloads/judging-rubric.pdf',
-    size: 'PDF • ~1 MB',
-    available: false,
-    badge: 'Coming Soon',
+    accent: 'rgba(245,158,11,1)',   glow: 'rgba(245,158,11,0.12)',
+    size: 'PDF • ~1 MB',   available: false, badge: 'Coming Soon',
   },
   {
     title: 'Registration Guide',
     desc: 'Step-by-step walkthrough for team registration, profile setup, and dashboard access.',
     icon: FileImage,
-    color: 'var(--color-prism-green)',
-    href: '/downloads/registration-guide.pdf',
-    size: 'PDF • ~1.2 MB',
-    available: false,
-    badge: 'Coming Soon',
+    accent: 'rgba(52,211,153,1)',   glow: 'rgba(52,211,153,0.12)',
+    size: 'PDF • ~1.2 MB', available: false, badge: 'Coming Soon',
   },
 ];
 
@@ -56,239 +46,229 @@ const LINKS = [
     title: 'GitHub Organization',
     desc: 'Submit your project repository here. Official submission guidelines will be shared closer to the event.',
     icon: Code2,
-    color: 'var(--color-ieee-blue-light)',
-    href: '#',
-    label: 'github.com/prismtech2026',
+    accent: 'rgba(34,211,238,1)', glow: 'rgba(34,211,238,0.1)',
+    label: 'github.com/prismtech2026', href: '#',
   },
   {
     title: 'Sponsor API Documentation',
     desc: 'Documentation for datasets and APIs provided by our technology partners. Access details shared with registered teams.',
     icon: ExternalLink,
-    color: 'var(--color-prism-rose)',
-    href: '#',
-    label: 'Available after registration',
+    accent: 'rgba(251,113,133,1)', glow: 'rgba(251,113,133,0.1)',
+    label: 'Available after registration', href: '#',
   },
   {
     title: 'YouTube — Past Highlights',
     desc: 'Watch highlights, project demos, and ceremony recordings from previous IEEE events.',
     icon: Play,
-    color: '#ff4444',
-    href: '#',
-    label: 'Watch on YouTube',
+    accent: 'rgba(245,158,11,1)', glow: 'rgba(245,158,11,0.1)',
+    label: 'Watch on YouTube', href: '#',
   },
 ];
 
 const CHECKLIST = [
-  { item: 'Laptop and charger (mandatory)', important: true },
-  { item: 'Valid institutional ID card', important: true },
-  { item: 'All required software pre-installed (IDEs, SDKs, etc.)', important: true },
-  { item: 'Backup internet access (mobile hotspot recommended)', important: false },
-  { item: 'GitHub account set up and ready to push', important: false },
-  { item: 'Team problem domain decided in advance', important: false },
-  { item: 'Comfortable clothing for a 24-hour stay', important: false },
-  { item: 'Any personal medication or medical supplies', important: false },
+  { item: 'Laptop and charger',                                    required: true  },
+  { item: 'Valid institutional ID card',                           required: true  },
+  { item: 'All required software pre-installed (IDEs, SDKs, etc.)',required: true  },
+  { item: 'Backup internet access (mobile hotspot recommended)',   required: false },
+  { item: 'GitHub account set up and ready to push',              required: false },
+  { item: 'Team problem domain decided in advance',               required: false },
+  { item: 'Comfortable clothing for a 24-hour stay',              required: false },
+  { item: 'Any personal medication or medical supplies',          required: false },
 ];
 
-export default function ResourcesPage() {
-  const heroRef = useRef(null);
-  const downloadsRef = useRef(null);
-  const linksRef = useRef(null);
-  const checklistRef = useRef(null);
+function SectionLabel({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
+      <div style={{ width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0, background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon style={{ width: '17px', height: '17px', color: 'rgba(34,211,238,0.85)' }} />
+      </div>
+      <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(1.125rem, 2vw, 1.375rem)', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.02em', margin: 0 }}>
+        {label}
+      </h2>
+    </div>
+  );
+}
 
-  const heroInView = useInView(heroRef, { once: true });
-  const downloadsInView = useInView(downloadsRef, { once: true, margin: '-60px' });
-  const linksInView = useInView(linksRef, { once: true, margin: '-60px' });
-  const checklistInView = useInView(checklistRef, { once: true, margin: '-60px' });
+export default function ResourcesPage() {
+  const heroRef      = useRef(null);
+  const dlRef        = useRef(null);
+  const linksRef     = useRef(null);
+  const checkRef     = useRef(null);
+
+  const heroInView  = useInView(heroRef,  { once: true });
+  const dlInView    = useInView(dlRef,    { once: true, margin: '-40px' });
+  const linksInView = useInView(linksRef, { once: true, margin: '-40px' });
+  const checkInView = useInView(checkRef, { once: true, margin: '-40px' });
 
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+      <main id="main-content" className="min-h-screen" style={{ background: 'var(--color-surface-0)', position: 'relative' }}>
 
-        {/* Hero */}
-        <section ref={heroRef} className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.08) 0%, transparent 70%)' }}
-          />
-          <div className="container relative z-10">
-            <span className="eyebrow">Downloads & Resources</span>
-            <h1
-              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-3xl"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
-            >
-              Everything you need to <span className="text-gradient-ieee">prepare and build.</span>
-            </h1>
-            <p className="text-base text-[var(--color-text-secondary)] max-w-xl leading-relaxed">
+        {/* Full-page background */}
+        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
+          <div style={{ position: 'absolute', top: '8%', left: '25%', width: '700px', height: '700px', background: 'radial-gradient(ellipse at center, rgba(0,136,204,0.11) 0%, rgba(14,165,233,0.05) 35%, transparent 70%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />
+          <div style={{ position: 'absolute', top: '-5%', right: '-8%', width: '520px', height: '520px', background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 65%)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.05) 0%, transparent 50%, rgba(34,211,238,0.03) 100%)' }} />
+        </div>
+
+        {/* ── Hero ── */}
+        <section ref={heroRef} style={{ position: 'relative', zIndex: 1, paddingTop: '80px', paddingBottom: '64px' }}>
+          <div className="container">
+            <motion.div className="inline-flex items-center gap-2 mb-6"
+              initial={{ opacity: 0, y: 10 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Downloads & Resources</span>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+            </motion.div>
+            <motion.h1
+              style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08, fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', marginBottom: '16px' }}
+              initial={{ opacity: 0, y: 20 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.55, delay: 0.08 }}>
+              <span className="text-white">Everything you need to</span>{' '}
+              <span className="text-gradient-ieee">prepare and build.</span>
+            </motion.h1>
+            <motion.p
+              style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.8, maxWidth: '560px' }}
+              initial={{ opacity: 0, y: 14 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.18 }}>
               Official rulebooks, problem statements, judging rubrics, sponsor APIs, and participant checklists — all in one place.
-            </p>
+            </motion.p>
           </div>
         </section>
 
-        <div className="section">
-          <div className="container space-y-20">
+        {/* ── Body ── */}
+        <section style={{ position: 'relative', zIndex: 1, paddingBottom: '80px' }}>
+          <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: '64px' }}>
 
-            {/* Downloads */}
-            <section ref={downloadsRef} aria-labelledby="downloads-heading">
-              <div className="flex items-center gap-3 mb-10">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                  <Download className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-                </div>
-                <h2 id="downloads-heading" className="text-2xl font-bold text-[var(--color-text-primary)]">Official Documents</h2>
-              </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {DOWNLOADS.map((doc, i) => (
-                <motion.div
-                  key={doc.title}
-                  className="glass-card p-7 group flex flex-col h-full relative overflow-hidden"
-                  style={{ borderColor: `${doc.color}12` }}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={downloadsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                >
-                  {/* Color accent */}
-                  <div className="absolute top-0 inset-x-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${doc.color}50, transparent)` }} />
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: `radial-gradient(circle at top left, ${doc.color}05, transparent 60%)` }} />
+            {/* Official Documents */}
+            <div ref={dlRef}>
+              <SectionLabel icon={Download} label="Official Documents" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {DOWNLOADS.map((doc, i) => (
+                  <motion.div key={doc.title}
+                    initial={{ opacity: 0, y: 20 }} animate={dlInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: i * 0.08 }}
+                    whileHover={{ y: -3, boxShadow: `0 0 28px ${doc.glow}, 0 8px 24px rgba(0,0,0,0.3)` }}
+                    style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.92), rgba(8,16,32,0.68))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', padding: '24px', display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden', transition: 'box-shadow 0.25s ease, transform 0.25s ease', cursor: 'default' }}>
+                    {/* Top accent */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${doc.accent}, transparent)` }} />
 
-                  <div className="flex items-start justify-between mb-5">
-                    <div
-                      className="w-11 h-11 rounded-xl flex items-center justify-center"
-                      style={{ background: `${doc.color}15`, border: `1px solid ${doc.color}20` }}
-                    >
-                      <doc.icon className="w-5 h-5" style={{ color: doc.color }} />
-                    </div>
-                    <span
-                      className="badge text-[10px]"
-                      style={{ color: doc.color, background: `${doc.color}12`, border: `1px solid ${doc.color}20` }}
-                    >
-                      {doc.badge}
-                    </span>
-                  </div>
-
-                  <h3 className="font-bold text-white text-lg mb-2">{doc.title}</h3>
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6 flex-grow">{doc.desc}</p>
-
-                  <div className="flex items-center justify-between pt-5 border-t border-white/05">
-                    <span className="text-xs text-[var(--color-text-muted)]">{doc.size}</span>
-                    {doc.available ? (
-                      <a
-                        href={doc.href}
-                        download
-                        className="flex items-center gap-1.5 text-sm font-semibold transition-colors hover:opacity-80"
-                        style={{ color: doc.color }}
-                      >
-                        <Download className="w-4 h-4" />
-                        Download
-                      </a>
-                    ) : (
-                      <div className="flex items-center gap-1.5 text-sm text-[var(--color-text-muted)]">
-                        <Lock className="w-3.5 h-3.5" />
-                        Not yet available
+                    {/* Header row */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: doc.glow, border: `1px solid ${doc.accent}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <doc.icon style={{ width: '18px', height: '18px', color: doc.accent }} />
                       </div>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </section>
-
-            {/* External Links */}
-            <section ref={linksRef} aria-labelledby="links-heading">
-              <div className="flex items-center gap-3 mb-10">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                  <ExternalLink className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-                </div>
-                <h2 id="links-heading" className="text-2xl font-bold text-[var(--color-text-primary)]">Links & Platforms</h2>
-              </div>
-            <div className="space-y-4">
-              {LINKS.map((link, i) => (
-                <motion.a
-                  key={link.title}
-                  href={link.href}
-                  className="glass-card p-5 flex items-start sm:items-center gap-4 group cursor-pointer hover:scale-[1.005] transition-transform duration-300 block"
-                  style={{ borderColor: `${link.color}12` }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={linksInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.08 }}
-                >
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: `${link.color}15`, border: `1px solid ${link.color}20` }}
-                  >
-                    <link.icon className="w-5 h-5" style={{ color: link.color }} />
-                  </div>
-                  <div className="flex-1">
-                    <div className="font-semibold text-white">{link.title}</div>
-                    <div className="text-sm text-[var(--color-text-secondary)] mt-0.5 leading-relaxed">{link.desc}</div>
-                    <div className="text-xs mt-1.5 font-mono" style={{ color: `${link.color}80` }}>{link.label}</div>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors shrink-0 hidden sm:block" />
-                </motion.a>
-              ))}
-            </div>
-          </section>
-
-            {/* Participant Checklist */}
-            <section ref={checklistRef} aria-labelledby="checklist-heading">
-              <div className="flex items-center gap-3 mb-10">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                  <ShieldCheck className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-                </div>
-                <h2 id="checklist-heading" className="text-2xl font-bold text-[var(--color-text-primary)]">Participant Checklist</h2>
-              </div>
-            <div className="glass-card p-7 sm:p-10">
-              <p className="text-[var(--color-text-secondary)] text-sm mb-8 leading-relaxed">
-                Make sure you bring everything you need. Items marked as important are mandatory for check-in.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {CHECKLIST.map((item, i) => (
-                  <motion.div
-                    key={i}
-                    className="flex items-start gap-3 p-3.5 rounded-xl"
-                    style={{ background: item.important ? 'rgba(0,212,255,0.04)' : 'transparent' }}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={checklistInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.05 + i * 0.04 }}
-                  >
-                    <div className={`w-5 h-5 rounded flex items-center justify-center mt-0.5 shrink-0 ${
-                      item.important
-                        ? 'bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/30'
-                        : 'bg-white/05 border border-white/10'
-                    }`}>
-                      <div className={`w-2 h-2 rounded-full ${item.important ? 'bg-[var(--color-ieee-blue-light)]' : 'bg-white/20'}`} />
+                      <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: '999px', background: doc.glow, border: `1px solid ${doc.accent}30`, color: doc.accent }}>
+                        {doc.badge}
+                      </span>
                     </div>
-                    <span className={`text-sm leading-relaxed ${item.important ? 'text-white font-medium' : 'text-[var(--color-text-secondary)]'}`}>
-                      {item.item}
-                      {item.important && (
-                        <span className="ml-2 text-[10px] bg-[var(--color-ieee-blue-light)]/10 text-[var(--color-ieee-blue-light)] border border-[var(--color-ieee-blue-light)]/20 px-1.5 py-0.5 rounded-full">Required</span>
-                      )}
-                    </span>
+
+                    {/* Title */}
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.02em', marginBottom: '8px' }}>{doc.title}</div>
+                    <p style={{ fontSize: '13px', color: 'rgba(139,158,192,0.65)', lineHeight: 1.75, margin: '0 0 auto', flexGrow: 1 }}>{doc.desc}</p>
+
+                    {/* Footer row */}
+                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', margin: '16px 0 14px' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'rgba(139,158,192,0.4)', letterSpacing: '0.02em' }}>{doc.size}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'rgba(139,158,192,0.4)' }}>
+                        <Lock style={{ width: '11px', height: '11px' }} />
+                        <span>Not yet available</span>
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
+            </div>
 
-              <div className="mt-8 flex items-start gap-3 p-4 rounded-xl bg-[var(--color-surface-2)] border border-white/06">
-                <Info className="w-5 h-5 text-[var(--color-ieee-blue-light)] shrink-0 mt-0.5" />
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                  Meals, breaks, first-aid, and sick-room support are planned. Accommodation depends on availability and will be communicated to registered teams closer to the event.
-                </p>
+            {/* Links & Platforms */}
+            <div ref={linksRef}>
+              <SectionLabel icon={ExternalLink} label="Links & Platforms" />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {LINKS.map((link, i) => (
+                  <motion.a key={link.title} href={link.href} target="_blank" rel="noopener noreferrer"
+                    initial={{ opacity: 0, x: -16 }} animate={linksInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.4, delay: i * 0.08 }}
+                    style={{ borderRadius: '14px', background: 'linear-gradient(145deg, rgba(14,20,36,0.92), rgba(8,16,32,0.68))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', padding: '18px 22px', display: 'flex', alignItems: 'center', gap: '16px', textDecoration: 'none', position: 'relative', overflow: 'hidden', transition: 'all 0.22s ease' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = `${link.accent}25`; e.currentTarget.style.transform = 'translateX(4px)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.transform = 'translateX(0)'; }}>
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${link.accent}, transparent)` }} />
+                    <div style={{ width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0, background: link.glow, border: `1px solid ${link.accent}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <link.icon style={{ width: '17px', height: '17px', color: link.accent }} />
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em', marginBottom: '3px' }}>{link.title}</div>
+                      <div style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.6)', lineHeight: 1.6, marginBottom: '4px' }}>{link.desc}</div>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: `${link.accent}70`, letterSpacing: '0.02em' }}>{link.label}</div>
+                    </div>
+                    <ArrowUpRight style={{ width: '16px', height: '16px', color: 'rgba(139,158,192,0.3)', flexShrink: 0 }} />
+                  </motion.a>
+                ))}
               </div>
             </div>
-          </section>
 
-              {/* CTA */}
-              <div className="glass-card p-6 flex flex-col sm:flex-row items-center justify-between gap-5 mt-10">
-                <div>
-                  <h3 className="font-semibold text-sm text-[var(--color-text-primary)] mb-1">Ready to compete?</h3>
-                  <p className="text-[var(--color-text-secondary)] text-sm">Register your team before September 21, 2026.</p>
+            {/* Participant Checklist */}
+            <div ref={checkRef}>
+              <SectionLabel icon={CheckCircle2} label="Participant Checklist" />
+              <div style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.92), rgba(8,16,32,0.68))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', overflow: 'hidden' }}>
+                <div style={{ height: '2px', background: 'linear-gradient(90deg, rgba(34,211,238,0.6), rgba(99,102,241,0.3), transparent)' }} />
+                <div style={{ padding: '24px 28px' }}>
+                  <p style={{ fontSize: '13px', color: 'rgba(139,158,192,0.55)', lineHeight: 1.75, marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    Make sure you bring everything you need. Items marked <span style={{ color: 'rgba(34,211,238,0.7)', fontWeight: 600 }}>Required</span> are mandatory for check-in.
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2" style={{ gap: '0' }}>
+                    {CHECKLIST.map((item, i) => (
+                      <motion.div key={i}
+                        initial={{ opacity: 0, y: 10 }} animate={checkInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.35, delay: 0.05 + i * 0.05 }}
+                        style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 0', borderBottom: i < CHECKLIST.length - (CHECKLIST.length % 2 === 0 ? 2 : 1) ? '1px solid rgba(255,255,255,0.04)' : 'none', paddingRight: i % 2 === 0 ? '24px' : '0' }}>
+                        <div style={{ width: '20px', height: '20px', borderRadius: '50%', flexShrink: 0, background: item.required ? 'rgba(34,211,238,0.1)' : 'rgba(255,255,255,0.04)', border: item.required ? '1px solid rgba(34,211,238,0.3)' : '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1px' }}>
+                          <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: item.required ? 'rgba(34,211,238,0.8)' : 'rgba(255,255,255,0.2)' }} />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <span style={{ fontSize: '13px', color: item.required ? 'rgba(241,245,249,0.85)' : 'rgba(139,158,192,0.65)', fontWeight: item.required ? 600 : 400, lineHeight: 1.6 }}>{item.item}</span>
+                          {item.required && (
+                            <span style={{ marginLeft: '8px', fontSize: '9px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: '999px', background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.2)', color: 'rgba(34,211,238,0.75)' }}>Required</span>
+                          )}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Info note */}
+                  <div style={{ marginTop: '20px', borderRadius: '12px', background: 'rgba(0,136,204,0.05)', border: '1px solid rgba(0,136,204,0.15)', padding: '14px 18px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                    <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(34,211,238,0.07)', border: '1px solid rgba(34,211,238,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Info style={{ width: '13px', height: '13px', color: 'rgba(34,211,238,0.65)' }} />
+                    </div>
+                    <p style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.6)', lineHeight: 1.75, margin: 0 }}>
+                      Meals, breaks, first-aid, and sick-room support are planned. Accommodation depends on availability and will be communicated to registered teams closer to the event.
+                    </p>
+                  </div>
                 </div>
-                <Link href="/auth/register" className="btn-magnetic btn-primary text-sm shrink-0">
-                  Register Your Team
-                </Link>
               </div>
+            </div>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={checkInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.4 }}
+              style={{ borderRadius: '16px', background: 'linear-gradient(135deg, rgba(0,136,204,0.08), rgba(8,16,32,0.6))', border: '1px solid rgba(0,136,204,0.18)', backdropFilter: 'blur(20px)', padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '3px', background: 'linear-gradient(to bottom, rgba(34,211,238,0.7), rgba(59,130,246,0.3), transparent)' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Download style={{ width: '20px', height: '20px', color: 'rgba(34,211,238,0.85)' }} />
+                </div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.015em', marginBottom: '4px' }}>Ready to compete?</div>
+                  <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 21, 2026.</div>
+                </div>
+              </div>
+              <Link href="/auth/register" className="btn-magnetic btn-primary"
+                style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
+                Register Your Team
+              </Link>
+            </motion.div>
+
           </div>
-        </div>
+        </section>
+
       </main>
       <Footer />
     </>

@@ -1,11 +1,16 @@
+'use client';
+
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Brain, Shield, Cpu, HeartPulse, Leaf, Sparkles } from 'lucide-react';
-import type { Metadata } from 'next';
+import { Brain, Shield, Cpu, HeartPulse, Leaf, Sparkles, Globe, Target, Clock, FileText } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import Link from 'next/link';
 
-export const metadata: Metadata = {
-  title: 'Tracks & Problem Domains | PRISMTECH 2026',
-  description: 'Explore the problem domains for PRISMTECH 2026: AI, Cybersecurity, IoT, Healthcare, Sustainability, and Open Innovation.',
+const STREAM_COLORS: Record<string, { accent: string; glow: string }> = {
+  'Neural Stream': { accent: 'rgba(99,102,241,1)',  glow: 'rgba(99,102,241,0.18)'  },
+  'Optic Stream':  { accent: 'rgba(34,211,238,1)',  glow: 'rgba(34,211,238,0.18)'  },
+  'Social Stream': { accent: 'rgba(52,211,153,1)',  glow: 'rgba(52,211,153,0.18)'  },
 };
 
 const TRACKS = [
@@ -17,6 +22,7 @@ const TRACKS = [
     desc: 'Build an intelligent assistant for student services, events, academic support, and accessibility.',
     deliverable: 'Working prototype + responsible AI notes',
     stream: 'Neural Stream',
+    comingSoon: false,
   },
   {
     id: 'cyber',
@@ -26,6 +32,7 @@ const TRACKS = [
     desc: 'Detect suspicious messages and train users through explainable risk signals.',
     deliverable: 'Detection flow + dashboard',
     stream: 'Optic Stream',
+    comingSoon: false,
   },
   {
     id: 'iot',
@@ -35,6 +42,7 @@ const TRACKS = [
     desc: 'Monitor and optimize electricity usage in campus laboratories.',
     deliverable: 'Sensor model + savings insight',
     stream: 'Optic Stream',
+    comingSoon: false,
   },
   {
     id: 'health',
@@ -68,86 +76,229 @@ const TRACKS = [
   },
 ];
 
+const STREAMS = [
+  { label: 'Optic Stream',  sub: 'IEEE Photonics Society',          accent: 'rgba(34,211,238,0.8)'  },
+  { label: 'Neural Stream', sub: 'IEEE Computer Society',           accent: 'rgba(99,102,241,0.8)'  },
+  { label: 'Social Stream', sub: 'IEEE Women in Engineering (WIE)', accent: 'rgba(52,211,153,0.8)'  },
+];
+
 export default function TracksPage() {
+  const heroRef  = useRef(null);
+  const cardsRef = useRef(null);
+  const heroInView  = useInView(heroRef,  { once: true });
+  const cardsInView = useInView(cardsRef, { once: true, margin: '-40px' });
+
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+      <main id="main-content" className="min-h-screen" style={{ background: 'var(--color-surface-0)', position: 'relative' }}>
 
-        {/* Hero */}
-        <section className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.08) 0%, transparent 70%)' }}
-          />
-          <div className="container relative z-10">
-            <span className="eyebrow">Problem Statements</span>
-            <h1
-              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-2xl"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
+        {/* ── Full-page background ── */}
+        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
+          <div style={{ position: 'absolute', top: '8%', left: '25%', width: '700px', height: '700px', background: 'radial-gradient(ellipse at center, rgba(0,136,204,0.11) 0%, rgba(14,165,233,0.05) 35%, transparent 70%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />
+          <div style={{ position: 'absolute', top: '-5%', right: '-8%', width: '520px', height: '520px', background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 65%)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.05) 0%, transparent 50%, rgba(34,211,238,0.03) 100%)' }} />
+        </div>
+
+        {/* ── Hero ── */}
+        <section ref={heroRef} style={{ position: 'relative', zIndex: 1, paddingTop: '80px', paddingBottom: '64px' }}>
+          <div className="container">
+
+            {/* Eyebrow */}
+            <motion.div
+              className="inline-flex items-center gap-2 mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4 }}
             >
-              Choose a domain. <span className="text-gradient-ieee">Build with intent.</span>
-            </h1>
-            <p className="text-base text-[var(--color-text-secondary)] max-w-xl leading-relaxed">
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Problem Statements</span>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+            </motion.div>
+
+            {/* Heading */}
+            <motion.h1
+              style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08, fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', maxWidth: '700px', marginBottom: '20px' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.55, delay: 0.08 }}
+            >
+              <span className="text-white">Choose a domain.</span>{' '}
+              <span className="text-gradient-ieee">Build with intent.</span>
+            </motion.h1>
+
+            {/* Subtext */}
+            <motion.p
+              style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.8, maxWidth: '560px', marginBottom: '40px' }}
+              initial={{ opacity: 0, y: 14 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.18 }}
+            >
               PRISMTECH offers problem statements across high-impact domains. All statements will be officially released at the opening ceremony.
-            </p>
+            </motion.p>
+
+            {/* Stream legend pills */}
+            <motion.div
+              style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.28 }}
+            >
+              {STREAMS.map(s => (
+                <div
+                  key={s.label}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    padding: '6px 14px', borderRadius: '999px',
+                    background: 'rgba(255,255,255,0.03)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: s.accent, flexShrink: 0, boxShadow: `0 0 6px ${s.accent}` }} />
+                  <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'rgba(241,245,249,0.7)' }}>{s.label}</span>
+                  <span style={{ fontSize: '10.5px', color: 'rgba(139,158,192,0.5)' }}>· {s.sub}</span>
+                </div>
+              ))}
+            </motion.div>
+
           </div>
         </section>
 
-        {/* Main content */}
-        <div className="section">
+        {/* ── Track Cards ── */}
+        <section ref={cardsRef} style={{ position: 'relative', zIndex: 1, paddingBottom: '80px' }}>
           <div className="container">
 
-            {/* Stream legend */}
-            <div className="flex flex-wrap gap-2 mb-8">
-              {[
-                { label: 'Optic Stream – Photonics' },
-                { label: 'Neural Stream – Computer Society' },
-                { label: 'Social Stream – WIE' },
-              ].map(s => (
-                <div key={s.label} className="badge badge-blue">
-                  <div className="w-1 h-1 rounded-full bg-current" />
-                  {s.label}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              {TRACKS.map((track, i) => {
+                const sc = STREAM_COLORS[track.stream] ?? { accent: 'rgba(34,211,238,1)', glow: 'rgba(34,211,238,0.15)' };
+                return (
+                  <motion.article
+                    key={track.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={cardsInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.4, delay: i * 0.07 }}
+                    whileHover={{ y: -4, boxShadow: `0 0 32px ${sc.glow}, 0 8px 32px rgba(0,0,0,0.35)` }}
+                    style={{
+                      borderRadius: '16px',
+                      background: 'linear-gradient(145deg, rgba(14,20,36,0.85) 0%, rgba(8,16,32,0.65) 100%)',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      backdropFilter: 'blur(20px)',
+                      padding: '24px 24px 20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                      cursor: 'default',
+                    }}
+                  >
+                    {/* Top accent bar in stream color */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${sc.accent}, transparent)` }} />
+
+                    {/* Header row */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '18px' }}>
+                      <div style={{
+                        width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
+                        background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.2)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <track.icon style={{ width: '18px', height: '18px', color: sc.accent }} />
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {track.comingSoon && (
+                          <span style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '999px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', color: 'rgba(245,158,11,0.85)' }}>
+                            TBA
+                          </span>
+                        )}
+                        <span style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '999px', background: `${sc.glow}`, border: `1px solid ${sc.accent}30`, color: sc.accent }}>
+                          {track.tag}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Stream label */}
+                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: sc.accent, opacity: 0.7, marginBottom: '6px' }}>
+                      {track.stream}
+                    </div>
+
+                    {/* Title */}
+                    <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.0625rem', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.25 }}>
+                      {track.title}
+                    </h2>
+
+                    {/* Description */}
+                    <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.75, margin: '0 0 auto', flexGrow: 1 }}>
+                      {track.desc}
+                    </p>
+
+                    {/* Divider */}
+                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', margin: '18px 0 14px' }} />
+
+                    {/* Deliverable */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                      <FileText style={{ width: '12px', height: '12px', color: 'rgba(139,158,192,0.5)', flexShrink: 0, marginTop: '2px' }} />
+                      <div>
+                        <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(139,158,192,0.45)', marginBottom: '3px' }}>Expected Deliverable</div>
+                        <div style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(241,245,249,0.65)' }}>{track.deliverable}</div>
+                      </div>
+                    </div>
+                  </motion.article>
+                );
+              })}
+            </div>
+
+            {/* CTA banner */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={cardsInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              style={{
+                marginTop: '48px',
+                borderRadius: '16px',
+                background: 'linear-gradient(135deg, rgba(0,136,204,0.08) 0%, rgba(8,16,32,0.6) 100%)',
+                border: '1px solid rgba(0,136,204,0.18)',
+                backdropFilter: 'blur(20px)',
+                padding: '28px 32px',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '24px',
+                flexWrap: 'wrap',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Left glow */}
+              <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: '3px', background: 'linear-gradient(to bottom, rgba(34,211,238,0.7), rgba(59,130,246,0.3), transparent)', borderRadius: '0 2px 2px 0' }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(0,136,204,0.12)', border: '1px solid rgba(0,136,204,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Clock style={{ width: '20px', height: '20px', color: 'rgba(34,211,238,0.85)' }} />
                 </div>
-              ))}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {TRACKS.map((track) => (
-                <article key={track.id} className="glass-card p-6 flex flex-col">
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-[var(--color-surface-3)] border border-white/08 shrink-0">
-                      <track.icon className="text-[var(--color-ieee-blue-light)]" style={{ width: '17px', height: '17px' }} />
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {track.comingSoon && <span className="badge badge-neutral">TBA</span>}
-                      <span className="badge badge-blue">{track.tag}</span>
-                    </div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'var(--color-text-primary)', letterSpacing: '-0.01em', marginBottom: '4px' }}>
+                    Full Problem Statements
                   </div>
-
-                  <div className="text-[10px] font-medium text-[var(--color-text-muted)] mb-2">{track.stream}</div>
-                  <h2 className="text-base font-bold text-[var(--color-text-primary)] mb-2">{track.title}</h2>
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-4 flex-1">{track.desc}</p>
-
-                  <div className="pt-3.5 border-t border-white/[0.06]">
-                    <div className="text-[10px] uppercase tracking-widest text-[var(--color-text-muted)] mb-1 font-medium">Expected Deliverable</div>
-                    <div className="text-xs font-semibold text-[var(--color-text-secondary)]">{track.deliverable}</div>
-                  </div>
-                </article>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <div className="mt-10 glass-card p-6 flex flex-col sm:flex-row items-center justify-between gap-5">
-              <div>
-                <h3 className="font-semibold text-sm text-[var(--color-text-primary)] mb-1">Full Problem Statements</h3>
-                <p className="text-sm text-[var(--color-text-secondary)]">Detailed PDFs will be released during the opening ceremony on 26 September 2026.</p>
+                  <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6 }}>
+                    Detailed PDFs will be officially released at the opening ceremony on <span style={{ color: 'rgba(241,245,249,0.8)', fontWeight: 600 }}>26 September 2026</span>.
+                  </p>
+                </div>
               </div>
-              <a href="/resources" className="btn-magnetic btn-secondary text-sm shrink-0">View Resources</a>
-            </div>
+
+              <Link
+                href="/resources"
+                className="btn-magnetic btn-secondary"
+                style={{ fontSize: '0.875rem', padding: '12px 28px', borderRadius: '12px', border: '1px solid rgba(34,211,238,0.2)', boxShadow: '0 0 16px rgba(34,211,238,0.06)', flexShrink: 0 }}
+              >
+                View Resources
+              </Link>
+            </motion.div>
+
           </div>
-        </div>
+        </section>
+
       </main>
       <Footer />
     </>

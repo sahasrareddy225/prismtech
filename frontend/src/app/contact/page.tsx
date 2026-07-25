@@ -2,12 +2,13 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
-import { Mail, Phone, MapPin, MessageSquare, Send, Share2, Link2, Camera, ArrowRight, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import {
+  Mail, Phone, MapPin, Send, ArrowRight, Loader2,
+  Camera, Link2, CheckCircle2, MessageSquare,
+} from 'lucide-react';
 import Link from 'next/link';
-import type { Metadata } from 'next';
-import SectionHeader from '@/components/ui/SectionHeader';
 
 const CONTACT_ITEMS = [
   {
@@ -16,7 +17,7 @@ const CONTACT_ITEMS = [
     value: 'ieeeaziznagarklh@gmail.com',
     sub: 'For registration, tracks, and general questions',
     href: 'mailto:ieeeaziznagarklh@gmail.com',
-    color: 'var(--color-prism-cyan)',
+    accent: 'rgba(34,211,238,1)',
   },
   {
     icon: Phone,
@@ -24,7 +25,7 @@ const CONTACT_ITEMS = [
     value: '+91 97047 10888',
     sub: 'Available during business hours',
     href: 'https://wa.me/919704710888',
-    color: 'var(--color-prism-green)',
+    accent: 'rgba(52,211,153,1)',
   },
   {
     icon: Phone,
@@ -32,7 +33,7 @@ const CONTACT_ITEMS = [
     value: '+91 97047 10888',
     sub: 'On-site emergency contact (event day only)',
     href: 'tel:+919704710888',
-    color: 'var(--color-prism-rose)',
+    accent: 'rgba(251,113,133,1)',
   },
   {
     icon: MapPin,
@@ -40,13 +41,13 @@ const CONTACT_ITEMS = [
     value: 'KLH Aziz Nagar Campus',
     sub: 'R.V.S Nagar, Moinabad Road, Hyderabad 500075',
     href: '/venue',
-    color: '#a78bfa',
+    accent: 'rgba(167,139,250,1)',
   },
 ];
 
 const SOCIAL_LINKS = [
-  { icon: Camera, label: 'Instagram', handle: '@ieee_prismtech', href: 'https://instagram.com/ieee_prismtech', color: '#E1306C' },
-  { icon: Link2, label: 'LinkedIn', handle: 'IEEE PRISMTECH KLH', href: '#', color: '#0A66C2' },
+  { icon: Camera, label: 'Instagram', handle: '@ieee_prismtech', href: 'https://instagram.com/ieee_prismtech', accent: 'rgba(225,48,108,1)' },
+  { icon: Link2, label: 'LinkedIn', handle: 'IEEE PRISMTECH KLH', href: '#', accent: 'rgba(10,102,194,1)' },
 ];
 
 const QUICK_LINKS = [
@@ -57,265 +58,342 @@ const QUICK_LINKS = [
   { label: 'Event schedule', href: '/schedule' },
 ];
 
-export default function ContactPage() {
-  const heroRef = useRef(null);
-  const mainRef = useRef(null);
-  const heroInView = useInView(heroRef, { once: true });
-  const mainInView = useInView(mainRef, { once: true, margin: '-60px' });
+const SUBJECTS = [
+  { value: 'general', label: 'General Inquiry' },
+  { value: 'registration', label: 'Registration Help' },
+  { value: 'sponsorship', label: 'Sponsorship Opportunity' },
+  { value: 'mentorship', label: 'Join as Mentor / Judge' },
+  { value: 'media', label: 'Media & Press' },
+  { value: 'other', label: 'Other' },
+];
 
-  const [formState, setFormState] = useState({
-    name: '', email: '', subject: 'general', message: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const BG = (
+  <div className="fixed inset-0 pointer-events-none" aria-hidden="true" style={{ zIndex: 0 }}>
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,98,155,0.18) 0%, transparent 70%)' }} />
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 60% 40% at 80% 60%, rgba(88,28,220,0.08) 0%, transparent 60%)' }} />
+    <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
+    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.04) 0%, transparent 50%, rgba(88,28,220,0.04) 100%)' }} />
+  </div>
+);
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+      <div style={{ width: '20px', height: '1px', background: 'rgba(0,136,204,0.6)' }} />
+      <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(0,136,204,0.9)' }}>{children}</span>
+      <div style={{ width: '20px', height: '1px', background: 'rgba(0,136,204,0.6)' }} />
+    </div>
+  );
+}
+
+const card: React.CSSProperties = {
+  background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))',
+  border: '1px solid rgba(255,255,255,0.07)',
+  borderRadius: '14px',
+  backdropFilter: 'blur(20px)',
+};
+
+export default function ContactPage() {
+  const [form, setForm] = useState({ name: '', email: '', subject: 'general', message: '' });
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formState.name || !formState.email || !formState.message) {
-      setError('Please fill in all required fields.');
-      return;
-    }
+    if (!form.name || !form.email || !form.message) { setError('Please fill in all required fields.'); return; }
     setError('');
-    setIsSubmitting(true);
+    setSubmitting(true);
     await new Promise((r) => setTimeout(r, 1500));
-    setIsSubmitting(false);
+    setSubmitting(false);
     setSubmitted(true);
   };
 
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+      {BG}
+      <main id="main-content" className="min-h-screen" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* Hero */}
-        <section ref={heroRef} className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.08) 0%, transparent 70%)' }}
-          />
-          <div className="container relative z-10 text-center">
-            <span className="eyebrow justify-center">Contact</span>
-            <h1
-              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-2xl mx-auto"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
-            >
-              Reach the <span className="text-gradient-ieee">PRISMTECH team.</span>
-            </h1>
-            <p className="text-base text-[var(--color-text-secondary)] max-w-md mx-auto leading-relaxed">
-              Questions about registration, domains, or sponsorship? We respond within 24–48 hours.
-            </p>
+        <section style={{ paddingTop: '112px', paddingBottom: '72px', textAlign: 'center' }}>
+          <div className="container">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <SectionLabel>Contact</SectionLabel>
+              <h1
+                className="text-gradient-ieee"
+                style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1, marginBottom: '18px' }}
+              >
+                Reach the PRISMTECH team.
+              </h1>
+              <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', maxWidth: '480px', margin: '0 auto', lineHeight: 1.7 }}>
+                Questions about registration, domains, or sponsorship? We respond within 24–48 hours.
+              </p>
+            </motion.div>
           </div>
         </section>
 
-        <div ref={mainRef} className="container py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
+        {/* Main grid */}
+        <section style={{ paddingBottom: '96px' }}>
+          <div className="container">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '32px', alignItems: 'start' }}>
 
-            {/* Left: Contact info (2 cols) */}
-            <motion.div
-              className="lg:col-span-2 space-y-10"
-              initial={{ opacity: 0, x: -30 }}
-              animate={mainInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6 }}
-            >
-              {/* Direct contact */}
-              <div>
-                <h2 className="text-lg font-bold text-white mb-6">Direct Contact</h2>
-                <div className="space-y-4">
-                  {CONTACT_ITEMS.map(({ icon: Icon, label, value, sub, href }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      className="glass-card p-4 flex items-start gap-3 hover:border-white/[0.14] transition-colors group"
-                    >
-                      <div className="icon-container shrink-0">
-                        <Icon style={{ width: '15px', height: '15px' }} />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-[10px] text-[var(--color-text-muted)] font-medium uppercase tracking-wider mb-0.5">{label}</div>
-                        <div className="font-semibold text-sm text-[var(--color-text-primary)] group-hover:text-[var(--color-ieee-blue-light)] transition-colors truncate">{value}</div>
-                        <div className="text-xs text-[var(--color-text-muted)] mt-0.5">{sub}</div>
-                      </div>
-                    </a>
-                  ))}
+              {/* LEFT COLUMN */}
+              <motion.div
+                initial={{ opacity: 0, x: -24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}
+              >
+
+                {/* Direct Contact */}
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '14px' }}>
+                    Direct Contact
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    {CONTACT_ITEMS.map(({ icon: Icon, label, value, sub, href, accent }) => (
+                      <motion.a
+                        key={label}
+                        href={href}
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.2 }}
+                        style={{
+                          ...card,
+                          borderLeft: `3px solid ${accent}`,
+                          padding: '14px 16px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '14px',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <div style={{
+                          width: '36px', height: '36px', borderRadius: '10px', flexShrink: 0,
+                          background: `${accent}15`, border: `1px solid ${accent}30`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <Icon style={{ width: '15px', height: '15px', color: accent }} />
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '2px' }}>{label}</div>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{value}</div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--color-text-secondary)', marginTop: '2px' }}>{sub}</div>
+                        </div>
+                      </motion.a>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Social Links */}
-              <div>
-                <h2 className="text-lg font-bold text-white mb-5">Follow Us</h2>
-                <div className="grid grid-cols-2 gap-3">
-                  {SOCIAL_LINKS.map((s) => (
-                    <a
-                      key={s.label}
-                      href={s.href}
-                      className="flex items-center gap-2.5 p-3.5 rounded-xl border border-white/06 hover:border-white/14 bg-white/02 hover:bg-white/05 transition-all group"
-                    >
-                      <s.icon className="w-4 h-4 shrink-0" style={{ color: s.color }} />
-                      <div>
-                        <div className="text-xs font-semibold text-white">{s.label}</div>
-                        <div className="text-[10px] text-[var(--color-text-muted)]">{s.handle}</div>
-                      </div>
-                    </a>
-                  ))}
+                {/* Follow Us */}
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '14px' }}>
+                    Follow Us
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                    {SOCIAL_LINKS.map((s) => (
+                      <motion.a
+                        key={s.label}
+                        href={s.href}
+                        whileHover={{ y: -3, boxShadow: `0 8px 24px ${s.accent}20` }}
+                        transition={{ duration: 0.2 }}
+                        style={{
+                          ...card,
+                          borderTop: `2px solid ${s.accent}`,
+                          padding: '14px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          textDecoration: 'none',
+                        }}
+                      >
+                        <div style={{
+                          width: '32px', height: '32px', borderRadius: '8px', flexShrink: 0,
+                          background: `${s.accent}15`, border: `1px solid ${s.accent}30`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                          <s.icon style={{ width: '14px', height: '14px', color: s.accent }} />
+                        </div>
+                        <div>
+                          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-text-primary)' }}>{s.label}</div>
+                          <div style={{ fontSize: '0.72rem', color: 'var(--color-text-secondary)' }}>{s.handle}</div>
+                        </div>
+                      </motion.a>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Quick links */}
-              <div>
-                <h2 className="text-lg font-bold text-white mb-5">Quick Answers</h2>
-                <div className="space-y-2">
-                  {QUICK_LINKS.map((l) => (
-                    <Link
-                      key={l.href}
-                      href={l.href}
-                      className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-white/05 hover:border-white/12 bg-white/02 hover:bg-white/04 transition-all group text-sm text-white/70 hover:text-white"
-                    >
-                      {l.label}
-                      <ArrowRight className="w-3.5 h-3.5 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
-                    </Link>
-                  ))}
+                {/* Quick Answers */}
+                <div>
+                  <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '14px' }}>
+                    Quick Answers
+                  </div>
+                  <div style={{ ...card, overflow: 'hidden' }}>
+                    {QUICK_LINKS.map((l, i) => (
+                      <Link
+                        key={l.href}
+                        href={l.href}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '12px 16px',
+                          borderBottom: i < QUICK_LINKS.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+                          textDecoration: 'none',
+                          color: 'var(--color-text-secondary)',
+                          fontSize: '0.85rem',
+                          transition: 'color 0.2s, background 0.2s',
+                        }}
+                        className="hover:text-white hover:bg-white/[0.03]"
+                      >
+                        {l.label}
+                        <ArrowRight style={{ width: '13px', height: '13px', opacity: 0.4 }} />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            {/* Right: Contact Form (3 cols) */}
-            <motion.div
-              className="lg:col-span-3"
-              initial={{ opacity: 0, x: 30 }}
-              animate={mainInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.15 }}
-            >
-              {submitted ? (
-                <motion.div
-                  className="glass-card p-12 flex flex-col items-center justify-center text-center h-full min-h-[500px]"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                >
+              {/* RIGHT COLUMN — Form */}
+              <motion.div
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.15 }}
+              >
+                {submitted ? (
                   <motion.div
-                    className="w-20 h-20 rounded-2xl bg-[var(--color-prism-green)]/15 border border-[var(--color-prism-green)]/30 flex items-center justify-center mb-6"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', stiffness: 200 }}
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ ...card, padding: '64px 40px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
                   >
-                    <Send className="w-9 h-9 text-[var(--color-prism-green)]" />
-                  </motion.div>
-                  <h3 className="text-2xl font-bold text-white mb-3">Message Sent!</h3>
-                  <p className="text-[var(--color-text-secondary)] max-w-sm leading-relaxed mb-8">
-                    Thanks for reaching out. Our team will respond within 24–48 hours.
-                  </p>
-                  <button
-                    onClick={() => setSubmitted(false)}
-                    className="btn-magnetic btn-secondary text-sm"
-                  >
-                    Send Another Message
-                  </button>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="glass-card p-8 sm:p-10 space-y-6">
-                  <div>
-                    <h2 className="text-xl font-bold text-white mb-1">Send us a message</h2>
-                    <p className="text-sm text-[var(--color-text-secondary)]">We'll get back to you within 24–48 hours.</p>
-                  </div>
-
-                  {error && (
-                    <div className="p-3 rounded-xl bg-[var(--color-prism-rose)]/10 border border-[var(--color-prism-rose)]/25 text-sm text-[var(--color-prism-rose)]">
-                      {error}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label htmlFor="contact-name" className="form-label">
-                        Full Name <span className="text-[var(--color-prism-rose)]">*</span>
-                      </label>
-                      <input
-                        id="contact-name"
-                        type="text"
-                        required
-                        className="form-input"
-                        placeholder="Your full name"
-                        value={formState.name}
-                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="contact-email" className="form-label">
-                        Email Address <span className="text-[var(--color-prism-rose)]">*</span>
-                      </label>
-                      <input
-                        id="contact-email"
-                        type="email"
-                        required
-                        className="form-input"
-                        placeholder="you@college.edu"
-                        value={formState.email}
-                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="contact-subject" className="form-label">Subject</label>
-                    <select
-                      id="contact-subject"
-                      className="form-input"
-                      value={formState.subject}
-                      onChange={(e) => setFormState({ ...formState, subject: e.target.value })}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+                      style={{
+                        width: '72px', height: '72px', borderRadius: '20px',
+                        background: 'rgba(52,211,153,0.12)', border: '1px solid rgba(52,211,153,0.3)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px',
+                      }}
                     >
-                      <option value="general">General Inquiry</option>
-                      <option value="registration">Registration Help</option>
-                      <option value="sponsorship">Sponsorship Opportunity</option>
-                      <option value="mentorship">Join as Mentor / Judge</option>
-                      <option value="media">Media & Press</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
+                      <CheckCircle2 style={{ width: '32px', height: '32px', color: 'rgba(52,211,153,1)' }} />
+                    </motion.div>
+                    <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '10px' }}>Message Sent!</h3>
+                    <p style={{ color: 'var(--color-text-secondary)', maxWidth: '340px', lineHeight: 1.7, marginBottom: '32px', fontSize: '0.9rem' }}>
+                      Thanks for reaching out. Our team will respond within 24–48 hours.
+                    </p>
+                    <button onClick={() => setSubmitted(false)} className="btn-magnetic btn-secondary">
+                      Send Another Message
+                    </button>
+                  </motion.div>
+                ) : (
+                  <form onSubmit={handleSubmit} style={{ ...card, padding: '36px 32px' }}>
+                    {/* Form header */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px', paddingBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{
+                        width: '40px', height: '40px', borderRadius: '11px', flexShrink: 0,
+                        background: 'rgba(0,136,204,0.12)', border: '1px solid rgba(0,136,204,0.25)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <MessageSquare style={{ width: '18px', height: '18px', color: 'rgba(0,136,204,0.9)' }} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-text-primary)' }}>Send us a message</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>We'll get back to you within 24–48 hours.</div>
+                      </div>
+                    </div>
 
-                  <div>
-                    <label htmlFor="contact-message" className="form-label">
-                      Message <span className="text-[var(--color-prism-rose)]">*</span>
-                    </label>
-                    <textarea
-                      id="contact-message"
-                      required
-                      rows={6}
-                      className="form-input resize-none"
-                      placeholder="How can we help you?"
-                      value={formState.message}
-                      onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="btn-magnetic btn-primary w-full justify-center"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4" />
-                        Send Message
-                      </>
+                    {error && (
+                      <div style={{
+                        padding: '12px 16px', borderRadius: '10px', marginBottom: '20px',
+                        background: 'rgba(251,113,133,0.08)', border: '1px solid rgba(251,113,133,0.25)',
+                        fontSize: '0.85rem', color: 'rgba(251,113,133,1)',
+                      }}>
+                        {error}
+                      </div>
                     )}
-                  </button>
 
-                  <p className="text-xs text-[var(--color-text-muted)] text-center">
-                    By submitting, you agree to our{' '}
-                    <Link href="/privacy" className="text-[var(--color-prism-cyan)] hover:underline">Privacy Policy</Link>.
-                  </p>
-                </form>
-              )}
-            </motion.div>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+                      <div>
+                        <label htmlFor="c-name" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '7px', letterSpacing: '0.03em' }}>
+                          Full Name <span style={{ color: 'rgba(251,113,133,1)' }}>*</span>
+                        </label>
+                        <input
+                          id="c-name" type="text" required
+                          className="form-input"
+                          placeholder="Your full name"
+                          value={form.name}
+                          onChange={(e) => setForm({ ...form, name: e.target.value })}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="c-email" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '7px', letterSpacing: '0.03em' }}>
+                          Email Address <span style={{ color: 'rgba(251,113,133,1)' }}>*</span>
+                        </label>
+                        <input
+                          id="c-email" type="email" required
+                          className="form-input"
+                          placeholder="you@college.edu"
+                          value={form.email}
+                          onChange={(e) => setForm({ ...form, email: e.target.value })}
+                        />
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <label htmlFor="c-subject" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '7px', letterSpacing: '0.03em' }}>
+                        Subject
+                      </label>
+                      <select
+                        id="c-subject"
+                        className="form-input"
+                        value={form.subject}
+                        onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      >
+                        {SUBJECTS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+                      </select>
+                    </div>
+
+                    <div style={{ marginBottom: '24px' }}>
+                      <label htmlFor="c-message" style={{ display: 'block', fontSize: '0.78rem', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '7px', letterSpacing: '0.03em' }}>
+                        Message <span style={{ color: 'rgba(251,113,133,1)' }}>*</span>
+                      </label>
+                      <textarea
+                        id="c-message" required rows={6}
+                        className="form-input"
+                        style={{ resize: 'none' }}
+                        placeholder="How can we help you?"
+                        value={form.message}
+                        onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="btn-magnetic btn-primary"
+                      disabled={submitting}
+                      style={{ width: '100%', justifyContent: 'center', boxShadow: '0 0 24px rgba(0,136,204,0.2)' }}
+                    >
+                      {submitting ? (
+                        <><Loader2 className="w-4 h-4 animate-spin" /> Sending...</>
+                      ) : (
+                        <><Send className="w-4 h-4" /> Send Message</>
+                      )}
+                    </button>
+
+                    <p style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', textAlign: 'center', marginTop: '14px' }}>
+                      By submitting, you agree to our{' '}
+                      <Link href="/privacy" style={{ color: 'rgba(34,211,238,0.8)', textDecoration: 'none' }}>Privacy Policy</Link>.
+                    </p>
+                  </form>
+                )}
+              </motion.div>
+
+            </div>
           </div>
-        </div>
+        </section>
+
       </main>
       <Footer />
     </>

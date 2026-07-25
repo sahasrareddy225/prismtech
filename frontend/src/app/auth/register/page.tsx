@@ -1,728 +1,689 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useForm } from 'react-hook-form';
-import {
-  ArrowLeft, ArrowRight, CheckCircle2, Users, User, Cpu, Zap,
-  ChevronRight, Plus, Trash2, Loader2,
-} from 'lucide-react';
+import { Users, Calendar, MapPin, CreditCard, Clock, Zap, ArrowRight, ArrowLeft, User, Mail, Phone, Hash, BookOpen, GraduationCap } from 'lucide-react';
 
-// ---------- Types ----------
-interface TeamMember {
-  name: string;
-  email: string;
-  roll: string;
-}
-
-interface FormData {
-  teamName: string;
-  domain: string;
-  collegeName: string;
-  leaderName: string;
-  leaderEmail: string;
-  leaderPhone: string;
-  leaderRoll: string;
-  leaderBranch: string;
-  leaderYear: string;
-  members: TeamMember[];
-  agreeRules: boolean;
-  agreeIP: boolean;
-}
-
-const DOMAINS = [
-  { id: 'ai', label: 'AI Campus Copilot', tag: 'AI / ML' },
-  { id: 'cyber', label: 'Phishing Shield', tag: 'Cybersecurity' },
-  { id: 'iot', label: 'Smart Energy Lab', tag: 'IoT' },
-  { id: 'health', label: 'Healthcare Track', tag: 'Healthcare' },
-  { id: 'sustain', label: 'Sustainable Cities', tag: 'Sustainability' },
-  { id: 'open', label: 'Open Domain', tag: 'Innovation' },
+const INFO = [
+  { icon: Users,      label: 'Team Size',            value: '2 \u2013 4 Members',            highlight: false },
+  { icon: Clock,      label: 'Registration Deadline', value: '21 September 2026',         highlight: true  },
+  { icon: Calendar,   label: 'Event Date',            value: '26 \u2013 27 September 2026',    highlight: false },
+  { icon: MapPin,     label: 'Venue',                 value: 'KLH Aziz Nagar, Hyderabad', highlight: false },
+  { icon: CreditCard, label: 'Registration Fee',      value: 'To be announced',           highlight: false },
 ];
 
-const STEPS = [
-  { label: 'Team Info', icon: Users },
-  { label: 'Team Leader', icon: User },
-  { label: 'Members', icon: Users },
-  { label: 'Confirm', icon: CheckCircle2 },
+const TRACKS = [
+  { emoji: '🤖', category: 'AI / ML',        title: 'AI Campus Copilot'  },
+  { emoji: '🛡️', category: 'Cybersecurity',  title: 'Phishing Shield'    },
+  { emoji: '⚡',  category: 'IoT',            title: 'Smart Energy Lab'   },
+  { emoji: '🏥', category: 'Healthcare',     title: 'Healthcare Track'   },
+  { emoji: '🌱', category: 'Sustainability', title: 'Sustainable Cities' },
+  { emoji: '💡', category: 'Innovation',     title: 'Open Domain'        },
 ];
 
-// ---------- Sub-components ----------
+const STEPS = ['Team Info', 'Team Leader', 'Members', 'Confirm'];
 
-function StepIndicator({ step, total }: { step: number; total: number }) {
-  return (
-    <div className="flex items-center gap-2 mb-10" role="list" aria-label="Registration steps">
-      {STEPS.map((s, i) => {
-        const Icon = s.icon;
-        const isActive = i === step;
-        const isDone = i < step;
-        return (
-          <div key={s.label} className="flex items-center" role="listitem">
-            <div className="flex flex-col items-center gap-1.5">
-              <motion.div
-                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                  isDone
-                    ? 'bg-[var(--color-ieee-blue-light)] text-[var(--color-surface-0)]'
-                    : isActive
-                    ? 'bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)] text-[var(--color-ieee-blue-light)]'
-                    : 'bg-white/05 border border-white/10 text-[var(--color-text-muted)]'
-                }`}
-                layout
-              >
-                {isDone ? <CheckCircle2 className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
-              </motion.div>
-              <span
-                className={`text-[10px] font-semibold tracking-wide hidden sm:block ${
-                  isActive ? 'text-[var(--color-text-primary)]' : isDone ? 'text-[var(--color-ieee-blue-light)]' : 'text-[var(--color-text-muted)]'
-                }`}
-              >
-                {s.label}
-              </span>
-            </div>
-            {i < total - 1 && (
-              <div
-                className={`h-px mx-2 sm:mx-3 flex-1 min-w-[24px] sm:min-w-[40px] transition-colors duration-500 ${
-                  i < step ? 'bg-[var(--color-ieee-blue-light)]/40' : 'bg-white/08'
-                }`}
-              />
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
+function isValid(value: string, type: string, label: string): boolean {
+  if (!value.trim()) return false;
+  if (label === 'Team Size') return /^[2-4]$/.test(value.trim());
+  if (type === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  if (type === 'tel') return /^[+]?[\d\s\-]{7,15}$/.test(value.trim());
+  return value.trim().length >= 2;
 }
 
-function FormField({
-  label, id, required, error, children,
+function Field({
+  icon: Icon, label, placeholder, type = 'text',
+  value, onChange, error,
 }: {
-  label: string; id: string; required?: boolean; error?: string; children: React.ReactNode;
+  icon: React.ElementType; label: string; placeholder: string;
+  type?: string; value: string;
+  onChange: (v: string) => void; error?: string;
 }) {
+  const touched = value.length > 0;
+  const valid   = touched && isValid(value, type, label);
+  const showError = error && !valid;
+
+  const borderColor = showError
+    ? 'rgba(251,113,133,0.55)'
+    : valid
+    ? 'rgba(0,136,204,0.7)'
+    : 'rgba(255,255,255,0.09)';
+
+  const bgColor = valid
+    ? 'rgba(0,136,204,0.06)'
+    : showError
+    ? 'rgba(251,113,133,0.05)'
+    : 'rgba(255,255,255,0.04)';
+
+  const boxShadow = valid
+    ? '0 0 0 3px rgba(0,136,204,0.12)'
+    : showError
+    ? '0 0 0 3px rgba(251,113,133,0.08)'
+    : 'none';
+
+  const iconColor = valid
+    ? 'rgba(0,136,204,0.9)'
+    : showError
+    ? 'rgba(251,113,133,0.7)'
+    : 'rgba(0,136,204,0.5)';
+
   return (
     <div>
-      <label htmlFor={id} className="form-label">
-        {label} {required && <span className="text-[var(--color-prism-rose)]">*</span>}
+      <label style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '5px', display: 'block' }}>
+        {label} <span style={{ color: 'rgba(251,113,133,0.9)' }}>*</span>
       </label>
-      {children}
-      {error && <p className="text-xs text-[var(--color-prism-rose)] mt-1.5">{error}</p>}
+      <div style={{ position: 'relative' }}>
+        <Icon style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', width: '13px', height: '13px', color: iconColor, pointerEvents: 'none', transition: 'color 0.2s' }} />
+        <input
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{
+            width: '100%', padding: '9px 12px 9px 36px', borderRadius: '9px',
+            background: bgColor,
+            border: `1px solid ${borderColor}`,
+            boxShadow: `${boxShadow}, 0 0 0 9999px ${valid ? 'rgba(0,136,204,0.06)' : showError ? 'rgba(251,113,133,0.05)' : 'rgba(20,30,50,0.98)'} inset`,
+            color: '#f1f5f9', fontSize: '0.8125rem', outline: 'none', boxSizing: 'border-box',
+            transition: 'border-color 0.2s, box-shadow 0.2s, background 0.2s',
+            WebkitTextFillColor: '#f1f5f9',
+          }}
+        />
+      </div>
+      {showError && (
+        <p style={{ fontSize: '0.68rem', color: 'rgba(251,113,133,0.9)', margin: '4px 0 0 2px' }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
 
-// ---------- Steps ----------
-
-function Step1({ form }: { form: ReturnType<typeof useForm<FormData>> }) {
-  const { register, watch, setValue, formState: { errors } } = form;
-  const selectedDomain = watch('domain');
-
+function TrackCard({ emoji, category, title, selected, onSelect }: {
+  emoji: string; category: string; title: string; selected: boolean; onSelect: () => void;
+}) {
   return (
-    <motion.div
-      key="step1"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-6"
+    <button
+      onClick={onSelect}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '6px',
+        padding: '12px', borderRadius: '12px',
+        background: selected ? 'rgba(0,136,204,0.12)' : 'rgba(255,255,255,0.03)',
+        border: selected ? '1px solid rgba(0,136,204,0.45)' : '1px solid rgba(255,255,255,0.08)',
+        cursor: 'pointer', transition: 'all 0.2s ease', textAlign: 'left',
+        boxShadow: selected ? '0 0 16px rgba(0,136,204,0.15)' : 'none', width: '100%',
+      }}
     >
+      <span style={{ fontSize: '1.25rem', lineHeight: 1 }}>{emoji}</span>
       <div>
-        <h2 className="text-2xl font-bold text-white mb-1">Team Information</h2>
-        <p className="text-sm text-[var(--color-text-secondary)]">Choose your team name and hackathon domain.</p>
+        <div style={{ fontSize: '0.625rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: selected ? 'rgba(0,170,238,0.9)' : 'rgba(255,255,255,0.35)', marginBottom: '2px' }}>{category}</div>
+        <div style={{ fontSize: '0.7rem', fontWeight: 600, color: selected ? '#f1f5f9' : 'rgba(255,255,255,0.65)', letterSpacing: '-0.01em', lineHeight: 1.3 }}>{title}</div>
       </div>
-
-      <FormField label="Team Name" id="teamName" required error={errors.teamName?.message}>
-        <input
-          id="teamName"
-          {...register('teamName', { required: 'Team name is required', minLength: { value: 3, message: 'At least 3 characters' } })}
-          className="form-input"
-          placeholder="e.g. Team NeuralNinjas"
-          autoFocus
-        />
-      </FormField>
-
-      <FormField label="Institution / College" id="collegeName" required error={errors.collegeName?.message}>
-        <input
-          id="collegeName"
-          {...register('collegeName', { required: 'College name is required' })}
-          className="form-input"
-          placeholder="e.g. KL University, Hyderabad"
-        />
-      </FormField>
-
-      <div>
-        <label className="form-label">
-          Problem Domain <span className="text-[var(--color-prism-rose)]">*</span>
-        </label>
-        {errors.domain && <p className="text-xs text-[var(--color-prism-rose)] mb-2">{errors.domain.message}</p>}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {DOMAINS.map((d) => (
-            <button
-              key={d.id}
-              type="button"
-              onClick={() => setValue('domain', d.id, { shouldValidate: true })}
-              className={`flex items-start gap-3 p-4 rounded-xl text-left border transition-all duration-200 ${
-                selectedDomain === d.id
-                  ? 'border-[var(--color-ieee-blue-light)]/50 bg-[var(--color-surface-3)]'
-                  : 'border-[var(--color-glass-border)] bg-[var(--color-surface-2)] hover:border-white/15'
-              }`}
-              aria-pressed={selectedDomain === d.id}
-            >
-              <div
-                className="w-2.5 h-2.5 rounded-full mt-1 shrink-0"
-                style={{ background: selectedDomain === d.id ? 'var(--color-ieee-blue-light)' : 'rgba(255,255,255,0.15)' }}
-              />
-              <div>
-                <div className="text-xs font-bold tracking-wider text-[var(--color-text-muted)] mb-0.5">{d.tag}</div>
-                <div className={`text-sm font-semibold ${selectedDomain === d.id ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`}>
-                  {d.label}
-                </div>
-              </div>
-              {selectedDomain === d.id && (
-                <CheckCircle2 className="w-4 h-4 ml-auto shrink-0 mt-0.5 text-[var(--color-ieee-blue-light)]" />
-              )}
-            </button>
-          ))}
-        </div>
-        <input
-          type="hidden"
-          {...register('domain', { required: 'Please select a domain' })}
-        />
-      </div>
-    </motion.div>
+    </button>
   );
 }
 
-function Step2({ form }: { form: ReturnType<typeof useForm<FormData>> }) {
-  const { register, formState: { errors } } = form;
-  const years = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'PG 1st Year', 'PG 2nd Year'];
+const backBtn: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: '6px',
+  padding: '10px 18px', borderRadius: '10px',
+  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
+  color: 'rgba(255,255,255,0.6)', fontWeight: 600, fontSize: '0.8125rem', cursor: 'pointer',
+};
 
-  return (
-    <motion.div
-      key="step2"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-6"
-    >
-      <div>
-        <h2 className="text-2xl font-bold text-white mb-1">Team Leader Details</h2>
-        <p className="text-sm text-[var(--color-text-secondary)]">The team leader is the primary point of contact.</p>
-      </div>
+const nextBtn: React.CSSProperties = {
+  display: 'inline-flex', alignItems: 'center', gap: '7px',
+  padding: '10px 22px', borderRadius: '10px',
+  background: 'linear-gradient(135deg, #0088cc 0%, #0062a0 100%)',
+  color: '#ffffff', fontWeight: 700, fontSize: '0.8125rem',
+  letterSpacing: '-0.01em', border: '1px solid rgba(0,170,238,0.3)',
+  boxShadow: '0 0 24px rgba(0,136,204,0.28), inset 0 1px 0 rgba(255,255,255,0.12)',
+  cursor: 'pointer',
+};
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <FormField label="Full Name" id="leaderName" required error={errors.leaderName?.message}>
-          <input
-            id="leaderName"
-            {...register('leaderName', { required: 'Name is required' })}
-            className="form-input"
-            placeholder="Full name as on ID"
-            autoFocus
-          />
-        </FormField>
+interface MemberData { fullName: string; email: string; rollNo: string; }
+const EMPTY: MemberData = { fullName: '', email: '', rollNo: '' };
 
-        <FormField label="Roll / Reg. Number" id="leaderRoll" required error={errors.leaderRoll?.message}>
-          <input
-            id="leaderRoll"
-            {...register('leaderRoll', { required: 'Roll number is required' })}
-            className="form-input"
-            placeholder="e.g. 2100030001"
-          />
-        </FormField>
+function MembersStep({ teamSize, members, setMembers, activeMember: active, setActiveMember: setActive, onBack, onContinue }: {
+  teamSize: number;
+  members: MemberData[];
+  setMembers: React.Dispatch<React.SetStateAction<MemberData[]>>;
+  activeMember: number;
+  setActiveMember: React.Dispatch<React.SetStateAction<number>>;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
+  const max = teamSize - 1;
 
-        <FormField label="Email Address" id="leaderEmail" required error={errors.leaderEmail?.message}>
-          <input
-            id="leaderEmail"
-            type="email"
-            {...register('leaderEmail', {
-              required: 'Email is required',
-              pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Invalid email' },
-            })}
-            className="form-input"
-            placeholder="leader@college.edu"
-          />
-        </FormField>
+  const add = () => {
+    if (members.length >= max) return;
+    setMembers(p => [...p, { ...EMPTY }]);
+    setActive(members.length);
+  };
 
-        <FormField label="Phone (WhatsApp)" id="leaderPhone" required error={errors.leaderPhone?.message}>
-          <input
-            id="leaderPhone"
-            type="tel"
-            {...register('leaderPhone', {
-              required: 'Phone is required',
-              pattern: { value: /^[6-9]\d{9}$/, message: 'Enter valid 10-digit mobile number' },
-            })}
-            className="form-input"
-            placeholder="9XXXXXXXXX"
-          />
-        </FormField>
+  const remove = (i: number) => {
+    setMembers(p => p.filter((_, idx) => idx !== i));
+    setActive(p => (p >= i && p > 0 ? p - 1 : p));
+  };
 
-        <FormField label="Branch / Specialization" id="leaderBranch" required error={errors.leaderBranch?.message}>
-          <input
-            id="leaderBranch"
-            {...register('leaderBranch', { required: 'Branch is required' })}
-            className="form-input"
-            placeholder="e.g. CSE, ECE, IT"
-          />
-        </FormField>
+  const update = (field: keyof MemberData, val: string) =>
+    setMembers(p => p.map((m, i) => i === active ? { ...m, [field]: val } : m));
 
-        <FormField label="Year of Study" id="leaderYear" required error={errors.leaderYear?.message}>
-          <select
-            id="leaderYear"
-            {...register('leaderYear', { required: 'Year is required' })}
-            className="form-input"
-          >
-            <option value="">Select year</option>
-            {years.map((y) => <option key={y} value={y}>{y}</option>)}
-          </select>
-        </FormField>
-      </div>
+  const m = members[active];
+  const canAdd = members.length < max;
+  const isMemberValid = (m: MemberData) =>
+    m.fullName.trim().length >= 2 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(m.email.trim()) &&
+    m.rollNo.trim().length >= 2;
+  const filled = (m: MemberData) => m.fullName.trim() !== '';
+  const [submitError, setSubmitError] = React.useState('');
 
-      <div className="glass-card p-4 border-[var(--color-ieee-blue-light)]/15 bg-[var(--color-surface-3)]">
-        <p className="text-xs text-[var(--color-ieee-blue-light)] leading-relaxed">
-          <strong>Note:</strong> The team leader will receive the registration confirmation, schedule updates, and all official communications via the email and WhatsApp number provided above.
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-function Step3({ form }: { form: ReturnType<typeof useForm<FormData>> }) {
-  const { register, watch, setValue, formState: { errors } } = form;
-  const members = watch('members') || [];
-
-  const addMember = () => {
-    if (members.length < 3) {
-      setValue('members', [...members, { name: '', email: '', roll: '' }]);
+  const handleContinue = () => {
+    // Must have exactly (teamSize - 1) members
+    if (members.length < max) {
+      setSubmitError(`Please add all ${max} member${max > 1 ? 's' : ''} required for a team of ${teamSize}.`);
+      return;
     }
+    // Every member must have all fields valid
+    const firstInvalid = members.findIndex(m => !isMemberValid(m));
+    if (firstInvalid !== -1) {
+      setActive(firstInvalid);
+      setSubmitError(`Member ${firstInvalid + 2} has incomplete or invalid details. Please fill all fields.`);
+      return;
+    }
+    setSubmitError('');
+    onContinue();
   };
 
-  const removeMember = (idx: number) => {
-    setValue('members', members.filter((_, i) => i !== idx));
-  };
 
+  React.useEffect(() => {
+    if (submitError && members.length >= max && members.every(isMemberValid)) {
+      setSubmitError('');
+    }
+  }, [members, max, submitError]);
   return (
-    <motion.div
-      key="step3"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-6"
-    >
-      <div className="flex items-start justify-between gap-4">
+    <>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <h2 className="text-2xl font-bold text-white mb-1">Team Members</h2>
-          <p className="text-sm text-[var(--color-text-secondary)]">Add 1–3 more members (total team size: 2–4).</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(0,136,204,0.12)', border: '1px solid rgba(0,136,204,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Users style={{ width: '13px', height: '13px', color: '#0088cc' }} />
+            </div>
+            <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em', margin: 0 }}>Team Members</h2>
+          </div>
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', margin: 0 }}>
+            Add {max === 1 ? '1 more member' : `1\u2013${max} more members`} &mdash; total team size: {teamSize}.
+          </p>
         </div>
-        <button
-          type="button"
-          onClick={addMember}
-          disabled={members.length >= 3}
-          className="btn-magnetic btn-secondary text-sm py-2 px-4 shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <Plus className="w-4 h-4" />
-          Add Member
-        </button>
+        <div style={{ padding: '3px 10px', borderRadius: '999px', background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.2)', fontSize: '0.7rem', fontWeight: 700, color: 'rgba(0,170,238,0.9)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+          {members.length} / {max}
+        </div>
       </div>
 
-      {members.length === 0 ? (
-        <div className="glass-card p-8 text-center border-dashed border-white/10">
-          <Users className="w-8 h-8 text-white/20 mx-auto mb-3" />
-          <p className="text-sm text-[var(--color-text-muted)]">No additional members yet.</p>
-          <p className="text-xs text-[var(--color-text-muted)] mt-1">You can participate solo or add up to 3 more members.</p>
-          <button type="button" onClick={addMember} className="btn-magnetic btn-secondary text-sm mt-4 mx-auto">
-            <Plus className="w-4 h-4" />
-            Add First Member
+      {/* Divider */}
+      <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+
+      {/* Member tabs + Add button */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+        {members.map((mem, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button
+              onClick={() => setActive(i)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
+                padding: '6px 12px', borderRadius: '8px', cursor: 'pointer',
+                fontSize: '0.75rem', fontWeight: 600, transition: 'all 0.2s',
+                background: active === i ? 'rgba(0,136,204,0.9)' : 'rgba(255,255,255,0.05)',
+                border: active === i ? '1px solid rgba(0,170,238,0.5)' : '1px solid rgba(255,255,255,0.09)',
+                color: active === i ? '#fff' : 'rgba(255,255,255,0.5)',
+                boxShadow: active === i ? '0 0 14px rgba(0,136,204,0.25)' : 'none',
+              }}
+            >
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', flexShrink: 0, background: filled(mem) ? '#34d399' : active === i ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.2)' }} />
+              Member {i + 2}
+            </button>
+            {members.length > 1 && (
+              <button
+                onClick={() => remove(i)}
+                title={`Remove Member ${i + 2}`}
+                style={{ width: '18px', height: '18px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'transparent', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.25)', fontSize: '10px', transition: 'all 0.2s' }}
+              >
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 1l6 6M7 1l-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+              </button>
+            )}
+          </div>
+        ))}
+
+        {canAdd && (
+          <button
+            onClick={add}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
+              padding: '6px 12px', borderRadius: '8px', cursor: 'pointer',
+              fontSize: '0.75rem', fontWeight: 600,
+              background: 'transparent',
+              border: '1px dashed rgba(0,136,204,0.35)',
+              color: 'rgba(0,170,238,0.7)',
+              transition: 'all 0.2s',
+            }}
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 1v8M1 5h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Add Member
+          </button>
+        )}
+      </div>
+
+      {/* Active member form */}
+      <div style={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.02)', padding: '16px' }}>
+        <p style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(0,170,238,0.7)', marginBottom: '14px' }}>
+          Member {active + 2}
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Field icon={User}     label="Full Name"     placeholder="Full name"          value={m.fullName} onChange={v => update('fullName', v)} />
+          <Field icon={Mail}     label="Email Address" placeholder="member@college.edu" value={m.email}    onChange={v => update('email', v)}    type="email" />
+          <Field icon={Hash}     label="Roll Number"   placeholder="Roll / Reg. No."    value={m.rollNo}   onChange={v => update('rollNo', v)} />
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {submitError && (
+          <div style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(251,113,133,0.07)', border: '1px solid rgba(251,113,133,0.25)' }}>
+            <p style={{ fontSize: '0.72rem', color: 'rgba(251,113,133,0.95)', margin: 0, lineHeight: 1.5 }}>{submitError}</p>
+          </div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <button style={backBtn} onClick={onBack}>
+            <ArrowLeft style={{ width: '13px', height: '13px' }} /> Back
+          </button>
+          <button style={nextBtn} onClick={handleContinue}>
+            Continue <ArrowRight style={{ width: '13px', height: '13px' }} />
           </button>
         </div>
-      ) : (
-        <div className="space-y-5">
-          {members.map((_, idx) => (
-            <div key={idx} className="glass-card p-5 relative">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm font-bold text-white">Member {idx + 2}</span>
-                <button
-                  type="button"
-                  onClick={() => removeMember(idx)}
-                  className="w-7 h-7 rounded-lg bg-[var(--color-prism-rose)]/10 hover:bg-[var(--color-prism-rose)]/20 flex items-center justify-center transition-colors"
-                  aria-label={`Remove member ${idx + 2}`}
-                >
-                  <Trash2 className="w-3.5 h-3.5 text-[var(--color-prism-rose)]" />
-                </button>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <FormField label="Full Name" id={`member-${idx}-name`} required>
-                  <input
-                    id={`member-${idx}-name`}
-                    {...register(`members.${idx}.name`, { required: true })}
-                    className="form-input"
-                    placeholder="Full name"
-                  />
-                </FormField>
-                <FormField label="Email Address" id={`member-${idx}-email`} required>
-                  <input
-                    id={`member-${idx}-email`}
-                    type="email"
-                    {...register(`members.${idx}.email`, { required: true })}
-                    className="form-input"
-                    placeholder="member@college.edu"
-                  />
-                </FormField>
-                <FormField label="Roll Number" id={`member-${idx}-roll`} required>
-                  <input
-                    id={`member-${idx}-roll`}
-                    {...register(`members.${idx}.roll`, { required: true })}
-                    className="form-input"
-                    placeholder="Roll / Reg. No."
-                  />
-                </FormField>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </motion.div>
+      </div>
+    </>
   );
 }
-
-function Step4({ form }: { form: ReturnType<typeof useForm<FormData>> }) {
-  const { register, watch, formState: { errors } } = form;
-  const data = watch();
-  const domain = DOMAINS.find((d) => d.id === data.domain);
-
-  return (
-    <motion.div
-      key="step4"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -30 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="space-y-6"
-    >
-      <div>
-        <h2 className="text-2xl font-bold text-white mb-1">Review & Confirm</h2>
-        <p className="text-sm text-[var(--color-text-secondary)]">Please review your details before submitting.</p>
-      </div>
-
-      {/* Summary */}
-      <div className="glass-card p-6 space-y-5">
-        <div>
-          <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest mb-1">Team</div>
-          <div className="font-bold text-white text-lg">{data.teamName || '—'}</div>
-          <div className="text-sm text-[var(--color-text-secondary)] mt-0.5">{data.collegeName}</div>
-        </div>
-
-        {domain && (
-          <div>
-            <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest mb-1">Domain</div>
-            <div className="flex items-center gap-2">
-              <span className="badge text-xs" style={{ color: 'var(--color-ieee-blue-light)', background: 'rgba(0, 98, 155, 0.1)', border: '1px solid rgba(0, 98, 155, 0.2)' }}>
-                {domain.tag}
-              </span>
-              <span className="text-[var(--color-text-primary)] font-medium">{domain.label}</span>
-            </div>
-          </div>
-        )}
-
-        <div>
-          <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest mb-2">Team Leader</div>
-          <div className="flex flex-col gap-1">
-            <div className="text-white font-semibold">{data.leaderName}</div>
-            <div className="text-sm text-[var(--color-text-secondary)]">{data.leaderEmail} · {data.leaderPhone}</div>
-            <div className="text-sm text-[var(--color-text-secondary)]">{data.leaderBranch}, {data.leaderYear}</div>
-          </div>
-        </div>
-
-        {data.members && data.members.length > 0 && (
-          <div>
-            <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest mb-2">
-              Additional Members ({data.members.length})
-            </div>
-            <div className="space-y-2">
-              {data.members.map((m, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/05 border border-white/08 flex items-center justify-center text-xs text-white/60 font-bold">
-                    {i + 2}
-                  </div>
-                  <div>
-                    <div className="text-sm text-white">{m.name}</div>
-                    <div className="text-xs text-[var(--color-text-muted)]">{m.email}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Agreements */}
-      <div className="space-y-3">
-        <label className="flex items-start gap-3 cursor-pointer group">
-          <input
-            type="checkbox"
-            {...register('agreeRules', { required: 'You must agree to the rules' })}
-            className="mt-0.5 w-4 h-4 rounded accent-[var(--color-ieee-blue-light)] shrink-0"
-          />
-          <span className="text-sm text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)] transition-colors leading-relaxed">
-            I have read and agree to the{' '}
-            <Link href="/rules" className="text-[var(--color-ieee-blue-light)] hover:underline" target="_blank">
-              PRISMTECH Rules & Guidelines
-            </Link>{' '}
-            and the IEEE Code of Conduct.
-          </span>
-        </label>
-        {errors.agreeRules && <p className="text-xs text-[var(--color-prism-rose)] ml-7">{errors.agreeRules.message}</p>}
-
-        <label className="flex items-start gap-3 cursor-pointer group">
-          <input
-            type="checkbox"
-            {...register('agreeIP', { required: 'You must confirm IP terms' })}
-            className="mt-0.5 w-4 h-4 rounded accent-[var(--color-ieee-blue-light)] shrink-0"
-          />
-          <span className="text-sm text-[var(--color-text-secondary)] group-hover:text-[var(--color-text-primary)] transition-colors leading-relaxed">
-            I understand that teams retain intellectual property over their projects, and sponsor datasets must follow stated license terms.
-          </span>
-        </label>
-        {errors.agreeIP && <p className="text-xs text-[var(--color-prism-rose)] ml-7">{errors.agreeIP.message}</p>}
-      </div>
-    </motion.div>
-  );
-}
-
-// ---------- Success Screen ----------
-
-function SuccessScreen({ teamName, regId }: { teamName: string; regId: string }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="text-center py-8"
-    >
-      <motion.div
-        className="w-20 h-20 rounded-2xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/30 flex items-center justify-center mx-auto mb-6"
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
-      >
-        <CheckCircle2 className="w-10 h-10 text-[var(--color-ieee-blue-light)]" />
-      </motion.div>
-
-      <h2 className="text-3xl font-black font-display text-[var(--color-text-primary)] mb-2">You're Registered!</h2>
-      <p className="text-[var(--color-text-secondary)] mb-6">
-        Welcome to PRISMTECH 2026, <strong className="text-[var(--color-text-primary)]">{teamName}</strong>.
-      </p>
-
-      <div className="glass-card p-5 max-w-sm mx-auto mb-8 border-[var(--color-ieee-blue-light)]/20">
-        <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-widest mb-1">Registration ID</div>
-        <div className="font-mono text-xl font-bold text-[var(--color-ieee-blue-light)]">{regId}</div>
-        <p className="text-xs text-[var(--color-text-muted)] mt-2">
-          Save this ID. Confirmation details will be sent to the team leader's email.
-        </p>
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link href="/dashboard" className="btn-magnetic btn-primary">
-          <Cpu className="w-4 h-4" />
-          Go to Dashboard
-        </Link>
-        <Link href="/" className="btn-magnetic btn-secondary">
-          Back to Home
-        </Link>
-      </div>
-    </motion.div>
-  );
-}
-
-// ---------- Main Component ----------
 
 export default function RegisterPage() {
-  const [step, setStep] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [regId, setRegId] = useState('');
+  const [step, setStep] = React.useState(0);
 
-  const form = useForm<FormData>({
-    defaultValues: {
-      teamName: '',
-      domain: '',
-      collegeName: '',
-      leaderName: '',
-      leaderEmail: '',
-      leaderPhone: '',
-      leaderRoll: '',
-      leaderBranch: '',
-      leaderYear: '',
-      members: [],
-      agreeRules: false,
-      agreeIP: false,
-    },
-    mode: 'onBlur',
+  // Step 0 state
+  const [teamName, setTeamName]     = React.useState('');
+  const [teamSize, setTeamSize]     = React.useState('');
+  const [track, setTrack]           = React.useState('');
+  const [step0Errors, setStep0Errors] = React.useState<Record<string, string>>({});
+
+  // Step 1 state
+  const [fullName, setFullName]     = React.useState('');
+  const [rollNo, setRollNo]         = React.useState('');
+  const [email, setEmail]           = React.useState('');
+  const [phone, setPhone]           = React.useState('');
+  const [branch, setBranch]         = React.useState('');
+  const [year, setYear]             = React.useState('');
+  const [step1Errors, setStep1Errors] = React.useState<Record<string, string>>({});
+
+  // Step 2 state
+  const [members, setMembers] = React.useState<MemberData[]>([{ ...EMPTY }]);
+  const [activeMember, setActiveMember] = React.useState(0);
+
+  // Step 3 state
+  const [confirmed, setConfirmed] = React.useState(false);
+  const [regId] = React.useState(() => {
+    const ts = Date.now().toString(36).toUpperCase();
+    const rand = Math.random().toString(36).substring(2, 7).toUpperCase();
+    return `PRT-2026-${ts}-${rand}`;
   });
 
-  const stepFields: (keyof FormData)[][] = [
-    ['teamName', 'domain', 'collegeName'],
-    ['leaderName', 'leaderEmail', 'leaderPhone', 'leaderRoll', 'leaderBranch', 'leaderYear'],
-    ['members'],
-    ['agreeRules', 'agreeIP'],
-  ];
+  function validateStep0() {
+    const errs: Record<string, string> = {};
+    if (!teamName.trim()) errs.teamName = 'Team name is required';
+    if (!teamSize.trim()) errs.teamSize = 'Team size is required';
+    if (!track) errs.track = 'Please select a track';
+    setStep0Errors(errs);
+    return Object.keys(errs).length === 0;
+  }
 
-  const next = async () => {
-    const valid = await form.trigger(stepFields[step] as (keyof FormData)[]);
-    if (valid) setStep((s) => s + 1);
-  };
-
-  const prev = () => setStep((s) => s - 1);
-
-  const onSubmit = async (data: FormData) => {
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise((r) => setTimeout(r, 1800));
-    const id = 'PRT-' + Math.random().toString(36).slice(2, 8).toUpperCase();
-    setRegId(id);
-    setIsSubmitting(false);
-    setSubmitted(true);
-  };
-
-  const stepComponents = [
-    <Step1 key="s1" form={form} />,
-    <Step2 key="s2" form={form} />,
-    <Step3 key="s3" form={form} />,
-    <Step4 key="s4" form={form} />,
-  ];
+  function validateStep1() {
+    const errs: Record<string, string> = {};
+    if (!fullName.trim()) errs.fullName = 'Full name is required';
+    if (!rollNo.trim())   errs.rollNo   = 'Roll / Reg. number is required';
+    if (!email.trim())    errs.email    = 'Email address is required';
+    else if (!/\S+@\S+\.\S+/.test(email)) errs.email = 'Enter a valid email';
+    if (!phone.trim())    errs.phone    = 'Phone number is required';
+    if (!branch.trim())   errs.branch   = 'Branch is required';
+    if (!year.trim())     errs.year     = 'Year of study is required';
+    setStep1Errors(errs);
+    return Object.keys(errs).length === 0;
+  }
 
   return (
-    <main className="min-h-screen bg-[var(--color-surface-0)] relative overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute top-0 left-0 w-full h-[600px] pointer-events-none"
-        aria-hidden="true"
-        style={{ background: 'radial-gradient(ellipse at top left, rgba(0,98,155,0.08) 0%, transparent 60%)' }}
-      />
+    <main style={{
+      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
+      paddingLeft: 'clamp(48px, 10vw, 140px)', paddingRight: 'clamp(24px, 6vw, 80px)',
+      paddingTop: '72px', paddingBottom: '48px',
+      backgroundImage: `
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,98,155,0.18) 0%, transparent 70%),
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)
+      `,
+      backgroundSize: 'auto, 52px 52px, 52px 52px',
+      backgroundColor: '#0a0f1a', position: 'relative', gap: '56px', flexWrap: 'wrap',
+    }}>
 
-      {/* Back link */}
-      <div className="absolute top-6 left-4 sm:left-8 z-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-white transition-colors">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Home
+      {/* Back to Home */}
+      <div style={{ position: 'absolute', top: '24px', left: '28px' }}>
+        <Link href="/home" style={{
+          display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '8px 16px',
+          borderRadius: '10px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)',
+          color: 'rgba(255,255,255,0.6)', fontSize: '0.8125rem', fontWeight: 600,
+          textDecoration: 'none', letterSpacing: '-0.01em', backdropFilter: 'blur(8px)',
+        }}>
+          <ArrowLeft style={{ width: '14px', height: '14px' }} /> Back to Home
         </Link>
       </div>
 
-      <div className="container relative z-10 py-16 pt-20 flex flex-col lg:flex-row gap-12 lg:gap-20 items-start min-h-screen">
-
-        {/* Left: Info panel */}
-        <motion.aside
-          className="lg:sticky lg:top-24 lg:w-80 shrink-0"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="flex items-center gap-2.5 mb-8">
-            <div className="w-9 h-9 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-[var(--color-ieee-blue-light)]" fill="currentColor" />
-            </div>
-            <div>
-              <div className="text-base font-bold text-[var(--color-text-primary)] font-display">PRISMTECH 2026</div>
-              <div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-widest">IEEE KLH Hackathon</div>
+      {/* â”€â”€ LEFT: Info Card â”€â”€ */}
+      <div style={{ flex: '0 0 auto', width: '420px' }}>
+        <div style={{
+          background: 'linear-gradient(160deg, rgba(14,22,42,0.97) 0%, rgba(8,14,28,0.99) 100%)',
+          border: '1px solid rgba(34,211,238,0.12)', borderRadius: '20px',
+          boxShadow: '0 0 0 1px rgba(0,136,204,0.06), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)',
+          backdropFilter: 'blur(24px)', padding: '16px 28px', display: 'flex', flexDirection: 'column', gap: '10px',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '999px', background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.25)' }}>
+              <Zap style={{ width: '11px', height: '11px', color: 'rgba(0,136,204,0.95)' }} fill="currentColor" />
+              <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(0,136,204,0.95)' }}>IEEE PRISMTECH 2026</span>
             </div>
           </div>
-
-          <h1 className="text-display-lg text-[var(--color-text-primary)] mb-4">
-            Register your<br />
-            <span className="text-gradient-ieee">team today.</span>
-          </h1>
-
-          <p className="text-[var(--color-text-secondary)] text-sm leading-relaxed mb-8">
-            Join hundreds of students competing at KLH Aziz Nagar, Hyderabad on <strong className="text-white">September 26–27, 2026</strong> for a 24-hour innovation sprint.
-          </p>
-
-          <div className="space-y-3">
-            {[
-              { label: 'Team Size', value: '2 – 4 Members' },
-              { label: 'Registration Deadline', value: '21 September 2026' },
-              { label: 'Event Date', value: '26–27 September 2026' },
-              { label: 'Venue', value: 'KLH Aziz Nagar, Hyderabad' },
-              { label: 'Registration Fee', value: 'TBA — to be announced' },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex items-start gap-3">
-                <ChevronRight className="w-4 h-4 text-[var(--color-prism-cyan)] shrink-0 mt-0.5" />
-                <div>
-                  <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">{label}</div>
-                  <div className="text-sm text-white font-medium">{value}</div>
+          <div style={{ textAlign: 'center' }}>
+            <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.35rem', lineHeight: 1.1, letterSpacing: '-0.03em', marginBottom: '6px' }}>
+              <span style={{ color: '#f1f5f9' }}>Register your </span>
+              <span style={{ background: 'linear-gradient(135deg, #0088cc, #00aaee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>team today.</span>
+            </h1>
+            <p style={{ fontSize: '0.75rem', color: '#8b9ec0', lineHeight: 1.7, margin: 0 }}>
+              Join students from across India competing at KLH Aziz Nagar, Hyderabad on{' '}
+              <strong style={{ color: '#f1f5f9', fontWeight: 600 }}>September 26–27, 2026</strong>{' '}
+              — a 24-hour innovation sprint organised by IEEE KLH.
+            </p>
+          </div>
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)' }} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '7px' }}>
+            {INFO.map(({ icon: Icon, label, value, highlight }) => (
+              <div key={label} style={{
+                display: 'flex', alignItems: 'center', gap: '10px', padding: '6px 10px', borderRadius: '10px',
+                background: highlight ? 'linear-gradient(135deg, rgba(251,113,133,0.08) 0%, rgba(8,16,32,0.5) 100%)' : 'rgba(255,255,255,0.03)',
+                border: highlight ? '1px solid rgba(251,113,133,0.22)' : '1px solid rgba(255,255,255,0.07)',
+              }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: highlight ? 'rgba(251,113,133,0.1)' : 'rgba(0,136,204,0.08)', border: highlight ? '1px solid rgba(251,113,133,0.2)' : '1px solid rgba(0,136,204,0.18)' }}>
+                  <Icon style={{ width: '13px', height: '13px', color: highlight ? 'rgba(251,113,133,0.9)' : 'rgba(0,136,204,0.9)' }} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)', marginBottom: '2px' }}>{label}</div>
+                  <div style={{ fontSize: '0.775rem', fontWeight: 600, color: highlight ? 'rgba(251,113,133,0.95)' : '#f1f5f9', letterSpacing: '-0.01em' }}>{value}</div>
                 </div>
               </div>
             ))}
           </div>
-
-          <div className="mt-8 pt-6 border-t border-white/05">
-            <p className="text-xs text-[var(--color-text-muted)]">
-              Already registered?{' '}
-              <Link href="/auth/login" className="text-[var(--color-prism-cyan)] hover:underline">
-                Sign in to your dashboard
-              </Link>
-            </p>
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)' }}>Already registered?</span>
+            <Link href="/auth/login" style={{ fontSize: '0.75rem', fontWeight: 600, color: 'rgba(34,211,238,0.85)', textDecoration: 'none' }}>Sign in →</Link>
           </div>
-        </motion.aside>
+        </div>
+      </div>
 
-        {/* Right: Form */}
-        <div className="flex-1 max-w-2xl w-full">
-          <motion.div
-            className="glass-card p-7 sm:p-10"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {submitted ? (
-              <SuccessScreen teamName={form.watch('teamName')} regId={regId} />
-            ) : (
-              <>
-                <StepIndicator step={step} total={STEPS.length} />
+      {/* â”€â”€ RIGHT: Multi-step Form Card â”€â”€ */}
+      <div style={{ flex: '0 0 auto', width: '520px' }}>
+        <div style={{
+          background: 'linear-gradient(160deg, rgba(14,22,42,0.97) 0%, rgba(8,14,28,0.99) 100%)',
+          border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px',
+          boxShadow: '0 0 0 1px rgba(0,136,204,0.04), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)',
+          backdropFilter: 'blur(24px)', padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: '20px',
+        }}>
 
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <AnimatePresence mode="wait">
-                    {stepComponents[step]}
-                  </AnimatePresence>
-
-                  {/* Navigation */}
-                  <div className={`flex gap-3 mt-8 ${step > 0 ? 'justify-between' : 'justify-end'}`}>
-                    {step > 0 && (
-                      <button type="button" onClick={prev} className="btn-magnetic btn-secondary">
-                        <ArrowLeft className="w-4 h-4" />
-                        Back
-                      </button>
-                    )}
-
-                    {step < STEPS.length - 1 ? (
-                      <button type="button" onClick={next} className="btn-magnetic btn-primary ml-auto">
-                        Continue
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                    ) : (
-                      <button type="submit" className="btn-magnetic btn-primary ml-auto" disabled={isSubmitting}>
-                        {isSubmitting ? (
-                          <>
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            Submitting...
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 className="w-4 h-4" />
-                            Complete Registration
-                          </>
-                        )}
-                      </button>
-                    )}
+          {/* Step indicator */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            {STEPS.map((label, i) => (
+              <React.Fragment key={label}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+                  <div style={{
+                    width: '26px', height: '26px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.65rem', fontWeight: 700, transition: 'all 0.3s ease',
+                    background: i < step ? 'rgba(0,136,204,0.9)' : i === step ? 'rgba(0,136,204,0.15)' : 'rgba(255,255,255,0.05)',
+                    border: i <= step ? '1px solid rgba(0,136,204,0.6)' : '1px solid rgba(255,255,255,0.1)',
+                    color: i < step ? '#fff' : i === step ? '#0088cc' : 'rgba(255,255,255,0.3)',
+                  }}>
+                    {i < step ? (
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    ) : i + 1}
                   </div>
+                  <span style={{ fontSize: '0.6rem', fontWeight: 600, whiteSpace: 'nowrap', color: i === step ? 'rgba(0,170,238,0.9)' : 'rgba(255,255,255,0.3)' }}>{label}</span>
+                </div>
+                {i < STEPS.length - 1 && <div style={{ flex: 1, height: '1px', marginBottom: '16px', background: i < step ? 'rgba(0,136,204,0.5)' : 'rgba(255,255,255,0.08)', transition: 'background 0.3s ease' }} />}
+              </React.Fragment>
+            ))}
+          </div>
 
-                  {/* Progress */}
-                  <p className="text-center text-xs text-[var(--color-text-muted)] mt-5">
-                    Step {step + 1} of {STEPS.length}
-                  </p>
-                </form>
-              </>
-            )}
-          </motion.div>
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+
+          {/* â”€â”€ STEP 0: Team Information â”€â”€ */}
+          {step === 0 && (
+            <>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(0,136,204,0.12)', border: '1px solid rgba(0,136,204,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Users style={{ width: '13px', height: '13px', color: '#0088cc' }} />
+                  </div>
+                  <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em', margin: 0 }}>Team Information</h2>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', margin: 0 }}>Fill in your team details to secure your spot.</p>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(0,136,204,0.8)', margin: 0 }}>Team Info</p>
+                <Field icon={Users} label="Team Name" placeholder="e.g. Circuit Breakers" value={teamName} onChange={setTeamName} error={step0Errors.teamName} />
+                <Field icon={User}  label="Team Size" placeholder="2 - 4"                 value={teamSize} onChange={setTeamSize} error={step0Errors.teamSize} />
+              </div>
+
+              <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(0,136,204,0.8)', margin: 0 }}>Select Track</p>
+                {step0Errors.track && <p style={{ fontSize: '0.68rem', color: 'rgba(251,113,133,0.9)', margin: 0 }}>{step0Errors.track}</p>}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                  {TRACKS.map(({ emoji, category, title }) => (
+                    <TrackCard key={title} emoji={emoji} category={category} title={title}
+                      selected={track === title} onSelect={() => { setTrack(title); setStep0Errors(e => ({ ...e, track: '' })); }} />
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button style={nextBtn} onClick={() => { if (validateStep0()) setStep(1); }}>
+                  Continue <ArrowRight style={{ width: '13px', height: '13px' }} />
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* â”€â”€ STEP 1: Team Leader â”€â”€ */}
+          {step === 1 && (
+            <>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(0,136,204,0.12)', border: '1px solid rgba(0,136,204,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <User style={{ width: '13px', height: '13px', color: '#0088cc' }} />
+                  </div>
+                  <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em', margin: 0 }}>Team Leader Details</h2>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', margin: 0 }}>The team leader is the primary point of contact.</p>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <Field icon={User}          label="Full Name"               placeholder="Your full name"       value={fullName} onChange={setFullName} error={step1Errors.fullName} />
+                <Field icon={Hash}          label="Roll / Reg. Number"      placeholder="e.g. 21BCE1234"       value={rollNo}   onChange={setRollNo}   error={step1Errors.rollNo} />
+                <Field icon={Mail}          label="Email Address"           placeholder="you@example.com"      value={email}    onChange={setEmail}    error={step1Errors.email}    type="email" />
+                <Field icon={Phone}         label="Phone (WhatsApp)"        placeholder="+91 00000 00000"      value={phone}    onChange={setPhone}    error={step1Errors.phone}    type="tel" />
+                <Field icon={BookOpen}      label="Branch / Specialization" placeholder="e.g. CSE, ECE, IT\u2026"  value={branch}   onChange={setBranch}   error={step1Errors.branch} />
+                {/* Year of Study - dropdown */}
+                <div>
+                  <label style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: '5px', display: 'block' }}>
+                    Year of Study <span style={{ color: 'rgba(251,113,133,0.9)' }}>*</span>
+                  </label>
+                  <div style={{ position: 'relative' }}>
+                    <GraduationCap style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', width: '13px', height: '13px', color: year ? 'rgba(0,136,204,0.9)' : step1Errors.year ? 'rgba(251,113,133,0.7)' : 'rgba(0,136,204,0.5)', pointerEvents: 'none', zIndex: 1 }} />
+                    <select
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                      style={{
+                        width: '100%', padding: '9px 12px 9px 36px', borderRadius: '9px',
+                        background: year ? 'rgba(0,136,204,0.06)' : step1Errors.year ? 'rgba(251,113,133,0.05)' : 'rgba(255,255,255,0.04)',
+                        border: year ? '1px solid rgba(0,136,204,0.7)' : step1Errors.year ? '1px solid rgba(251,113,133,0.55)' : '1px solid rgba(255,255,255,0.09)',
+                        boxShadow: year ? '0 0 0 3px rgba(0,136,204,0.12)' : step1Errors.year ? '0 0 0 3px rgba(251,113,133,0.08)' : 'none',
+                        color: year ? '#f1f5f9' : 'rgba(255,255,255,0.35)',
+                        fontSize: '0.8125rem', outline: 'none', boxSizing: 'border-box',
+                        appearance: 'none', cursor: 'pointer',
+                        transition: 'border-color 0.2s, box-shadow 0.2s, background 0.2s',
+                      }}
+                    >
+                      <option value="" disabled style={{ background: '#0d1628', color: 'rgba(255,255,255,0.35)' }}>Select year</option>
+                      <option value="1st Year" style={{ background: '#0d1628', color: '#f1f5f9' }}>1st Year</option>
+                      <option value="2nd Year" style={{ background: '#0d1628', color: '#f1f5f9' }}>2nd Year</option>
+                      <option value="3rd Year" style={{ background: '#0d1628', color: '#f1f5f9' }}>3rd Year</option>
+                      <option value="4th Year" style={{ background: '#0d1628', color: '#f1f5f9' }}>4th Year</option>
+                    </select>
+                    <svg style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', width: '12px', height: '12px', color: 'rgba(255,255,255,0.35)', pointerEvents: 'none' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6 9 12 15 18 9" /></svg>
+                  </div>
+                  {step1Errors.year && !year && <p style={{ fontSize: '0.68rem', color: 'rgba(251,113,133,0.9)', margin: '4px 0 0 2px' }}>{step1Errors.year}</p>}
+                </div>
+              </div>
+
+              <div style={{ padding: '10px 14px', borderRadius: '10px', background: 'rgba(0,136,204,0.06)', border: '1px solid rgba(0,136,204,0.15)' }}>
+                <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, margin: 0 }}>
+                  <strong style={{ color: 'rgba(0,170,238,0.8)' }}>Note:</strong> The team leader will receive the registration confirmation, schedule updates, and all official communications via the email and WhatsApp number provided above.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button style={backBtn} onClick={() => setStep(0)}>
+                  <ArrowLeft style={{ width: '13px', height: '13px' }} /> Back
+                </button>
+                <button style={nextBtn} onClick={() => { if (validateStep1()) setStep(2); }}>
+                  Continue <ArrowRight style={{ width: '13px', height: '13px' }} />
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* â”€â”€ STEP 2: Team Members â”€â”€ */}
+          {step === 2 && (
+            <MembersStep
+              teamSize={parseInt(teamSize) || 2}
+              members={members}
+              setMembers={setMembers}
+              activeMember={activeMember}
+              setActiveMember={setActiveMember}
+              onBack={() => setStep(1)}
+              onContinue={() => setStep(3)}
+            />
+          )}
+
+          {/* â”€â”€ STEP 3: Confirm â”€â”€ */}
+          {step === 3 && !confirmed && (
+            <>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(0,136,204,0.12)', border: '1px solid rgba(0,136,204,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0088cc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                  </div>
+                  <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9', letterSpacing: '-0.02em', margin: 0 }}>Confirm Registration</h2>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.35)', margin: 0 }}>Review your details before submitting.</p>
+              </div>
+
+              <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+
+              {/* Summary rows */}
+              {[
+                { label: 'Team Name',   value: teamName },
+                { label: 'Team Size',   value: `${teamSize} members` },
+                { label: 'Track',       value: TRACKS.find(t => t.title === track)?.category ?? track },
+                { label: 'Team Leader', value: fullName },
+                { label: 'Email',       value: email },
+                { label: 'Branch',      value: `${branch} - ${year}` },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>{label}</span>
+                  <span style={{ fontSize: '0.8rem', fontWeight: 600, color: '#f1f5f9' }}>{value}</span>
+                </div>
+              ))}
+
+              <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button style={backBtn} onClick={() => setStep(2)}>
+                  <ArrowLeft style={{ width: '13px', height: '13px' }} /> Back
+                </button>
+                <button
+                  style={{ ...nextBtn, background: 'linear-gradient(135deg, #059669 0%, #047857 100%)', border: '1px solid rgba(52,211,153,0.3)', boxShadow: '0 0 24px rgba(52,211,153,0.2), inset 0 1px 0 rgba(255,255,255,0.12)', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                  onClick={() => setConfirmed(true)}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                  Confirm Registration
+                </button>
+              </div>
+            </>
+          )}
+
+          {/* â”€â”€ SUCCESS â”€â”€ */}
+          {step === 3 && confirmed && (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', padding: '12px 0' }}>
+
+              {/* Green check */}
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(52,211,153,0.12)', border: '2px solid rgba(52,211,153,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 32px rgba(52,211,153,0.15)' }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+              </div>
+
+              {/* Title */}
+              <div style={{ textAlign: 'center' }}>
+                <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', letterSpacing: '-0.02em', margin: '0 0 6px' }}>Registration Successful!</h2>
+                <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)', margin: 0, lineHeight: 1.6 }}>
+                  Your team <strong style={{ color: '#f1f5f9' }}>{teamName}</strong> has been registered for IEEE PrismTech 2026.
+                </p>
+              </div>
+
+              {/* Registration ID box */}
+              <div style={{ width: '100%', borderRadius: '12px', background: 'rgba(52,211,153,0.06)', border: '1px solid rgba(52,211,153,0.2)', padding: '16px 20px', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(52,211,153,0.7)', margin: '0 0 8px' }}>Registration ID</p>
+                <p style={{ fontSize: '1rem', fontWeight: 800, color: '#34d399', letterSpacing: '0.06em', fontFamily: 'var(--font-mono)', margin: 0 }}>{regId}</p>
+              </div>
+
+              {/* Note */}
+              <div style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', background: 'rgba(0,136,204,0.06)', border: '1px solid rgba(0,136,204,0.15)' }}>
+                <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6, margin: 0 }}>
+                  <strong style={{ color: 'rgba(0,170,238,0.8)' }}>Save this ID.</strong> Confirmation details will be sent to the team leader&apos;s email at <strong style={{ color: '#f1f5f9' }}>{email}</strong>.
+                </p>
+              </div>
+
+              <Link href="/home" style={{ ...nextBtn, textDecoration: 'none', marginTop: '4px' } as React.CSSProperties}>
+                Back to Home
+              </Link>
+            </div>
+          )}
+
         </div>
       </div>
     </main>
   );
 }
+

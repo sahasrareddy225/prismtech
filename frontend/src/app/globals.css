@@ -107,6 +107,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  transform: translateY(-220%);
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #0b1527;
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  transition: transform var(--duration-base) ease, opacity var(--duration-base) ease;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
 /* ═══════════════════════════════════════════════════
    SCROLLBAR
 ═══════════════════════════════════════════════════ */
@@ -174,9 +197,9 @@ h1, h2, h3, h4, h5, h6 {
 ═══════════════════════════════════════════════════ */
 .container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 56px);
+  padding: 0 clamp(24px, 4vw, 64px);
 }
 
 .container-narrow {
@@ -306,8 +329,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ═══════════════════════════════════════════════════
-   FORM ELEMENTS
+   AUTOFILL OVERRIDE
 ═══════════════════════════════════════════════════ */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 9999px #0d1628 inset !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+  caret-color: #f1f5f9;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 .form-input {
   width: 100%;
   background: var(--color-surface-1);
@@ -474,8 +507,8 @@ select.form-input option {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 10px 22px;
+  gap: 8px;
+  padding: 13px 28px;
   font-family: var(--font-sans);
   font-size: 0.875rem;
   font-weight: 600;
@@ -484,38 +517,40 @@ select.form-input option {
   border: none;
   cursor: pointer;
   position: relative;
-  transition: all var(--duration-base) ease;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   text-decoration: none;
   white-space: nowrap;
 }
 
 .btn-primary {
-  background: var(--color-ieee-blue);
+  background: linear-gradient(135deg, #0088cc 0%, #0062a0 100%);
   color: #ffffff;
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+  border: 1px solid rgba(0,170,238,0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 .btn-primary:hover {
-  background: #0077b8;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3), 0 1px 2px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #009de0 0%, #0077b8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 1px rgba(34,211,238,0.2), 0 8px 24px rgba(0,136,204,0.35), inset 0 1px 0 rgba(255,255,255,0.12);
 }
 
 .btn-primary:active {
   transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(10, 18, 32, 0.6);
   color: var(--color-text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.09);
-  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(10, 18, 32, 0.8);
+  border-color: rgba(34, 211, 238, 0.45);
+  color: rgba(34, 211, 238, 0.95);
+  box-shadow: 0 0 0 1px rgba(34,211,238,0.1), 0 4px 16px rgba(34,211,238,0.08);
   transform: translateY(-1px);
 }
 

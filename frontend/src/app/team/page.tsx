@@ -4,49 +4,20 @@ import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { ExternalLink, Mail, Link2, Users, Zap } from 'lucide-react';
+import { ExternalLink, Mail, Link2, Users, Zap, Info } from 'lucide-react';
 import Link from 'next/link';
-import SectionHeader from '@/components/ui/SectionHeader';
 
 const LEADERSHIP = [
-  {
-    role: 'Student General Chair',
-    name: 'Name Pending',
-    org: 'IEEE KLH Student Branch, Aziz Nagar',
-    initials: 'SGC',
-    socials: { linkedin: '#', email: 'mailto:chair@prismtech.klhieee.com' },
-    pending: true,
-  },
-  {
-    role: 'Vice Chair — Technical',
-    name: 'Name Pending',
-    org: 'IEEE KLH Student Branch',
-    initials: 'VCT',
-    socials: { linkedin: '#', email: 'mailto:technical@prismtech.klhieee.com' },
-    pending: true,
-  },
-  {
-    role: 'Vice Chair — Operations',
-    name: 'Name Pending',
-    org: 'IEEE KLH Student Branch',
-    initials: 'VCO',
-    socials: { linkedin: '#', email: 'mailto:operations@prismtech.klhieee.com' },
-    pending: true,
-  },
-  {
-    role: 'Branch Counselor',
-    name: 'Dr. Sai Sudha Gadde',
-    org: 'IEEE KLH SB Aziz Nagar',
-    initials: 'SSG',
-    socials: { linkedin: '#', email: 'mailto:counselor@prismtech.klhieee.com' },
-    pending: false,
-  },
+  { role: 'Student General Chair',   name: 'To Be Announced', org: 'IEEE KLH Student Branch, Aziz Nagar', initials: 'SGC', pending: true  },
+  { role: 'Vice Chair — Technical',  name: 'To Be Announced', org: 'IEEE KLH Student Branch',             initials: 'VCT', pending: true  },
+  { role: 'Vice Chair — Operations', name: 'To Be Announced', org: 'IEEE KLH Student Branch',             initials: 'VCO', pending: true  },
+  { role: 'Branch Counselor',        name: 'Dr. Sai Sudha Gadde', org: 'IEEE KLH SB Aziz Nagar',         initials: 'SSG', pending: false },
 ];
 
 const STREAMS = [
-  { name: 'Optic Stream', sub: 'IEEE Photonics Society', desc: 'Hardware-focused innovations in photonics and sensor technology.' },
-  { name: 'Neural Stream', sub: 'IEEE Computer Society', desc: 'AI, ML, cybersecurity, and software-centric problem statements.' },
-  { name: 'Social Stream', sub: 'IEEE Women in Engineering', desc: 'Challenges in sustainability, accessibility, education, and social impact.' },
+  { name: 'Optic Stream',  sub: 'IEEE Photonics Society',       desc: 'Hardware-focused innovations in photonics and sensor technology.',                    accent: 'rgba(34,211,238,1)',  glow: 'rgba(34,211,238,0.12)' },
+  { name: 'Neural Stream', sub: 'IEEE Computer Society',        desc: 'AI, ML, cybersecurity, and software-centric problem statements.',                     accent: 'rgba(99,102,241,1)',  glow: 'rgba(99,102,241,0.12)' },
+  { name: 'Social Stream', sub: 'IEEE Women in Engineering',    desc: 'Challenges in sustainability, accessibility, education, and social impact.',           accent: 'rgba(52,211,153,1)',  glow: 'rgba(52,211,153,0.12)' },
 ];
 
 const COMMITTEES = [
@@ -57,251 +28,268 @@ const COMMITTEES = [
 
 const MENTORS = [
   { label: 'Industry Experts', desc: 'Professionals from AI, cybersecurity, IoT, and startup ecosystems.' },
-  { label: 'Faculty Advisors', desc: 'IEEE-affiliated faculty from KLH and partner institutions.' },
-  { label: 'IEEE Members', desc: 'Active IEEE members from regional sections and technical committees.' },
+  { label: 'Faculty Advisors', desc: 'IEEE-affiliated faculty from KLH and partner institutions.'         },
+  { label: 'IEEE Members',     desc: 'Active IEEE members from regional sections and technical committees.' },
 ];
 
-export default function TeamPage() {
-  const heroRef = useRef(null);
-  const teamRef = useRef(null);
-  const streamsRef = useRef(null);
-  const committeesRef = useRef(null);
+function SectionHeading({ eyebrow, title, gradient, inView }: { eyebrow: string; title: string; gradient: string; inView: boolean }) {
+  return (
+    <div style={{ marginBottom: '32px' }}>
+      <motion.div className="inline-flex items-center gap-2 mb-4"
+        initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
+        <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+        <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>{eyebrow}</span>
+        <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+      </motion.div>
+      <motion.h2
+        style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', letterSpacing: '-0.03em', lineHeight: 1.1, margin: 0 }}
+        initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.08 }}>
+        <span className="text-white">{title.split(' ').slice(0, -2).join(' ')} </span>
+        <span className={gradient}>{title.split(' ').slice(-2).join(' ')}</span>
+      </motion.h2>
+    </div>
+  );
+}
 
-  const heroInView = useInView(heroRef, { once: true });
-  const teamInView = useInView(teamRef, { once: true, margin: '-60px' });
-  const streamsInView = useInView(streamsRef, { once: true, margin: '-60px' });
-  const committeesInView = useInView(committeesRef, { once: true, margin: '-60px' });
+export default function TeamPage() {
+  const heroRef       = useRef(null);
+  const leaderRef     = useRef(null);
+  const mentorRef     = useRef(null);
+  const streamsRef    = useRef(null);
+  const committeeRef  = useRef(null);
+
+  const heroInView      = useInView(heroRef,      { once: true });
+  const leaderInView    = useInView(leaderRef,    { once: true, margin: '-40px' });
+  const mentorInView    = useInView(mentorRef,    { once: true, margin: '-40px' });
+  const streamsInView   = useInView(streamsRef,   { once: true, margin: '-40px' });
+  const committeeInView = useInView(committeeRef, { once: true, margin: '-40px' });
 
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+      <main id="main-content" className="min-h-screen" style={{ background: 'var(--color-surface-0)', position: 'relative' }}>
 
-        {/* Hero */}
-        <section ref={heroRef} className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.08) 0%, transparent 70%)' }}
-          />
-          <div className="container relative z-10 text-center">
-            <span className="eyebrow justify-center">The People</span>
-            <h1
-              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-2xl mx-auto"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
-            >
-              Meet the organizing <span className="text-gradient-ieee">committee.</span>
-            </h1>
-            <p className="text-base text-[var(--color-text-secondary)] max-w-xl mx-auto leading-relaxed">
+        {/* Full-page background */}
+        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
+          <div style={{ position: 'absolute', top: '8%', left: '25%', width: '700px', height: '700px', background: 'radial-gradient(ellipse at center, rgba(0,136,204,0.11) 0%, rgba(14,165,233,0.05) 35%, transparent 70%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />
+          <div style={{ position: 'absolute', top: '-5%', right: '-8%', width: '520px', height: '520px', background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 65%)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.05) 0%, transparent 50%, rgba(34,211,238,0.03) 100%)' }} />
+        </div>
+
+        {/* ── Hero ── */}
+        <section ref={heroRef} style={{ position: 'relative', zIndex: 1, paddingTop: '80px', paddingBottom: '64px' }}>
+          <div className="container" style={{ textAlign: 'center' }}>
+            <motion.div className="inline-flex items-center gap-2 mb-6"
+              initial={{ opacity: 0, y: 10 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>The People</span>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+            </motion.div>
+            <motion.h1
+              style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08, fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', marginBottom: '16px' }}
+              initial={{ opacity: 0, y: 20 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.55, delay: 0.08 }}>
+              <span className="text-white">Meet the organizing</span>{' '}
+              <span className="text-gradient-ieee">committee.</span>
+            </motion.h1>
+            <motion.p
+              style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.8, maxWidth: '560px', margin: '0 auto' }}
+              initial={{ opacity: 0, y: 14 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.18 }}>
               PRISMTECH 2026 is powered by a dedicated team of IEEE student volunteers, faculty mentors, and industry judges working across 11 specialized committees.
-            </p>
+            </motion.p>
           </div>
         </section>
 
-        <div className="section">
-          <div className="container space-y-24">
+        {/* ── Body ── */}
+        <section style={{ position: 'relative', zIndex: 1, paddingBottom: '80px' }}>
+          <div className="container" style={{ display: 'flex', flexDirection: 'column', gap: '72px' }}>
 
-          {/* Leadership Cards */}
-          <section ref={teamRef} aria-labelledby="leadership-heading">
-            <motion.span className="eyebrow" initial={{ opacity: 0, y: 16 }} animate={teamInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
-              Leadership
-            </motion.span>
-            <motion.h2 id="leadership-heading" className="text-display-lg text-[var(--color-text-primary)] mt-2 mb-12" initial={{ opacity: 0, y: 20 }} animate={teamInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }}>
-              Organizing committee chairs.
-            </motion.h2>
+            {/* Leadership */}
+            <div ref={leaderRef}>
+              <SectionHeading eyebrow="Leadership" title="Organizing committee chairs." gradient="text-gradient-ieee" inView={leaderInView} />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {LEADERSHIP.map((person, i) => (
-                <motion.div
-                  key={i}
-                  className="glass-card p-7 flex flex-col items-center text-center group relative overflow-hidden"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={teamInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                >
-                  {/* Top color accent */}
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--color-ieee-blue-light)]/40 to-transparent" />
-                  
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ background: 'radial-gradient(circle at top, rgba(0, 98, 155, 0.05), transparent 60%)' }} />
-
-                  {/* Avatar */}
-                  <div
-                    className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-black font-display mb-5 relative bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 text-[var(--color-ieee-blue-light)]"
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {LEADERSHIP.map((person, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={leaderInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.4, delay: i * 0.08 }}
+                    whileHover={{ y: -4, boxShadow: '0 0 28px rgba(0,136,204,0.18), 0 8px 24px rgba(0,0,0,0.3)' }}
+                    style={{
+                      borderRadius: '16px',
+                      background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))',
+                      border: '1px solid rgba(255,255,255,0.07)',
+                      backdropFilter: 'blur(20px)',
+                      padding: '28px 20px 22px',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+                      position: 'relative', overflow: 'hidden',
+                      transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                    }}
                   >
-                    {person.initials}
-                    {person.pending && (
-                      <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-white/20 border-2 border-[var(--color-surface-2)]" title="Name to be announced" />
-                    )}
-                  </div>
+                    {/* Top accent */}
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, rgba(0,136,204,0.6), rgba(34,211,238,0.3), transparent)' }} />
 
-                  {/* Role */}
-                  <div
-                    className="badge mb-3 text-xs"
-                    style={{ color: 'var(--color-ieee-blue-light)', background: 'rgba(0, 98, 155, 0.1)', border: '1px solid rgba(0, 98, 155, 0.2)' }}
-                  >
-                    {person.role}
-                  </div>
+                    {/* Avatar */}
+                    <div style={{
+                      width: '64px', height: '64px', borderRadius: '16px', marginBottom: '16px',
+                      background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.25)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 800,
+                      color: 'rgba(34,211,238,0.85)', letterSpacing: '0.04em',
+                      boxShadow: '0 0 20px rgba(0,136,204,0.1)',
+                      position: 'relative',
+                    }}>
+                      {person.initials}
+                      {person.pending && (
+                        <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '10px', height: '10px', borderRadius: '50%', background: 'rgba(245,158,11,0.8)', border: '2px solid rgba(8,14,28,1)' }} />
+                      )}
+                    </div>
 
-                  <h3 className="font-bold text-[var(--color-text-primary)] text-base mb-0.5">
-                    {person.pending ? (
-                      <span className="italic text-white/40">To Be Announced</span>
-                    ) : (
-                      person.name
-                    )}
-                  </h3>
-                  <p className="text-xs text-[var(--color-text-muted)] mb-5">{person.org}</p>
+                    {/* Role badge */}
+                    <div style={{
+                      fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                      padding: '3px 10px', borderRadius: '999px', marginBottom: '10px',
+                      background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)',
+                      color: 'rgba(34,211,238,0.8)',
+                    }}>
+                      {person.role}
+                    </div>
 
-                  {/* Socials */}
-                  <div className="flex items-center gap-2 mt-auto">
-                    {person.socials.linkedin && (
-                      <a
-                        href={person.socials.linkedin}
-                        className="w-8 h-8 rounded-lg bg-white/04 border border-white/08 flex items-center justify-center hover:border-[var(--color-ieee-blue-light)]/40 hover:text-[var(--color-ieee-blue-light)] transition-all text-white/40"
-                        aria-label="LinkedIn"
-                      >
-                        <Link2 className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    {person.socials.email && (
-                      <a
-                        href={person.socials.email}
-                        className="w-8 h-8 rounded-lg bg-white/04 border border-white/08 flex items-center justify-center hover:border-[var(--color-prism-cyan)]/40 hover:text-[var(--color-prism-cyan)] transition-all text-white/40"
-                        aria-label="Email"
-                      >
-                        <Mail className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                    {/* Name */}
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: person.pending ? 'rgba(139,158,192,0.4)' : 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em', marginBottom: '4px', fontStyle: person.pending ? 'italic' : 'normal' }}>
+                      {person.name}
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'rgba(139,158,192,0.45)', marginBottom: '18px' }}>{person.org}</div>
 
-            {/* Note about pending names */}
-            <div className="mt-6 flex items-start gap-3 p-4 rounded-xl bg-[var(--color-surface-2)] border border-white/06 max-w-lg">
-              <div className="w-2 h-2 rounded-full bg-[var(--color-ieee-blue-light)] shrink-0 mt-1.5" />
-              <p className="text-xs text-[var(--color-text-secondary)]">
-                Committee chair names marked with an indicator will be updated as the organizing committee is formally constituted. Follow our social channels for announcements.
-              </p>
-            </div>
-          </section>
+                    {/* Divider */}
+                    <div style={{ height: '1px', width: '100%', background: 'rgba(255,255,255,0.05)', marginBottom: '14px' }} />
 
-          {/* Mentors & Judges */}
-          <section aria-labelledby="mentors-heading">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <span className="eyebrow">Mentors & Judges</span>
-                <h2 id="mentors-heading" className="text-display-lg text-[var(--color-text-primary)] mt-2 mb-5">
-                  Guided by{' '}
-                  <span className="text-gradient-ieee">industry experts.</span>
-                </h2>
-                <p className="text-[var(--color-text-secondary)] leading-relaxed mb-8">
-                  PRISMTECH's mentor and jury panels are drawn from industry, academia, and IEEE's professional network. 
-                  Mentors are available throughout the 24-hour sprint to provide technical guidance, ideation support, 
-                  and pitch coaching.
-                </p>
-                <Link href="/contact" className="btn-magnetic btn-secondary">
-                  <ExternalLink className="w-4 h-4" />
-                  Join as a Mentor or Judge
-                </Link>
+                    {/* Social icons */}
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {[{ icon: Link2, label: 'LinkedIn' }, { icon: Mail, label: 'Email' }].map(({ icon: Icon, label }) => (
+                        <a key={label} href="#" aria-label={label}
+                          style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(139,158,192,0.4)', textDecoration: 'none', transition: 'all 0.2s' }}
+                          onMouseEnter={e => { e.currentTarget.style.color = 'rgba(34,211,238,0.8)'; e.currentTarget.style.borderColor = 'rgba(34,211,238,0.2)'; }}
+                          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(139,158,192,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}>
+                          <Icon style={{ width: '13px', height: '13px' }} />
+                        </a>
+                      ))}
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-              <div className="space-y-4">
-                {MENTORS.map((m, i) => (
-                  <div key={i} className="glass-card p-5 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center shrink-0">
-                      <Users className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
+
+              {/* Pending note */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }} animate={leaderInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.4 }}
+                style={{ marginTop: '16px', display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px 16px', borderRadius: '12px', background: 'rgba(14,20,36,0.7)', border: '1px solid rgba(255,255,255,0.06)', maxWidth: '520px' }}>
+                <Info style={{ width: '13px', height: '13px', color: 'rgba(34,211,238,0.5)', flexShrink: 0, marginTop: '2px' }} />
+                <p style={{ fontSize: '12px', color: 'rgba(139,158,192,0.55)', lineHeight: 1.7, margin: 0 }}>
+                  Committee chair names will be updated as the organizing committee is formally constituted. Follow our social channels for announcements.
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Mentors & Judges */}
+            <div ref={mentorRef}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <div>
+                  <SectionHeading eyebrow="Mentors & Judges" title="Guided by industry experts." gradient="text-gradient-ieee" inView={mentorInView} />
+                  <motion.p
+                    style={{ fontSize: '14px', color: 'rgba(139,158,192,0.65)', lineHeight: 1.8, marginBottom: '28px' }}
+                    initial={{ opacity: 0, y: 12 }} animate={mentorInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.2 }}>
+                    PRISMTECH's mentor and jury panels are drawn from industry, academia, and IEEE's professional network. Mentors are available throughout the 24-hour sprint to provide technical guidance, ideation support, and pitch coaching.
+                  </motion.p>
+                  <motion.div initial={{ opacity: 0, y: 10 }} animate={mentorInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.28 }}>
+                    <Link href="/contact" className="btn-magnetic btn-secondary inline-flex items-center gap-2"
+                      style={{ fontSize: '0.875rem', padding: '12px 24px', borderRadius: '12px', border: '1px solid rgba(34,211,238,0.2)' }}>
+                      <ExternalLink style={{ width: '14px', height: '14px' }} />
+                      Join as a Mentor or Judge
+                    </Link>
+                  </motion.div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  {MENTORS.map((m, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity: 0, x: 20 }} animate={mentorInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
+                      style={{ borderRadius: '14px', background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', padding: '18px 20px', display: 'flex', alignItems: 'flex-start', gap: '14px', overflow: 'hidden', position: 'relative' }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, rgba(0,136,204,0.5), transparent)' }} />
+                      <div style={{ width: '36px', height: '36px', borderRadius: '9px', flexShrink: 0, background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Users style={{ width: '15px', height: '15px', color: 'rgba(34,211,238,0.8)' }} />
+                      </div>
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '13.5px', color: 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em', marginBottom: '4px' }}>{m.label}</div>
+                        <div style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.6)', lineHeight: 1.65 }}>{m.desc}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Streams */}
+            <div ref={streamsRef}>
+              <SectionHeading eyebrow="Event Streams" title="Three streams, one event." gradient="text-gradient-ieee" inView={streamsInView} />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                {STREAMS.map((s, i) => (
+                  <motion.div key={s.name}
+                    initial={{ opacity: 0, y: 20 }} animate={streamsInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: i * 0.1 }}
+                    whileHover={{ y: -4, boxShadow: `0 0 28px ${s.glow}, 0 8px 24px rgba(0,0,0,0.3)` }}
+                    style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', padding: '24px', position: 'relative', overflow: 'hidden', transition: 'box-shadow 0.25s ease, transform 0.25s ease', cursor: 'default' }}>
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${s.accent}, transparent)` }} />
+                    <div style={{ display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: '999px', background: s.glow, border: `1px solid ${s.accent}30`, fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: s.accent, marginBottom: '14px' }}>
+                      {s.sub}
                     </div>
-                    <div>
-                      <div className="font-bold text-[var(--color-text-primary)] mb-1">{m.label}</div>
-                      <div className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{m.desc}</div>
-                    </div>
-                  </div>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.0625rem', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.02em', marginBottom: '10px' }}>{s.name}</h3>
+                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', marginBottom: '10px' }} />
+                    <p style={{ fontSize: '13px', color: 'rgba(139,158,192,0.65)', lineHeight: 1.75, margin: 0 }}>{s.desc}</p>
+                  </motion.div>
                 ))}
               </div>
             </div>
-          </section>
 
-          {/* Streams */}
-          <section ref={streamsRef} aria-labelledby="streams-heading">
-            <motion.span className="eyebrow" initial={{ opacity: 0, y: 16 }} animate={streamsInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
-              Event Streams
-            </motion.span>
-            <motion.h2 id="streams-heading" className="text-display-lg text-[var(--color-text-primary)] mt-2 mb-10" initial={{ opacity: 0, y: 20 }} animate={streamsInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }}>
-              Three streams, one event.
-            </motion.h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {STREAMS.map((s, i) => (
-                <motion.div
-                  key={s.name}
-                  className="glass-card p-7 group relative overflow-hidden"
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={streamsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                >
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[var(--color-ieee-blue-light)]/40 to-transparent" />
-                  <div className="w-3 h-3 rounded-full mb-5 bg-[var(--color-ieee-blue-light)] shadow-sm" />
-                  <h3 className="font-bold text-[var(--color-text-primary)] text-lg mb-1">{s.name}</h3>
-                  <div className="text-xs font-bold tracking-wider mb-4 text-[var(--color-ieee-blue-light)]">{s.sub}</div>
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{s.desc}</p>
-                </motion.div>
-              ))}
+            {/* Committees */}
+            <div ref={committeeRef}>
+              <SectionHeading eyebrow="Committees" title="11 teams, one vision." gradient="text-gradient-ieee" inView={committeeInView} />
+              <motion.p style={{ fontSize: '14px', color: 'rgba(139,158,192,0.6)', lineHeight: 1.8, maxWidth: '560px', marginBottom: '28px' }}
+                initial={{ opacity: 0, y: 10 }} animate={committeeInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.16 }}>
+                PRISMTECH is organized across 11 specialized coordination teams, each handling a critical area of the event lifecycle.
+              </motion.p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {COMMITTEES.map((c, i) => (
+                  <motion.div key={c}
+                    initial={{ opacity: 0, y: 10 }} animate={committeeInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.3, delay: 0.2 + i * 0.04 }}
+                    style={{ padding: '7px 16px', borderRadius: '999px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', fontSize: '12.5px', fontWeight: 600, color: 'rgba(139,158,192,0.7)', letterSpacing: '0.01em' }}>
+                    {c}
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </section>
 
-          {/* Committees */}
-          <section ref={committeesRef} aria-labelledby="committees-heading">
-            <motion.span className="eyebrow" initial={{ opacity: 0, y: 16 }} animate={committeesInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
-              Committees
-            </motion.span>
-            <motion.h2 id="committees-heading" className="text-display-lg text-[var(--color-text-primary)] mt-2 mb-8" initial={{ opacity: 0, y: 20 }} animate={committeesInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.1 }}>
-              11 teams, one vision.
-            </motion.h2>
-            <motion.p
-              className="text-[var(--color-text-secondary)] max-w-xl mb-8 leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={committeesInView ? { opacity: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              PRISMTECH is organized across 11 specialized coordination teams, each handling a critical area of the event lifecycle.
-            </motion.p>
+            {/* CTA */}
             <motion.div
-              className="flex flex-wrap gap-2.5"
-              initial={{ opacity: 0, y: 12 }}
-              animate={committeesInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              {COMMITTEES.map((c, i) => (
-                <motion.span
-                  key={c}
-                  className="badge badge-neutral"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={committeesInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ duration: 0.3, delay: 0.3 + i * 0.03 }}
-                >
-                  {c}
-                </motion.span>
-              ))}
+              initial={{ opacity: 0, y: 20 }} animate={committeeInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.5 }}
+              style={{ borderRadius: '16px', background: 'linear-gradient(135deg, rgba(0,136,204,0.08), rgba(8,16,32,0.6))', border: '1px solid rgba(0,136,204,0.18)', backdropFilter: 'blur(20px)', padding: '32px 36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '3px', background: 'linear-gradient(to bottom, rgba(34,211,238,0.7), rgba(59,130,246,0.3), transparent)' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Zap style={{ width: '20px', height: '20px', color: 'rgba(34,211,238,0.85)' }} />
+                </div>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.015em', marginBottom: '4px' }}>Ready to be part of PRISMTECH?</div>
+                  <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 21, 2026.</div>
+                </div>
+              </div>
+              <Link href="/auth/register" className="btn-magnetic btn-primary"
+                style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
+                Register Now
+              </Link>
             </motion.div>
-          </section>
 
-          {/* Join CTA */}
-          <div className="glass-card p-8 sm:p-12 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center shrink-0">
-                <Zap className="w-6 h-6 text-[var(--color-ieee-blue-light)]" fill="currentColor" />
-              </div>
-              <div>
-                <div className="font-bold text-[var(--color-text-primary)] text-lg">Ready to be part of PRISMTECH?</div>
-                <div className="text-sm text-[var(--color-text-secondary)]">Register your team before September 21, 2026.</div>
-              </div>
-            </div>
-            <Link href="/auth/register" className="btn-magnetic btn-primary shrink-0">
-              Register Now
-            </Link>
           </div>
-          </div>
-        </div>
+        </section>
 
       </main>
       <Footer />

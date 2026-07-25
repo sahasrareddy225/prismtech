@@ -1,14 +1,15 @@
+'use client';
+
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import type { Metadata } from 'next';
-import { Download, CheckCircle2, XCircle, BookOpen, Scale, Shield, Lightbulb, Mic, MonitorSmartphone, Target, Wrench, BarChart3 } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
+import {
+  Download, CheckCircle2, XCircle, BookOpen, Scale,
+  Shield, Lightbulb, Mic, MonitorSmartphone, Target,
+  Wrench, BarChart3, AlertTriangle, Lock,
+} from 'lucide-react';
 import Link from 'next/link';
-import SectionHeader from '@/components/ui/SectionHeader';
-
-export const metadata: Metadata = {
-  title: 'Rules & Guidelines | PRISMTECH 2026',
-  description: 'Complete rules, code of conduct, submission requirements, and judging criteria for IEEE PRISMTECH Hackathon 2026.',
-};
 
 const ELIGIBILITY = [
   'Open to undergraduate and postgraduate students from recognized institutions.',
@@ -43,188 +44,258 @@ const DONT = [
 ];
 
 const JUDGING = [
-  { icon: Lightbulb, label: 'Innovation', weight: '20%', color: 'var(--color-prism-cyan)', desc: 'Originality of the concept and creativity in approach' },
-  { icon: Target, label: 'Feasibility', weight: '20%', color: '#a78bfa', desc: 'Technical practicality and real-world implementability' },
-  { icon: BarChart3, label: 'Impact', weight: '20%', color: 'var(--color-prism-gold)', desc: 'Social, environmental, or business value created' },
-  { icon: Wrench, label: 'Technical Depth', weight: '20%', color: 'var(--color-prism-green)', desc: 'Code quality, architecture, and technical soundness' },
-  { icon: MonitorSmartphone, label: 'UX & Design', weight: '10%', color: 'var(--color-prism-rose)', desc: 'User experience, accessibility, and interface quality' },
-  { icon: Mic, label: 'Pitch Quality', weight: '10%', color: 'var(--color-ieee-blue-light)', desc: 'Clarity, storytelling, and conviction in final presentation' },
+  { icon: Lightbulb,        label: 'Innovation',     weight: '20%', accent: 'rgba(34,211,238,1)',  glow: 'rgba(34,211,238,0.12)', desc: 'Originality of the concept and creativity in approach' },
+  { icon: Target,           label: 'Feasibility',    weight: '20%', accent: 'rgba(99,102,241,1)',  glow: 'rgba(99,102,241,0.12)', desc: 'Technical practicality and real-world implementability' },
+  { icon: BarChart3,        label: 'Impact',         weight: '20%', accent: 'rgba(245,158,11,1)',  glow: 'rgba(245,158,11,0.12)', desc: 'Social, environmental, or business value created' },
+  { icon: Wrench,           label: 'Technical Depth',weight: '20%', accent: 'rgba(52,211,153,1)',  glow: 'rgba(52,211,153,0.12)', desc: 'Code quality, architecture, and technical soundness' },
+  { icon: MonitorSmartphone,label: 'UX & Design',    weight: '10%', accent: 'rgba(251,113,133,1)', glow: 'rgba(251,113,133,0.12)',desc: 'User experience, accessibility, and interface quality' },
+  { icon: Mic,              label: 'Pitch Quality',  weight: '10%', accent: 'rgba(0,136,204,1)',   glow: 'rgba(0,136,204,0.12)', desc: 'Clarity, storytelling, and conviction in final presentation' },
 ];
 
+function SectionLabel({ icon: Icon, label }: { icon: React.ElementType; label: string }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+      <div style={{
+        width: '38px', height: '38px', borderRadius: '10px', flexShrink: 0,
+        background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 0 12px rgba(0,136,204,0.1)',
+      }}>
+        <Icon style={{ width: '17px', height: '17px', color: 'rgba(34,211,238,0.85)' }} />
+      </div>
+      <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(1.125rem, 2vw, 1.375rem)', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.02em', margin: 0 }}>
+        {label}
+      </h2>
+    </div>
+  );
+}
+
 export default function RulesPage() {
+  const heroRef    = useRef(null);
+  const bodyRef    = useRef(null);
+  const heroInView = useInView(heroRef, { once: true });
+  const bodyInView = useInView(bodyRef, { once: true, margin: '-40px' });
+
   return (
     <>
       <Navbar />
-      <main id="main-content" className="min-h-screen bg-[var(--color-surface-0)]">
+      <main id="main-content" className="min-h-screen" style={{ background: 'var(--color-surface-0)', position: 'relative' }}>
 
-        {/* Hero */}
-        <section className="relative pt-28 pb-12 border-b border-white/[0.05] overflow-hidden">
-          <div
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
-            aria-hidden="true"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(0,98,155,0.08) 0%, transparent 70%)' }}
-          />
-          <div className="container relative z-10 text-center">
-            <span className="eyebrow justify-center">Rules & Guidelines</span>
-            <h1
-              className="text-[var(--color-text-primary)] mt-2 mb-4 max-w-2xl mx-auto"
-              style={{ fontSize: 'clamp(1.75rem, 4vw, 3rem)', fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '-0.025em', lineHeight: 1.1 }}
-            >
-              Clear rules for <span className="text-gradient-ieee">fair innovation.</span>
-            </h1>
-            <p className="text-base text-[var(--color-text-secondary)] max-w-xl mx-auto leading-relaxed mb-6">
+        {/* Full-page background */}
+        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
+          <div style={{ position: 'absolute', top: '8%', left: '25%', width: '700px', height: '700px', background: 'radial-gradient(ellipse at center, rgba(0,136,204,0.11) 0%, rgba(14,165,233,0.05) 35%, transparent 70%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />
+          <div style={{ position: 'absolute', top: '-5%', right: '-8%', width: '520px', height: '520px', background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.08) 0%, transparent 65%)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px)', backgroundSize: '52px 52px' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.05) 0%, transparent 50%, rgba(34,211,238,0.03) 100%)' }} />
+        </div>
+
+        {/* ── Hero ── */}
+        <section ref={heroRef} style={{ position: 'relative', zIndex: 1, paddingTop: '80px', paddingBottom: '64px' }}>
+          <div className="container" style={{ textAlign: 'center' }}>
+
+            <motion.div className="inline-flex items-center gap-2 mb-6"
+              initial={{ opacity: 0, y: 10 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+              <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Rules & Guidelines</span>
+              <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
+            </motion.div>
+
+            <motion.h1
+              style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.08, fontSize: 'clamp(2rem, 4.5vw, 3.25rem)', marginBottom: '16px' }}
+              initial={{ opacity: 0, y: 20 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.55, delay: 0.08 }}>
+              <span className="text-white">Clear rules for</span>{' '}
+              <span className="text-gradient-ieee">fair innovation.</span>
+            </motion.h1>
+
+            <motion.p
+              style={{ fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.8, maxWidth: '520px', margin: '0 auto 32px' }}
+              initial={{ opacity: 0, y: 14 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.18 }}>
               Read the complete rules before registering. These guidelines ensure a fair, safe, and rewarding experience for all participants.
-            </p>
-            <a
+            </motion.p>
+
+            <motion.a
               href="/downloads/rulebook.pdf"
               download
-              className="btn-magnetic btn-primary inline-flex"
-            >
-              <Download className="w-4 h-4" />
+              initial={{ opacity: 0, y: 10 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.28 }}
+              className="btn-magnetic btn-primary inline-flex items-center gap-2"
+              style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)' }}>
+              <Download style={{ width: '15px', height: '15px' }} />
               Download Official Rulebook
-            </a>
+            </motion.a>
+
           </div>
         </section>
 
-        <div className="section">
-          <div className="container space-y-20">
+        {/* ── Body ── */}
+        <section ref={bodyRef} style={{ position: 'relative', zIndex: 1, paddingBottom: '80px' }}>
+          <div className="container">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '48px', maxWidth: '900px', margin: '0 auto' }}>
 
-            {/* Eligibility */}
-            <section aria-labelledby="eligibility-heading">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-                </div>
-                <h2 id="eligibility-heading" className="text-2xl font-bold text-[var(--color-text-primary)]">Eligibility & Team Rules</h2>
-              </div>
-            <div className="glass-card p-7">
-              <ul className="space-y-4">
-                {ELIGIBILITY.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <div className="w-6 h-6 rounded-full bg-[var(--color-ieee-blue-glow)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center shrink-0 mt-0.5">
-                      <span className="text-[10px] font-bold text-[var(--color-ieee-blue-light)]">{i + 1}</span>
-                    </div>
-                    <span className="text-[var(--color-text-secondary)] leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
-            {/* Submission */}
-            <section aria-labelledby="submission-heading">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                  <Scale className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-                </div>
-                <h2 id="submission-heading" className="text-2xl font-bold text-[var(--color-text-primary)]">Submission Requirements</h2>
-              </div>
-            <div className="glass-card p-7">
-              <p className="text-sm text-[var(--color-text-secondary)] mb-5">
-                Every team must submit the following before the hacking deadline. Incomplete submissions will be disqualified from evaluation.
-              </p>
-              <ul className="space-y-3">
-                {SUBMISSION.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-[var(--color-prism-cyan)] shrink-0 mt-0.5" />
-                    <span className="text-[var(--color-text-secondary)] text-sm leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
-            {/* Do / Don't */}
-            <section aria-labelledby="conduct-heading">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-                </div>
-                <h2 id="conduct-heading" className="text-2xl font-bold text-[var(--color-text-primary)]">Code of Conduct</h2>
-              </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="glass-card p-7 border-[var(--color-prism-green)]/10">
-                <div className="flex items-center gap-2 mb-5">
-                  <CheckCircle2 className="w-5 h-5 text-[var(--color-prism-green)]" />
-                  <h3 className="font-bold text-white">You Should</h3>
-                </div>
-                <ul className="space-y-3">
-                  {DO.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-[var(--color-text-secondary)]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-prism-green)] shrink-0 mt-1.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="glass-card p-7 border-[var(--color-prism-rose)]/10">
-                <div className="flex items-center gap-2 mb-5">
-                  <XCircle className="w-5 h-5 text-[var(--color-prism-rose)]" />
-                  <h3 className="font-bold text-white">You Must Not</h3>
-                </div>
-                <ul className="space-y-3">
-                  {DONT.map((item, i) => (
-                    <li key={i} className="flex items-start gap-2.5 text-sm text-[var(--color-text-secondary)]">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-prism-rose)] shrink-0 mt-1.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-6 glass-card p-5 border-[var(--color-prism-rose)]/10 bg-[var(--color-prism-rose)]/05">
-              <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">
-                <strong className="text-white">Disqualification:</strong>{' '}
-                Violations of the code of conduct, plagiarism, safety violations, or disruptive behavior may result in immediate disqualification. The organizing committee's decision is final.
-              </p>
-            </div>
-          </section>
-
-          {/* Judging Criteria */}
-          <section aria-labelledby="judging-heading-rules">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-3)] border border-[var(--color-ieee-blue-light)]/20 flex items-center justify-center">
-                <Scale className="w-5 h-5 text-[var(--color-ieee-blue-light)]" />
-              </div>
-              <h2 id="judging-heading-rules" className="text-2xl font-bold text-white">Judging Criteria</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {JUDGING.map((c) => (
-                <div key={c.label} className="glass-card p-5" style={{ borderColor: `${c.color}15` }}>
-                  <div className="flex items-center justify-between mb-3">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center"
-                      style={{ background: `${c.color}15`, border: `1px solid ${c.color}20` }}
-                    >
-                      <c.icon className="w-4 h-4" style={{ color: c.color }} />
-                    </div>
-                    <span className="text-2xl font-black font-display" style={{ color: c.color }}>{c.weight}</span>
+              {/* Eligibility */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={bodyInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5 }}>
+                <SectionLabel icon={BookOpen} label="Eligibility & Team Rules" />
+                <div style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', overflow: 'hidden' }}>
+                  <div style={{ height: '2px', background: 'linear-gradient(90deg, rgba(0,136,204,0.7), rgba(34,211,238,0.3), transparent)' }} />
+                  <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '0' }}>
+                    {ELIGIBILITY.map((item, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '14px 0', borderBottom: i < ELIGIBILITY.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                        <div style={{ width: '26px', height: '26px', borderRadius: '50%', flexShrink: 0, background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', fontWeight: 700, color: 'rgba(34,211,238,0.8)' }}>{i + 1}</span>
+                        </div>
+                        <span style={{ fontSize: '13.5px', color: 'rgba(139,158,192,0.75)', lineHeight: 1.7, paddingTop: '3px' }}>{item}</span>
+                      </div>
+                    ))}
                   </div>
-                  <h3 className="font-bold text-white mb-1">{c.label}</h3>
-                  <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">{c.desc}</p>
                 </div>
-              ))}
-            </div>
-          </section>
+              </motion.div>
 
-          {/* IP */}
-          <section>
-            <div className="glass-card p-7 flex flex-col sm:flex-row items-start sm:items-center gap-6 justify-between">
-              <div>
-                <h3 className="font-bold text-white text-lg mb-2">Intellectual Property</h3>
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed max-w-xl">
-                  Teams retain all intellectual property rights over their projects. Shared sponsor datasets or APIs must be used in accordance with their respective license terms as communicated at the event.
-                </p>
-              </div>
-              <Link href="/auth/register" className="btn-magnetic btn-primary shrink-0">
-                Register Now
-              </Link>
+              {/* Submission */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={bodyInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.08 }}>
+                <SectionLabel icon={Scale} label="Submission Requirements" />
+                <div style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', overflow: 'hidden' }}>
+                  <div style={{ height: '2px', background: 'linear-gradient(90deg, rgba(99,102,241,0.7), rgba(99,102,241,0.2), transparent)' }} />
+                  <div style={{ padding: '24px 28px' }}>
+                    <p style={{ fontSize: '13px', color: 'rgba(139,158,192,0.55)', lineHeight: 1.75, marginBottom: '20px', paddingBottom: '16px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                      Every team must submit the following before the hacking deadline. Incomplete submissions will be disqualified from evaluation.
+                    </p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                      {SUBMISSION.map((item, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 0', borderBottom: i < SUBMISSION.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                          <CheckCircle2 style={{ width: '15px', height: '15px', color: 'rgba(34,211,238,0.7)', flexShrink: 0, marginTop: '2px' }} />
+                          <span style={{ fontSize: '13.5px', color: 'rgba(139,158,192,0.75)', lineHeight: 1.7 }}>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Code of Conduct */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={bodyInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.16 }}>
+                <SectionLabel icon={Shield} label="Code of Conduct" />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+
+                  {/* You Should */}
+                  <div style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))', border: '1px solid rgba(52,211,153,0.12)', backdropFilter: 'blur(20px)', overflow: 'hidden' }}>
+                    <div style={{ height: '2px', background: 'linear-gradient(90deg, rgba(52,211,153,0.7), transparent)' }} />
+                    <div style={{ padding: '20px 24px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                        <CheckCircle2 style={{ width: '16px', height: '16px', color: 'rgba(52,211,153,0.85)' }} />
+                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em' }}>You Should</span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {DO.map((item, i) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'rgba(52,211,153,0.7)', flexShrink: 0, marginTop: '7px' }} />
+                            <span style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.7)', lineHeight: 1.65 }}>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* You Must Not */}
+                  <div style={{ borderRadius: '16px', background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))', border: '1px solid rgba(251,113,133,0.12)', backdropFilter: 'blur(20px)', overflow: 'hidden' }}>
+                    <div style={{ height: '2px', background: 'linear-gradient(90deg, rgba(251,113,133,0.7), transparent)' }} />
+                    <div style={{ padding: '20px 24px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                        <XCircle style={{ width: '16px', height: '16px', color: 'rgba(251,113,133,0.85)' }} />
+                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em' }}>You Must Not</span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {DONT.map((item, i) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                            <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'rgba(251,113,133,0.7)', flexShrink: 0, marginTop: '7px' }} />
+                            <span style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.7)', lineHeight: 1.65 }}>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Disqualification notice */}
+                <div style={{ borderRadius: '14px', background: 'rgba(251,113,133,0.05)', border: '1px solid rgba(251,113,133,0.15)', padding: '14px 20px', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <div style={{ width: '28px', height: '28px', borderRadius: '7px', background: 'rgba(251,113,133,0.1)', border: '1px solid rgba(251,113,133,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <AlertTriangle style={{ width: '13px', height: '13px', color: 'rgba(251,113,133,0.8)' }} />
+                  </div>
+                  <p style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.65)', lineHeight: 1.75, margin: 0 }}>
+                    <span style={{ color: 'rgba(251,113,133,0.9)', fontWeight: 700 }}>Disqualification — </span>
+                    Violations of the code of conduct, plagiarism, safety violations, or disruptive behavior may result in immediate disqualification. The organizing committee's decision is final.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Judging Criteria */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={bodyInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.24 }}>
+                <SectionLabel icon={Scale} label="Judging Criteria" />
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px' }}>
+                  {JUDGING.map((c, i) => (
+                    <motion.div
+                      key={c.label}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={bodyInView ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.38, delay: 0.28 + i * 0.06 }}
+                      whileHover={{ y: -3, boxShadow: `0 0 28px ${c.glow}, 0 8px 24px rgba(0,0,0,0.3)` }}
+                      style={{
+                        borderRadius: '14px',
+                        background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))',
+                        border: '1px solid rgba(255,255,255,0.07)',
+                        backdropFilter: 'blur(20px)',
+                        padding: '20px',
+                        position: 'relative', overflow: 'hidden',
+                        transition: 'box-shadow 0.25s ease, transform 0.25s ease',
+                        cursor: 'default',
+                      }}>
+                      <div style={{ height: '2px', position: 'absolute', top: 0, left: 0, right: 0, background: `linear-gradient(90deg, ${c.accent}, transparent)` }} />
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
+                        <div style={{ width: '36px', height: '36px', borderRadius: '9px', background: c.glow, border: `1px solid ${c.accent}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <c.icon style={{ width: '16px', height: '16px', color: c.accent }} />
+                        </div>
+                        <span style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 800, color: c.accent, letterSpacing: '-0.04em', lineHeight: 1 }}>{c.weight}</span>
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '13.5px', color: 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em', marginBottom: '6px' }}>{c.label}</div>
+                      <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)', marginBottom: '8px' }} />
+                      <p style={{ fontSize: '12px', color: 'rgba(139,158,192,0.6)', lineHeight: 1.65, margin: 0 }}>{c.desc}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* IP + CTA */}
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={bodyInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.32 }}>
+                <div style={{
+                  borderRadius: '16px',
+                  background: 'linear-gradient(135deg, rgba(0,136,204,0.08), rgba(8,16,32,0.6))',
+                  border: '1px solid rgba(0,136,204,0.18)',
+                  backdropFilter: 'blur(20px)',
+                  padding: '28px 32px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap',
+                  position: 'relative', overflow: 'hidden',
+                }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '3px', background: 'linear-gradient(to bottom, rgba(34,211,238,0.7), rgba(59,130,246,0.3), transparent)' }} />
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Lock style={{ width: '17px', height: '17px', color: 'rgba(34,211,238,0.85)' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.015em', marginBottom: '6px' }}>Intellectual Property</div>
+                      <p style={{ fontSize: '13px', color: 'rgba(139,158,192,0.65)', lineHeight: 1.75, margin: 0, maxWidth: '520px' }}>
+                        Teams retain all intellectual property rights over their projects. Shared sponsor datasets or APIs must be used in accordance with their respective license terms as communicated at the event.
+                      </p>
+                    </div>
+                  </div>
+                  <Link href="/auth/register" className="btn-magnetic btn-primary"
+                    style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
+                    Register Now
+                  </Link>
+                </div>
+              </motion.div>
+
             </div>
-          </section>
           </div>
-        </div>
+        </section>
+
       </main>
       <Footer />
     </>
