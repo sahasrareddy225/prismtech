@@ -16,6 +16,7 @@ const NAV_LINKS = [
   { href: '/team', label: 'Team' },
   { href: '/sponsors', label: 'Sponsors' },
   { href: '/contact', label: 'Contact' },
+  { href: '/venue', label: 'Venue' },
 ];
 
 export default function Navbar() {

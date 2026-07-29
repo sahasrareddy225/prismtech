@@ -10,6 +10,7 @@ import RulesSection from "@/components/sections/RulesSectionSPA";
 import TeamSection from "@/components/sections/TeamSectionSPA";
 import SponsorsSection from "@/components/sections/SponsorsSectionSPA";
 import ContactSection from "@/components/sections/ContactSectionSPA";
+import VenueSection from "@/components/sections/VenueSectionSPA";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
       <TeamSection />
       <SponsorsSection />
       <ContactSection />
+      <VenueSection />
       <Footer />
     </>
   );
