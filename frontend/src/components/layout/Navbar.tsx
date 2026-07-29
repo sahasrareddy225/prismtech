@@ -69,7 +69,7 @@ export default function Navbar() {
         className="sticky top-0 z-50 border-b"
         role="banner"
       >
-        <nav className="w-full px-16 flex items-center h-[96px] gap-8" aria-label="Primary navigation">
+        <nav className="w-full px-5 lg:px-16 flex items-center h-[96px] gap-8" aria-label="Primary navigation">
 
           {/* Logo & Title */}
           <div className="flex items-center shrink-0 group mr-6">

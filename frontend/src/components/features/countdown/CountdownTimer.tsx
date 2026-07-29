@@ -9,7 +9,7 @@ function TimeBlock({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div
-        className="relative flex items-center justify-center w-[88px] h-[88px] cursor-default
+        className="relative flex items-center justify-center w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] md:w-[88px] md:h-[88px] cursor-default
                    transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.04]"
         style={{ borderRadius: '20px' }}
       >
@@ -45,7 +45,7 @@ function TimeBlock({ value, label }: { value: number; label: string }) {
         />
         <span
           className="relative font-display font-extrabold tabular-nums text-white"
-          style={{ fontSize: '2.1rem', letterSpacing: '-0.04em' }}
+          style={{ fontSize: 'clamp(1.25rem, 4vw, 2.1rem)', letterSpacing: '-0.04em' }}
           aria-label={`${formatted} ${label}`}
         >
           {formatted}
@@ -97,18 +97,18 @@ export function CountdownTimer({ deadline = REGISTRATION_DEADLINE }: { deadline?
 
   return (
     <div
-      className="flex items-center justify-center gap-6"
+      className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 md:gap-6"
       role="timer"
       aria-label="Countdown to registration deadline"
       aria-live="polite"
     >
       {units.map((unit, i) => (
-        <div key={unit.label} className="flex items-center gap-6">
+        <div key={unit.label} className="flex items-center gap-2 sm:gap-4 md:gap-6">
           <TimeBlock value={unit.value} label={unit.label} />
           {i < units.length - 1 && (
             <span
-              className="font-display font-semibold text-cyan-400/35 mb-7 select-none"
-              style={{ fontSize: '1.5rem' }}
+              className="font-display font-semibold text-cyan-400/35 mb-5 sm:mb-7 select-none"
+              style={{ fontSize: 'clamp(1rem, 3vw, 1.5rem)' }}
               aria-hidden="true"
             >
               :

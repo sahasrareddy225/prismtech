@@ -14,7 +14,6 @@ export default function HeroSection() {
     >
       {/* Background */}
       <div className="absolute inset-0 bg-[var(--color-bg)]" aria-hidden="true" />
-      <div className="absolute inset-0 grid-pattern opacity-[0.10] pointer-events-none" aria-hidden="true" />
       <div
         className="absolute top-0 left-0 w-[600px] h-[500px] pointer-events-none"
         aria-hidden="true"
@@ -23,7 +22,7 @@ export default function HeroSection() {
 
       {/* Outer row: stacks on mobile, side-by-side on lg+ */}
       <div className="relative z-10 w-full flex justify-center">
-      <div className="w-full max-w-[1440px] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 lg:gap-24 px-20 sm:px-28 lg:px-36">
+      <div className="w-full max-w-[1440px] flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 lg:gap-24 px-6 sm:px-12 md:px-16 lg:px-36">
 
         {/* Left — Content */}
         <div className="flex flex-col gap-8 w-full lg:w-[45%] lg:max-w-[640px]">
@@ -90,7 +89,7 @@ export default function HeroSection() {
 
           {/* CTAs */}
           <motion.div
-            className="flex items-center gap-4"
+            className="flex flex-wrap items-center gap-4"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -108,9 +107,8 @@ export default function HeroSection() {
 
         {/* Right — Countdown */}
         <motion.div
-          className="flex flex-col items-center gap-7 shrink-0 px-14 pt-14 pb-14 rounded-[28px] relative overflow-hidden lg:self-center"
+          className="flex flex-col items-center gap-5 sm:gap-7 shrink-0 px-5 sm:px-14 py-8 sm:py-14 rounded-2xl sm:rounded-[28px] relative overflow-hidden lg:self-center w-full max-w-[680px]"
           style={{
-            minWidth: '680px',
             background: 'linear-gradient(160deg, rgba(10,20,40,0.92) 0%, rgba(6,14,28,0.96) 100%)',
             boxShadow: [
               '0 0 0 1px rgba(34,211,238,0.14)',

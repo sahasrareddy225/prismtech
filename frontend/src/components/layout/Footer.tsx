@@ -35,7 +35,7 @@ export default function Footer() {
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(20px, 4vw, 56px)' }}>
 
         {/* ── Main grid ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr 1.4fr', gap: '56px', padding: '20px 0 16px', alignItems: 'start' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr] gap-10 lg:gap-14 pt-8 lg:pt-5 pb-4 items-start">
 
           {/* Col 1 — Brand */}
           <div>
@@ -177,7 +177,7 @@ export default function Footer() {
         <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent)' }} />
 
         {/* Bottom bar */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', flexWrap: 'wrap', gap: '12px' }}>
+        <div className="flex flex-col md:flex-row items-center md:justify-between py-4 gap-4 text-center md:text-left">
           <p style={{ fontSize: '11.5px', color: 'rgba(139,158,192,0.35)', margin: 0, letterSpacing: '0.01em' }}>
             © {year} IEEE PRISMTECH Hackathon · IEEE KLH Student Branch, Aziz Nagar. All rights reserved.
           </p>
