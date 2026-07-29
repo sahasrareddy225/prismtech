@@ -184,7 +184,7 @@ export default function SchedulePage() {
             <motion.div className="inline-flex items-center gap-2 mb-6"
               initial={{ opacity: 0, y: 10 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4 }}>
               <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
-              <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>26–27 September 2026</span>
+              <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>26–20 September 2026</span>
               <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
             </motion.div>
 
@@ -237,11 +237,11 @@ export default function SchedulePage() {
             <div style={{ width: '100%', maxWidth: '760px' }}>
 
               <div ref={day1Ref}>
-                <DaySection items={day1} dayLabel="Day 1" dateLabel="September 26, 2026" inView={day1InView} />
+                <DaySection items={day1} dayLabel="Day 1" dateLabel="September 19, 2026" inView={day1InView} />
               </div>
 
               <div ref={day2Ref}>
-                <DaySection items={day2} dayLabel="Day 2" dateLabel="September 27, 2026" inView={day2InView} />
+                <DaySection items={day2} dayLabel="Day 2" dateLabel="September 20, 2026" inView={day2InView} />
               </div>
 
               {/* Note */}

@@ -7,7 +7,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 
 const FAQS = [
   { q: 'Is there a registration fee?', a: 'Fee details will be announced soon. Scholarships or waivers may be available for eligible participants.' },
-  { q: 'Can I form a team after registering?', a: 'Yes, team details can be edited before the registration deadline of 21 September 2026.' },
+  { q: 'Can I form a team after registering?', a: 'Yes, team details can be edited before the registration deadline of 9 September 2026.' },
   { q: 'Are food and accommodation provided?', a: 'Meals, breaks, first-aid, and sick-room support are planned. Accommodation depends on availability and will be communicated to registered teams.' },
   { q: 'What should participants bring?', a: 'Laptop, charger, institutional ID card, required software pre-installed, and backup internet access.' },
   { q: 'Who is eligible to participate?', a: 'Students from recognized colleges and universities with a valid institutional ID. Both undergraduate and postgraduate students can participate.' },

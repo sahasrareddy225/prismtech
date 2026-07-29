@@ -46,12 +46,11 @@ const CONTACT_ITEMS = [
 ];
 
 const SOCIAL_LINKS = [
-  { icon: Camera, label: 'Instagram', handle: '@ieee_prismtech', href: 'https://instagram.com/ieee_prismtech', accent: 'rgba(225,48,108,1)' },
-  { icon: Link2, label: 'LinkedIn', handle: 'IEEE PRISMTECH KLH', href: '#', accent: 'rgba(10,102,194,1)' },
+  { icon: Camera, label: 'Instagram', handle: '@ieee_prismtech', href: 'https://www.instagram.com/ieee_prismtech?igsh=YWp4c2Jhb3IzYjVt', accent: 'rgba(225,48,108,1)' },
+  { icon: Link2, label: 'LinkedIn', handle: 'IEEE PRISMTECH KLH', href: 'https://www.linkedin.com/in/ieee-prismtech-klh-2a35b3422?utm_source=share_via&utm_content=profile&utm_medium=member_android', accent: 'rgba(10,102,194,1)' },
 ];
 
 const QUICK_LINKS = [
-  { label: 'Registration guide', href: '/resources' },
   { label: 'FAQs', href: '/faq' },
   { label: 'Rules & guidelines', href: '/rules' },
   { label: 'Problem domains', href: '/tracks' },

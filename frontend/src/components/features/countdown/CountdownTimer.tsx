@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-const REGISTRATION_DEADLINE = new Date('2026-09-21T23:59:59+05:30');
+const REGISTRATION_DEADLINE = new Date('2026-09-09T23:59:59+05:30');
 
 function TimeBlock({ value, label }: { value: number; label: string }) {
   const formatted = String(value).padStart(2, '0');

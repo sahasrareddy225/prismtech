@@ -20,7 +20,7 @@ const DOWNLOADS = [
   },
   {
     title: 'Problem Statements',
-    desc: 'Detailed breakdown of all problem domains. Released officially at the opening ceremony on September 26.',
+    desc: 'Detailed breakdown of all problem domains. Released officially at the opening ceremony on September 19.',
     icon: BookOpen,
     accent: 'rgba(99,102,241,1)',   glow: 'rgba(99,102,241,0.12)',
     size: 'PDF • ~4 MB',   available: false, badge: 'Released at Opening',
@@ -180,30 +180,7 @@ export default function ResourcesPage() {
               </div>
             </div>
 
-            {/* Links & Platforms */}
-            <div ref={linksRef}>
-              <SectionLabel icon={ExternalLink} label="Links & Platforms" />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {LINKS.map((link, i) => (
-                  <motion.a key={link.title} href={link.href} target="_blank" rel="noopener noreferrer"
-                    initial={{ opacity: 0, x: -16 }} animate={linksInView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.4, delay: i * 0.08 }}
-                    style={{ borderRadius: '14px', background: 'linear-gradient(145deg, rgba(14,20,36,0.92), rgba(8,16,32,0.68))', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(20px)', padding: '18px 22px', display: 'flex', alignItems: 'center', gap: '16px', textDecoration: 'none', position: 'relative', overflow: 'hidden', transition: 'all 0.22s ease' }}
-                    onMouseEnter={e => { e.currentTarget.style.borderColor = `${link.accent}25`; e.currentTarget.style.transform = 'translateX(4px)'; }}
-                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; e.currentTarget.style.transform = 'translateX(0)'; }}>
-                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${link.accent}, transparent)` }} />
-                    <div style={{ width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0, background: link.glow, border: `1px solid ${link.accent}30`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <link.icon style={{ width: '17px', height: '17px', color: link.accent }} />
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em', marginBottom: '3px' }}>{link.title}</div>
-                      <div style={{ fontSize: '12.5px', color: 'rgba(139,158,192,0.6)', lineHeight: 1.6, marginBottom: '4px' }}>{link.desc}</div>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: `${link.accent}70`, letterSpacing: '0.02em' }}>{link.label}</div>
-                    </div>
-                    <ArrowUpRight style={{ width: '16px', height: '16px', color: 'rgba(139,158,192,0.3)', flexShrink: 0 }} />
-                  </motion.a>
-                ))}
-              </div>
-            </div>
+
 
             {/* Participant Checklist */}
             <div ref={checkRef}>
@@ -257,10 +234,10 @@ export default function ResourcesPage() {
                 </div>
                 <div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.015em', marginBottom: '4px' }}>Ready to compete?</div>
-                  <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 21, 2026.</div>
+                  <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 9, 2026.</div>
                 </div>
               </div>
-              <Link href="/auth/register" className="btn-magnetic btn-primary"
+              <Link href="#" className="btn-magnetic btn-primary"
                 style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
                 Register Your Team
               </Link>

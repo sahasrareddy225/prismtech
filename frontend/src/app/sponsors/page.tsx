@@ -107,18 +107,7 @@ export default function SponsorsPage() {
               <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', maxWidth: '560px', margin: '0 auto 36px', lineHeight: 1.7 }}>
                 Partner with IEEE PRISMTECH 2026 to connect with 200+ driven students building the future of AI, cybersecurity, sustainability, and smart infrastructure at KLH Hyderabad.
               </p>
-              <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <a
-                  href="#sponsor-prospectus"
-                  className="btn-magnetic btn-primary"
-                  style={{ boxShadow: '0 0 24px rgba(0,136,204,0.2)' }}
-                >
-                  <Download className="w-4 h-4" /> Download Prospectus
-                </a>
-                <Link href="/contact" className="btn-magnetic btn-secondary">
-                  Discuss Partnership <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </div>
+
             </motion.div>
           </div>
         </section>
@@ -199,15 +188,7 @@ export default function SponsorsPage() {
                 <p style={{ color: 'var(--color-text-secondary)', lineHeight: 1.7, marginBottom: '32px', fontSize: '0.9rem' }}>
                   PRISMTECH offers sponsors a unique opportunity to engage with talented students, showcase their brand, and shape the next generation of technology builders.
                 </p>
-                <Link
-                  href="/contact"
-                  className="btn-magnetic btn-primary"
-                  style={{ boxShadow: '0 0 24px rgba(0,136,204,0.2)', display: 'inline-flex' }}
-                >
-                  <Mail className="w-4 h-4" />
-                  Contact Sponsorship Team
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+
               </motion.div>
 
               {/* Right — benefit cards */}
@@ -334,17 +315,8 @@ export default function SponsorsPage() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <div style={{
-                  width: '44px', height: '44px', borderRadius: '12px',
-                  background: 'rgba(0,136,204,0.12)',
-                  border: '1px solid rgba(0,136,204,0.25)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}>
-                  <Download style={{ width: '20px', height: '20px', color: 'rgba(0,136,204,0.9)' }} />
-                </div>
                 <div>
                   <div style={{ fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '4px' }}>Ready to partner with PRISMTECH?</div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>Download the full prospectus or reach out to discuss a custom package.</div>
                 </div>
               </div>
               <Link
@@ -353,7 +325,7 @@ export default function SponsorsPage() {
                 style={{ boxShadow: '0 0 24px rgba(0,136,204,0.2)', whiteSpace: 'nowrap' }}
               >
                 <Mail className="w-4 h-4" />
-                Get Sponsorship Package
+                Become a Sponsor
               </Link>
             </motion.div>
           </div>

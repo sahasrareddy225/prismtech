@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: '%s | PRISMTECH 2026',
   },
   description:
-    'PRISMTECH — A 24-Hour Sprint across the Tech Spectrum. IEEE hackathon organized by KLH Aziz Nagar IEEE Student Branch. September 26–27, 2026, Hyderabad.',
+    'PRISMTECH — A 24-Hour Sprint across the Tech Spectrum. IEEE hackathon organized by KLH Aziz Nagar IEEE Student Branch. September 19–20, 2026, Hyderabad.',
   keywords: [
     'PRISMTECH', 'IEEE Hackathon', 'KLH Hyderabad', 'IEEE KLH',
     'hackathon 2026', 'Aziz Nagar', 'IEEE Photonics', 'IEEE Computer Society',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     siteName: 'PRISMTECH 2026',
     title: 'PRISMTECH 2026 — A 24-Hour Sprint across the Tech Spectrum',
     description:
-      'Multidisciplinary hackathon where hardware (Light), software (Logic), and social impact (Equity) converge. September 26–27, 2026 · KLH Hyderabad.',
+      'Multidisciplinary hackathon where hardware (Light), software (Logic), and social impact (Equity) converge. September 19–20, 2026 · KLH Hyderabad.',
     images: [
       {
         url: '/og-image.png',
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'PRISMTECH 2026 — IEEE Hackathon',
-    description: 'A 24-Hour Sprint across the Tech Spectrum · September 26–27, 2026 · KLH Hyderabad',
+    description: 'A 24-Hour Sprint across the Tech Spectrum · September 19–20, 2026 · KLH Hyderabad',
     images: ['/og-image.png'],
   },
   robots: {

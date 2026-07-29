@@ -80,7 +80,7 @@ export default function HeroSection() {
           >
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-white/60 text-[13px]">
               <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-              September 26–27, 2026
+              September 19–20, 2026
             </div>
             <div className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-white/[0.03] text-white/60 text-[13px]">
               <MapPin className="w-3.5 h-3.5 text-cyan-400" />
@@ -95,7 +95,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Link href="/auth/register" className="btn-magnetic btn-primary px-8 py-3 text-[13px] font-semibold">
+            <Link href="#" className="btn-magnetic btn-primary px-8 py-3 text-[13px] font-semibold">
               Register Your Team
             </Link>
             <Link href="/tracks" className="btn-magnetic btn-ghost text-[13px] group px-6 py-3">

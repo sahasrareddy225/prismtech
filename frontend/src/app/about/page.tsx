@@ -135,7 +135,7 @@ export default function AboutPage() {
                   animate={heroInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.45, delay: 0.28 }}
                 >
-                  <Link href="/auth/register" className="btn-magnetic btn-primary text-sm px-8 py-3">
+                  <Link href="#" className="btn-magnetic btn-primary text-sm px-8 py-3">
                     Register Your Team
                   </Link>
                   <Link href="/tracks" className="btn-magnetic btn-secondary text-sm px-8 py-3">
@@ -386,122 +386,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Domains */}
-        <section ref={domainsRef} className="section" aria-labelledby="domains-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
-          <div className="container">
 
-            {/* Header */}
-            <div className="text-center mb-12">
-              <motion.div
-                className="inline-flex items-center gap-2 mb-4"
-                initial={{ opacity: 0, y: 10 }}
-                animate={domainsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.4 }}
-              >
-                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
-                <span style={{ fontSize: '0.6875rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>Problem Domains</span>
-                <div style={{ width: '20px', height: '1px', background: 'rgba(34,211,238,0.6)' }} />
-              </motion.div>
-              <motion.h2
-                id="domains-heading"
-                className="text-[var(--color-text-primary)]"
-                style={{ fontSize: 'clamp(1.625rem, 3.5vw, 2.5rem)', fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.1 }}
-                initial={{ opacity: 0, y: 16 }}
-                animate={domainsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.08 }}
-              >
-                Build across <span className="text-gradient-ieee">high-impact areas.</span>
-              </motion.h2>
-            </div>
-
-            {/* Domain cards grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" style={{ marginTop: '28px' }}>
-              {DOMAINS.map((d, i) => (
-                <motion.div
-                  key={d.label}
-                  initial={{ opacity: 0, y: 18 }}
-                  animate={domainsInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.38, delay: i * 0.055 }}
-                  whileHover={{ y: -3, boxShadow: '0 0 28px rgba(0,136,204,0.18), 0 8px 24px rgba(0,0,0,0.3)' }}
-                  style={{
-                    borderRadius: '14px',
-                    background: 'linear-gradient(145deg, rgba(14,165,233,0.07) 0%, rgba(8,16,32,0.55) 100%)',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                    backdropFilter: 'blur(16px)',
-                    padding: '20px 20px 18px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '12px',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    transition: 'box-shadow 0.25s ease, transform 0.25s ease',
-                    cursor: 'default',
-                  }}
-                >
-                  {/* Left accent bar */}
-                  <div style={{
-                    position: 'absolute', top: '18px', left: 0, width: '3px', height: '32px',
-                    background: 'linear-gradient(to bottom, rgba(34,211,238,0.75), rgba(59,130,246,0.35))',
-                    borderRadius: '0 2px 2px 0',
-                  }} />
-
-                  {/* Icon + index row */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{
-                      width: '38px', height: '38px', borderRadius: '10px',
-                      background: 'rgba(0,136,204,0.12)',
-                      border: '1px solid rgba(0,136,204,0.22)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <d.icon style={{ width: '17px', height: '17px', color: 'rgba(34,211,238,0.9)' }} />
-                    </div>
-                    <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(34,211,238,0.3)', fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>
-                      0{i + 1}
-                    </span>
-                  </div>
-
-                  {/* Text */}
-                  <div>
-                    <div style={{ fontSize: '13.5px', fontWeight: 700, color: 'var(--color-text-primary)', fontFamily: 'var(--font-display)', letterSpacing: '-0.01em', marginBottom: '4px' }}>
-                      {d.label}
-                    </div>
-                    <div style={{ fontSize: '11.5px', color: 'rgba(139,158,192,0.75)', lineHeight: 1.5 }}>
-                      {d.sub}
-                    </div>
-                  </div>
-
-                  {/* Bottom shimmer line */}
-                  <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(34,211,238,0.12), rgba(59,130,246,0.06), transparent)', marginTop: 'auto' }} />
-                </motion.div>
-              ))}
-            </div>
-
-            {/* CTA */}
-            <motion.div
-              className="flex justify-center"
-              style={{ marginTop: '72px' }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={domainsInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: 0.5 }}
-            >
-              <Link
-                href="/tracks"
-                className="btn-magnetic btn-secondary"
-                style={{
-                  fontSize: '0.9375rem',
-                  padding: '14px 40px',
-                  borderRadius: '14px',
-                  border: '1px solid rgba(34,211,238,0.25)',
-                  boxShadow: '0 0 24px rgba(34,211,238,0.08)',
-                  transition: 'all 0.25s ease',
-                }}
-              >
-                View Full Problem Statements
-              </Link>
-            </motion.div>
-
-          </div>
-        </section>
 
         {/* Streams */}
         <section ref={streamsRef} className="section" aria-labelledby="streams-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
@@ -693,7 +578,7 @@ export default function AboutPage() {
               transition={{ duration: 0.4, delay: 0.5 }}
             >
               <Link
-                href="/auth/register"
+                href="#"
                 className="btn-magnetic btn-primary"
                 style={{
                   fontSize: '0.9375rem',

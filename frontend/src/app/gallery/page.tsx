@@ -9,8 +9,8 @@ import Link from 'next/link';
 import SectionHeader from '@/components/ui/SectionHeader';
 
 const SOCIAL_LINKS = [
-  { icon: Camera, label: 'Instagram', handle: '@ieee.prismtech', href: '#', color: '#E1306C' },
-  { icon: Link2, label: 'LinkedIn', handle: 'IEEE KLH SB', href: '#', color: '#0A66C2' },
+  { icon: Camera, label: 'Instagram', handle: '@ieee_prismtech', href: 'https://www.instagram.com/ieee_prismtech?igsh=YWp4c2Jhb3IzYjVt', color: '#E1306C' },
+  { icon: Link2, label: 'LinkedIn', handle: 'IEEE KLH SB', href: 'https://www.linkedin.com/in/ieee-prismtech-klh-2a35b3422?utm_source=share_via&utm_content=profile&utm_medium=member_android', color: '#0A66C2' },
   { icon: Share2, label: 'YouTube', handle: 'IEEE PRISMTECH', href: '#', color: '#FF0000' },
 ];
 
@@ -95,7 +95,7 @@ export default function GalleryPage() {
                   Gallery Opens on Event Day
                 </h2>
                 <p className="text-[var(--color-text-secondary)] max-w-md mb-4 leading-relaxed">
-                  The media gallery will go live on <strong className="text-[var(--color-text-primary)]">September 26, 2026</strong>. 
+                  The media gallery will go live on <strong className="text-[var(--color-text-primary)]">September 19, 2026</strong>. 
                   Check back during the event for live team photos, project demos, and the closing ceremony.
                 </p>
                 <p className="text-sm text-[var(--color-text-muted)] mb-10">

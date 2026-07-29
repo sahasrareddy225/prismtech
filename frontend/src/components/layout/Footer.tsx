@@ -7,7 +7,7 @@ const NAV = [
   { label: 'About',    href: '/about'        },
   { label: 'Tracks',   href: '/tracks'       },
   { label: 'Schedule', href: '/schedule'     },
-  { label: 'Register', href: '/auth/register'},
+  { label: 'Register', href: '#'},
 ];
 
 const RESOURCES = [
@@ -18,8 +18,8 @@ const RESOURCES = [
 ];
 
 const SOCIALS = [
-  { icon: AtSign,       label: 'Instagram',  sub: '@ieee_prismtech',        href: 'https://instagram.com/ieee_prismtech' },
-  { icon: ExternalLink, label: 'LinkedIn',   sub: 'IEEE KLH Student Branch', href: '#'                                   },
+  { icon: AtSign,       label: 'Instagram',  sub: '@ieee_prismtech',        href: 'https://www.instagram.com/ieee_prismtech?igsh=YWp4c2Jhb3IzYjVt' },
+  { icon: ExternalLink, label: 'LinkedIn',   sub: 'IEEE KLH Student Branch', href: 'https://www.linkedin.com/in/ieee-prismtech-klh-2a35b3422?utm_source=share_via&utm_content=profile&utm_medium=member_android' },
   { icon: Mail,         label: 'Email Us',   sub: 'prismtech@ieee-klh.org',  href: 'mailto:prismtech@ieee-klh.org'       },
 ];
 

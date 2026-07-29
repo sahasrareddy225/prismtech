@@ -113,15 +113,7 @@ export default function RulesPage() {
               Read the complete rules before registering. These guidelines ensure a fair, safe, and rewarding experience for all participants.
             </motion.p>
 
-            <motion.a
-              href="/downloads/rulebook.pdf"
-              download
-              initial={{ opacity: 0, y: 10 }} animate={heroInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.28 }}
-              className="btn-magnetic btn-primary inline-flex items-center gap-2"
-              style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)' }}>
-              <Download style={{ width: '15px', height: '15px' }} />
-              Download Official Rulebook
-            </motion.a>
+
 
           </div>
         </section>
@@ -262,35 +254,7 @@ export default function RulesPage() {
                 </div>
               </motion.div>
 
-              {/* IP + CTA */}
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={bodyInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.32 }}>
-                <div style={{
-                  borderRadius: '16px',
-                  background: 'linear-gradient(135deg, rgba(0,136,204,0.08), rgba(8,16,32,0.6))',
-                  border: '1px solid rgba(0,136,204,0.18)',
-                  backdropFilter: 'blur(20px)',
-                  padding: '28px 32px',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', flexWrap: 'wrap',
-                  position: 'relative', overflow: 'hidden',
-                }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '3px', background: 'linear-gradient(to bottom, rgba(34,211,238,0.7), rgba(59,130,246,0.3), transparent)' }} />
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-                    <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <Lock style={{ width: '17px', height: '17px', color: 'rgba(34,211,238,0.85)' }} />
-                    </div>
-                    <div>
-                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.015em', marginBottom: '6px' }}>Intellectual Property</div>
-                      <p style={{ fontSize: '13px', color: 'rgba(139,158,192,0.65)', lineHeight: 1.75, margin: 0, maxWidth: '520px' }}>
-                        Teams retain all intellectual property rights over their projects. Shared sponsor datasets or APIs must be used in accordance with their respective license terms as communicated at the event.
-                      </p>
-                    </div>
-                  </div>
-                  <Link href="/auth/register" className="btn-magnetic btn-primary"
-                    style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
-                    Register Now
-                  </Link>
-                </div>
-              </motion.div>
+
 
             </div>
           </div>

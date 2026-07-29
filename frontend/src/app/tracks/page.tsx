@@ -149,15 +149,15 @@ export default function TracksPage() {
                 <div
                   key={s.label}
                   style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '8px',
-                    padding: '6px 14px', borderRadius: '999px',
+                    display: 'inline-flex', alignItems: 'center', gap: '12px',
+                    padding: '10px 20px', borderRadius: '999px',
                     background: 'rgba(255,255,255,0.03)',
                     border: '1px solid rgba(255,255,255,0.08)',
                   }}
                 >
-                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: s.accent, flexShrink: 0, boxShadow: `0 0 6px ${s.accent}` }} />
-                  <span style={{ fontSize: '11.5px', fontWeight: 600, color: 'rgba(241,245,249,0.7)' }}>{s.label}</span>
-                  <span style={{ fontSize: '10.5px', color: 'rgba(139,158,192,0.5)' }}>· {s.sub}</span>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: s.accent, flexShrink: 0, boxShadow: `0 0 8px ${s.accent}` }} />
+                  <span style={{ fontSize: '15px', fontWeight: 600, color: 'rgba(241,245,249,0.9)' }}>{s.label}</span>
+                  <span style={{ fontSize: '14px', color: 'rgba(139,158,192,0.6)' }}>· {s.sub}</span>
                 </div>
               ))}
             </motion.div>
@@ -169,84 +169,7 @@ export default function TracksPage() {
         <section ref={cardsRef} style={{ position: 'relative', zIndex: 1, paddingBottom: '80px' }}>
           <div className="container">
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {TRACKS.map((track, i) => {
-                const sc = STREAM_COLORS[track.stream] ?? { accent: 'rgba(34,211,238,1)', glow: 'rgba(34,211,238,0.15)' };
-                return (
-                  <motion.article
-                    key={track.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={cardsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: i * 0.07 }}
-                    whileHover={{ y: -4, boxShadow: `0 0 32px ${sc.glow}, 0 8px 32px rgba(0,0,0,0.35)` }}
-                    style={{
-                      borderRadius: '16px',
-                      background: 'linear-gradient(145deg, rgba(14,20,36,0.85) 0%, rgba(8,16,32,0.65) 100%)',
-                      border: '1px solid rgba(255,255,255,0.07)',
-                      backdropFilter: 'blur(20px)',
-                      padding: '24px 24px 20px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      position: 'relative',
-                      overflow: 'hidden',
-                      transition: 'box-shadow 0.25s ease, transform 0.25s ease',
-                      cursor: 'default',
-                    }}
-                  >
-                    {/* Top accent bar in stream color */}
-                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: `linear-gradient(90deg, ${sc.accent}, transparent)` }} />
 
-                    {/* Header row */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '18px' }}>
-                      <div style={{
-                        width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
-                        background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.2)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      }}>
-                        <track.icon style={{ width: '18px', height: '18px', color: sc.accent }} />
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        {track.comingSoon && (
-                          <span style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '999px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', color: 'rgba(245,158,11,0.85)' }}>
-                            TBA
-                          </span>
-                        )}
-                        <span style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '999px', background: `${sc.glow}`, border: `1px solid ${sc.accent}30`, color: sc.accent }}>
-                          {track.tag}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Stream label */}
-                    <div style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: sc.accent, opacity: 0.7, marginBottom: '6px' }}>
-                      {track.stream}
-                    </div>
-
-                    {/* Title */}
-                    <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '1.0625rem', color: 'var(--color-text-primary)', letterSpacing: '-0.02em', marginBottom: '10px', lineHeight: 1.25 }}>
-                      {track.title}
-                    </h2>
-
-                    {/* Description */}
-                    <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.75, margin: '0 0 auto', flexGrow: 1 }}>
-                      {track.desc}
-                    </p>
-
-                    {/* Divider */}
-                    <div style={{ height: '1px', background: 'rgba(255,255,255,0.06)', margin: '18px 0 14px' }} />
-
-                    {/* Deliverable */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                      <FileText style={{ width: '12px', height: '12px', color: 'rgba(139,158,192,0.5)', flexShrink: 0, marginTop: '2px' }} />
-                      <div>
-                        <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(139,158,192,0.45)', marginBottom: '3px' }}>Expected Deliverable</div>
-                        <div style={{ fontSize: '12px', fontWeight: 600, color: 'rgba(241,245,249,0.65)' }}>{track.deliverable}</div>
-                      </div>
-                    </div>
-                  </motion.article>
-                );
-              })}
-            </div>
 
             {/* CTA banner */}
             <motion.div
@@ -282,7 +205,7 @@ export default function TracksPage() {
                     Full Problem Statements
                   </div>
                   <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', margin: 0, lineHeight: 1.6 }}>
-                    Detailed PDFs will be officially released at the opening ceremony on <span style={{ color: 'rgba(241,245,249,0.8)', fontWeight: 600 }}>26 September 2026</span>.
+                    Detailed PDFs will be officially released at the opening ceremony on <span style={{ color: 'rgba(241,245,249,0.8)', fontWeight: 600 }}>19 September 2026</span>.
                   </p>
                 </div>
               </div>

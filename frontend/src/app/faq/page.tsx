@@ -24,11 +24,11 @@ const FAQ_CATEGORIES = [
       },
       {
         q: 'Can I edit my team details after registration?',
-        a: 'Yes, team details including member information and chosen domain can be edited before the registration deadline of 21 September 2026.',
+        a: 'Yes, team details including member information and chosen domain can be edited before the registration deadline of 9 September 2026.',
       },
       {
         q: 'What is the registration deadline?',
-        a: 'The official registration deadline is 21 September 2026. We strongly recommend registering early as spots are limited.',
+        a: 'The official registration deadline is 9 September 2026. We strongly recommend registering early as spots are limited.',
       },
       {
         q: 'Can a student participate in multiple teams?',
@@ -86,7 +86,7 @@ const FAQ_CATEGORIES = [
     faqs: [
       {
         q: 'When does coding officially start?',
-        a: 'Hacking begins at 10:00 AM on September 26, 2026, after the opening ceremony and problem statement release. No code written before this time may be used.',
+        a: 'Hacking begins at 10:00 AM on September 19, 2026, after the opening ceremony and problem statement release. No code written before this time may be used.',
       },
       {
         q: 'What must be submitted for evaluation?',

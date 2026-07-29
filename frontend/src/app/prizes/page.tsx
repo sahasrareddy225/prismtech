@@ -99,7 +99,7 @@ export default function PrizesPage() {
             <p className="text-base text-[var(--color-text-secondary)] max-w-xl mx-auto leading-relaxed mb-6">
               Cash prizes, trophies, IEEE certifications, special category awards, and track-level recognition await the top performers at PRISMTECH 2026.
             </p>
-            <Link href="/auth/register" className="btn-magnetic btn-primary mt-2">
+            <Link href="#" className="btn-magnetic btn-primary mt-2">
               <Zap className="w-4 h-4" fill="currentColor" />
               Register to Compete
             </Link>
@@ -268,7 +268,7 @@ export default function PrizesPage() {
                   a globally recognized credential.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="/auth/register" className="btn-magnetic btn-primary text-sm">
+                  <Link href="#" className="btn-magnetic btn-primary text-sm">
                     <Zap className="w-4 h-4" fill="currentColor" />
                     Register Your Team
                   </Link>

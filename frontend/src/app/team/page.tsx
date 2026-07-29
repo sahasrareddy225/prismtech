@@ -8,8 +8,8 @@ import { ExternalLink, Mail, Link2, Users, Zap, Info } from 'lucide-react';
 import Link from 'next/link';
 
 const LEADERSHIP = [
-  { role: 'Student General Chair',   name: 'To Be Announced', org: 'IEEE KLH Student Branch, Aziz Nagar', initials: 'SGC', pending: true  },
-  { role: 'Vice Chair — Technical',  name: 'To Be Announced', org: 'IEEE KLH Student Branch',             initials: 'VCT', pending: true  },
+  { role: 'Student General Chair',   name: 'A.Leena', org: 'IEEE KLH Student Branch, Aziz Nagar', initials: 'AL', pending: false, linkedin: 'https://www.linkedin.com/in/leena-adhimulam-7196b535a?utm_source=share_via&utm_content=profile&utm_medium=member_android', desc: 'Leads the overall planning, coordination, and execution of the hackathon by overseeing all committees, managing timelines, and ensuring the event runs successfully from start to finish.', image: '/team-leena.jpg' },
+  { role: 'Vice Chair',              name: 'Chidurala Sai Pavani', org: 'IEEE KLH Student Branch',             initials: 'CSP', pending: false, linkedin: 'https://www.linkedin.com/in/sai-pavani-chidurala-4b2927317?utm_source=share_via&utm_content=profile&utm_medium=member_android', desc: 'Leads and coordinates the Technical, Publicity & Media, Design & Creative, Mentor & Judge Coordination, and Participant Engagement Committees, ensuring timely execution, smooth collaboration, and the successful delivery of PrismTech Hackathon.', image: '/team-pavani.jpg' },
   { role: 'Vice Chair — Operations', name: 'To Be Announced', org: 'IEEE KLH Student Branch',             initials: 'VCO', pending: true  },
   { role: 'Branch Counselor',        name: 'Dr. Sai Sudha Gadde', org: 'IEEE KLH SB Aziz Nagar',         initials: 'SSG', pending: false },
 ];
@@ -132,17 +132,21 @@ export default function TeamPage() {
 
                     {/* Avatar */}
                     <div style={{
-                      width: '64px', height: '64px', borderRadius: '16px', marginBottom: '16px',
+                      width: '86px', height: '86px', borderRadius: '20px', marginBottom: '18px',
                       background: 'rgba(0,136,204,0.1)', border: '1px solid rgba(0,136,204,0.25)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 800,
+                      fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 800,
                       color: 'rgba(34,211,238,0.85)', letterSpacing: '0.04em',
-                      boxShadow: '0 0 20px rgba(0,136,204,0.1)',
-                      position: 'relative',
+                      boxShadow: '0 0 24px rgba(0,136,204,0.15)',
+                      position: 'relative', overflow: 'hidden'
                     }}>
-                      {person.initials}
+                      {(person as any).image ? (
+                        <img src={(person as any).image} alt={person.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        person.initials
+                      )}
                       {person.pending && (
-                        <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '10px', height: '10px', borderRadius: '50%', background: 'rgba(245,158,11,0.8)', border: '2px solid rgba(8,14,28,1)' }} />
+                        <div style={{ position: 'absolute', top: '-4px', right: '-4px', width: '10px', height: '10px', borderRadius: '50%', background: 'rgba(245,158,11,0.8)', border: '2px solid rgba(8,14,28,1)', zIndex: 10 }} />
                       )}
                     </div>
 
@@ -160,18 +164,29 @@ export default function TeamPage() {
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '14px', color: person.pending ? 'rgba(139,158,192,0.4)' : 'rgba(241,245,249,0.9)', letterSpacing: '-0.01em', marginBottom: '4px', fontStyle: person.pending ? 'italic' : 'normal' }}>
                       {person.name}
                     </div>
-                    <div style={{ fontSize: '11px', color: 'rgba(139,158,192,0.45)', marginBottom: '18px' }}>{person.org}</div>
+                    <div style={{ fontSize: '11px', color: 'rgba(139,158,192,0.45)', marginBottom: '12px' }}>{person.org}</div>
+
+                    {/* Description */}
+                    {(person as any).desc && (
+                      <div style={{ fontSize: '11.5px', color: 'rgba(139,158,192,0.7)', lineHeight: 1.5, marginBottom: '16px' }}>
+                        {(person as any).desc}
+                      </div>
+                    )}
 
                     {/* Divider */}
                     <div style={{ height: '1px', width: '100%', background: 'rgba(255,255,255,0.05)', marginBottom: '14px' }} />
 
                     {/* Social icons */}
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      {[{ icon: Link2, label: 'LinkedIn' }, { icon: Mail, label: 'Email' }].map(({ icon: Icon, label }) => (
-                        <a key={label} href="#" aria-label={label}
-                          style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(139,158,192,0.4)', textDecoration: 'none', transition: 'all 0.2s' }}
-                          onMouseEnter={e => { e.currentTarget.style.color = 'rgba(34,211,238,0.8)'; e.currentTarget.style.borderColor = 'rgba(34,211,238,0.2)'; }}
-                          onMouseLeave={e => { e.currentTarget.style.color = 'rgba(139,158,192,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; }}>
+                      {[
+                        { icon: Link2, label: 'LinkedIn', url: (person as any).linkedin },
+                        { icon: Mail, label: 'Email', url: (person as any).email }
+                      ].map(({ icon: Icon, label, url }) => (
+                        <a key={label} href={url || '#'} aria-label={label}
+                          style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(139,158,192,0.4)', textDecoration: 'none', transition: 'all 0.2s', cursor: url ? 'pointer' : 'default', opacity: url ? 1 : 0.3 }}
+                          onMouseEnter={e => { if (url) { e.currentTarget.style.color = 'rgba(34,211,238,0.8)'; e.currentTarget.style.borderColor = 'rgba(34,211,238,0.2)'; } }}
+                          onMouseLeave={e => { if (url) { e.currentTarget.style.color = 'rgba(139,158,192,0.4)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'; } }}
+                          onClick={e => { if (!url) e.preventDefault(); }}>
                           <Icon style={{ width: '13px', height: '13px' }} />
                         </a>
                       ))}
@@ -180,15 +195,7 @@ export default function TeamPage() {
                 ))}
               </div>
 
-              {/* Pending note */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }} animate={leaderInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.4 }}
-                style={{ marginTop: '16px', display: 'flex', alignItems: 'flex-start', gap: '10px', padding: '12px 16px', borderRadius: '12px', background: 'rgba(14,20,36,0.7)', border: '1px solid rgba(255,255,255,0.06)', maxWidth: '520px' }}>
-                <Info style={{ width: '13px', height: '13px', color: 'rgba(34,211,238,0.5)', flexShrink: 0, marginTop: '2px' }} />
-                <p style={{ fontSize: '12px', color: 'rgba(139,158,192,0.55)', lineHeight: 1.7, margin: 0 }}>
-                  Committee chair names will be updated as the organizing committee is formally constituted. Follow our social channels for announcements.
-                </p>
-              </motion.div>
+
             </div>
 
             {/* Mentors & Judges */}
@@ -201,13 +208,7 @@ export default function TeamPage() {
                     initial={{ opacity: 0, y: 12 }} animate={mentorInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.2 }}>
                     PRISMTECH's mentor and jury panels are drawn from industry, academia, and IEEE's professional network. Mentors are available throughout the 24-hour sprint to provide technical guidance, ideation support, and pitch coaching.
                   </motion.p>
-                  <motion.div initial={{ opacity: 0, y: 10 }} animate={mentorInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.4, delay: 0.28 }}>
-                    <Link href="/contact" className="btn-magnetic btn-secondary inline-flex items-center gap-2"
-                      style={{ fontSize: '0.875rem', padding: '12px 24px', borderRadius: '12px', border: '1px solid rgba(34,211,238,0.2)' }}>
-                      <ExternalLink style={{ width: '14px', height: '14px' }} />
-                      Join as a Mentor or Judge
-                    </Link>
-                  </motion.div>
+
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -279,10 +280,10 @@ export default function TeamPage() {
                 </div>
                 <div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '15px', color: 'rgba(241,245,249,0.93)', letterSpacing: '-0.015em', marginBottom: '4px' }}>Ready to be part of PRISMTECH?</div>
-                  <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 21, 2026.</div>
+                  <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 9, 2026.</div>
                 </div>
               </div>
-              <Link href="/auth/register" className="btn-magnetic btn-primary"
+              <Link href="#" className="btn-magnetic btn-primary"
                 style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
                 Register Now
               </Link>
