@@ -26,7 +26,7 @@ export default function VenueSection() {
   const inView = useInView(sectionRef, { once: true, margin: '-40px' });
 
   return (
-    <section id="venue" ref={sectionRef} style={{ position: 'relative', zIndex: 1, paddingBottom: '96px', background: 'var(--color-surface-0)' }}>
+      <section id="venue" ref={sectionRef} style={{ position: 'relative', zIndex: 1, paddingBottom: '96px' }}>
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true" style={{ zIndex: 0 }}>
         <div style={{ position: 'absolute', bottom: '0%', left: '50%', width: '800px', height: '600px', background: 'radial-gradient(ellipse at bottom, rgba(0,136,204,0.06) 0%, transparent 60%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />

@@ -66,13 +66,7 @@ const WHY_SPONSOR = [
   { icon: Star, label: 'Problem Statements', desc: 'Shape hackathon tracks to solve challenges relevant to your industry.', accent: 'rgba(52,211,153,1)' },
 ];
 
-const BG = (
-  <div className="fixed inset-0 pointer-events-none" aria-hidden="true" style={{ zIndex: 0 }}>
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,98,155,0.18) 0%, transparent 70%)' }} />
-    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 60% 40% at 80% 60%, rgba(88,28,220,0.08) 0%, transparent 60%)' }} />
-    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.04) 0%, transparent 50%, rgba(88,28,220,0.04) 100%)' }} />
-  </div>
-);
+const BG = null; // Background handled globally in layout.tsx
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -88,8 +82,7 @@ export default function SponsorsSection() {
   return (
     <>
       
-      {BG}
-      <section id="sponsors" className="min-h-screen" style={{ position: 'relative', zIndex: 1 }}>
+      <section id="sponsors" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* Hero */}
         <section style={{ position: 'relative', zIndex: 1, paddingTop: '112px', paddingBottom: '80px' }}>

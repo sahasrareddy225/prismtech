@@ -75,72 +75,93 @@ export default function AboutSection() {
   return (
     <>
       
-      <section id="about" className="min-h-screen" style={{ background: 'var(--color-surface-0)', position: 'relative' }}>
+      <section id="about" style={{ position: 'relative' }}>
 
-        {/* ── Single full-page background — covers every section ── */}
-        <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 0 }} aria-hidden="true">
-          <div style={{ position: 'absolute', top: '10%', left: '30%', width: '700px', height: '700px', background: 'radial-gradient(ellipse at center, rgba(0,136,204,0.13) 0%, rgba(14,165,233,0.06) 35%, transparent 70%)', borderRadius: '50%', transform: 'translateX(-50%)' }} />
-          <div style={{ position: 'absolute', top: '-5%', right: '-8%', width: '520px', height: '520px', background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.09) 0%, transparent 65%)', borderRadius: '50%' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(0,98,155,0.06) 0%, transparent 50%, rgba(34,211,238,0.04) 100%)' }} />
-        </div>
+        {/* ── Single full-page background — covered by layout.tsx ── */}
 
         {/* ── Hero + Stats unified zone ── */}
         <div ref={heroRef} className="relative" style={{ zIndex: 1 }}>
 
           {/* Hero content */}
-          <div className="relative z-10 w-full mx-auto px-6 lg:px-16 lg:pl-[120px]" style={{ maxWidth: '1280px', paddingTop: '40px' }}>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="relative z-10 w-full mx-auto" style={{ maxWidth: '1280px', paddingTop: 'clamp(32px, 6vw, 80px)', paddingLeft: 'clamp(24px, 6vw, 96px)', paddingRight: 'clamp(24px, 6vw, 96px)', marginLeft: 'auto', marginRight: 'auto' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
 
               {/* ── LEFT COLUMN ── */}
-              <div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+
+                {/* Eyebrow badge */}
                 <motion.div
-                  className="flex items-center gap-2 mb-8"
-                  initial={{ opacity: 0, y: 12 }}
+                  style={{ marginBottom: '28px' }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={heroInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4 }}
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse-dot" />
-                  <span className="text-[11px] font-bold tracking-[0.25em] uppercase text-cyan-400/80">
-                    About IEEE PRISMTECH
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    padding: '6px 14px', borderRadius: '999px',
+                    background: 'rgba(34,211,238,0.08)',
+                    border: '1px solid rgba(34,211,238,0.2)',
+                  }}>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(34,211,238,0.9)', boxShadow: '0 0 6px rgba(34,211,238,0.6)', flexShrink: 0 }} />
+                    <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.85)' }}>
+                      About IEEE PRISMTECH
+                    </span>
                   </span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse-dot" />
                 </motion.div>
 
+                {/* Heading */}
                 <motion.h1
-                  className="mb-7"
-                  style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05, fontSize: 'clamp(2.25rem, 4.5vw, 3.5rem)' }}
+                  style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.08, fontSize: 'clamp(1.75rem, 6vw, 3.75rem)', margin: 0, marginBottom: '24px' }}
                   initial={{ opacity: 0, y: 24 }}
                   animate={heroInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.55, delay: 0.08 }}
                 >
-                  <span className="block text-white">Building Technology.</span>
-                  <span className="block text-gradient-prism">Creating Impact.</span>
+                  <span style={{ display: 'block', color: '#ffffff' }}>Building Technology.</span>
+                  <span className="text-gradient-prism" style={{ display: 'block' }}>Creating Impact.</span>
                 </motion.h1>
 
+                {/* Thin divider */}
+                <motion.div
+                  style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg, rgba(34,211,238,0.7), rgba(99,102,241,0.4))', borderRadius: '2px', marginBottom: '24px' }}
+                  initial={{ opacity: 0, scaleX: 0 }}
+                  animate={heroInView ? { opacity: 1, scaleX: 1 } : {}}
+                  transition={{ duration: 0.4, delay: 0.22, transformOrigin: 'left' }}
+                />
+
+                {/* Description */}
                 <motion.p
-                  className="text-[15.5px] text-[var(--color-text-secondary)] leading-[1.8] mb-10 text-justify"
-                  style={{ maxWidth: '500px' }}
+                  style={{ fontSize: 'clamp(13px, 3.5vw, 15.5px)', color: 'var(--color-text-secondary)', lineHeight: 1.85, margin: 0, marginBottom: '28px', maxWidth: '480px' }}
                   initial={{ opacity: 0, y: 14 }}
                   animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.18 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
                 >
                   A 24-hour IEEE hackathon where student teams prototype solutions across AI, cybersecurity,
                   sustainability, healthcare, and smart infrastructure — guided by mentors and industry experts.
                 </motion.p>
 
+                {/* CTA buttons */}
                 <motion.div
-                  className="flex flex-col sm:flex-row gap-4"
+                  style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}
                   initial={{ opacity: 0, y: 12 }}
                   animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.45, delay: 0.28 }}
+                  transition={{ duration: 0.45, delay: 0.3 }}
                 >
-                  <Link href="#" className="btn-magnetic btn-primary text-sm px-8 py-3">
+                  <Link
+                    href="#"
+                    className="btn-magnetic btn-primary"
+                    style={{ fontSize: '13.5px', fontWeight: 600, padding: '12px 28px', borderRadius: '10px', letterSpacing: '0.01em' }}
+                  >
                     Register Your Team
                   </Link>
-                  <Link href="/tracks" className="btn-magnetic btn-secondary text-sm px-8 py-3">
+                  <Link
+                    href="/tracks"
+                    className="btn-magnetic btn-secondary"
+                    style={{ fontSize: '13.5px', fontWeight: 600, padding: '12px 28px', borderRadius: '10px', letterSpacing: '0.01em' }}
+                  >
                     Explore Domains
                   </Link>
                 </motion.div>
+
               </div>
 
               {/* ── RIGHT COLUMN — Premium Hero Illustration ── */}
@@ -152,8 +173,8 @@ export default function AboutSection() {
           </div>
 
           {/* Stats cards — same background zone, no gap */}
-          <div className="relative z-10 w-full mx-auto px-6 lg:px-16 lg:pl-[120px]" style={{ maxWidth: '1280px', paddingTop: '56px', paddingBottom: '72px' }}>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="relative z-10 w-full mx-auto" style={{ maxWidth: '1280px', paddingTop: '36px', paddingBottom: '48px', paddingLeft: 'clamp(24px, 6vw, 96px)', paddingRight: 'clamp(24px, 6vw, 96px)', marginLeft: 'auto', marginRight: 'auto' }}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-5">
               {STATS.map((s, i) => (
                 <motion.div
                   key={s.label}
@@ -166,7 +187,7 @@ export default function AboutSection() {
                     background: 'linear-gradient(160deg, rgba(14,165,233,0.08) 0%, rgba(8,16,32,0.6) 100%)',
                     border: '1px solid rgba(255,255,255,0.07)',
                     backdropFilter: 'blur(20px)',
-                    padding: '24px 24px 20px',
+                    padding: 'clamp(14px, 3vw, 24px) clamp(12px, 3vw, 24px) clamp(12px, 3vw, 20px)',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 0,
@@ -186,7 +207,7 @@ export default function AboutSection() {
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '2px', marginBottom: '8px' }}>
                     <span style={{
                       fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(2.25rem, 3.5vw, 3rem)',
+                      fontSize: 'clamp(1.5rem, 5vw, 3rem)',
                       fontWeight: 800,
                       letterSpacing: '-0.05em',
                       lineHeight: 1,
@@ -238,12 +259,97 @@ export default function AboutSection() {
         </div>
         {/* ── end hero+stats zone ── */}
 
+        {/* ── Mobile-only intro card ── */}
+        <div className="block lg:hidden" style={{ padding: '0 24px 48px' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: 0.4 }}
+            style={{
+              borderRadius: '24px',
+              background: 'linear-gradient(160deg, rgba(10,18,36,0.95) 0%, rgba(6,12,26,0.98) 100%)',
+              border: '1px solid rgba(34,211,238,0.15)',
+              padding: '36px 28px 32px',
+              position: 'relative',
+              overflow: 'hidden',
+              boxShadow: '0 0 0 1px rgba(34,211,238,0.06), 0 0 48px rgba(34,211,238,0.08), 0 20px 48px rgba(0,0,0,0.5)',
+            }}
+          >
+            {/* Top cyan glow line */}
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '2px', background: 'linear-gradient(90deg, transparent, rgba(34,211,238,0.9) 40%, rgba(99,102,241,0.6) 70%, transparent)' }} />
+            {/* Ambient corner glow */}
+            <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '160px', height: '160px', background: 'radial-gradient(circle, rgba(34,211,238,0.06) 0%, transparent 70%)', pointerEvents: 'none' }} />
+
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.45 }}
+              style={{ marginBottom: '22px' }}
+            >
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                padding: '6px 14px', borderRadius: '999px',
+                background: 'rgba(34,211,238,0.07)',
+                border: '1px solid rgba(34,211,238,0.22)',
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'rgba(34,211,238,1)', boxShadow: '0 0 8px rgba(34,211,238,0.8)', flexShrink: 0 }} />
+                <span style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(34,211,238,0.9)' }}>About IEEE PRISMTECH</span>
+              </span>
+            </motion.div>
+
+            {/* Heading */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.08, marginBottom: '18px' }}
+            >
+              <span style={{ display: 'block', fontSize: 'clamp(1.75rem, 8vw, 2.25rem)', color: '#ffffff' }}>Building Technology.</span>
+              <span className="text-gradient-prism" style={{ display: 'block', fontSize: 'clamp(1.75rem, 8vw, 2.25rem)' }}>Creating Impact.</span>
+            </motion.div>
+
+            {/* Divider */}
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={heroInView ? { opacity: 1, scaleX: 1 } : {}}
+              transition={{ duration: 0.4, delay: 0.56, transformOrigin: 'left' }}
+              style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg, rgba(34,211,238,0.9), rgba(99,102,241,0.5))', borderRadius: '2px', marginBottom: '18px' }}
+            />
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.58 }}
+              style={{ fontSize: '13.5px', color: 'rgba(139,158,192,0.9)', lineHeight: 1.85, margin: 0, marginBottom: '24px' }}
+            >
+              A 24-hour IEEE hackathon where student teams prototype solutions across AI, cybersecurity,
+              sustainability, healthcare, and smart infrastructure — guided by mentors and industry experts.
+            </motion.p>
+
+            {/* Divider line */}
+            <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(34,211,238,0.12), rgba(99,102,241,0.08), transparent)', marginBottom: '24px' }} />
+
+            {/* Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={heroInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.45, delay: 0.62 }}
+              style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}
+            >
+              <Link href="#" className="btn-magnetic btn-primary" style={{ fontSize: '13px', fontWeight: 600, padding: '11px 26px', borderRadius: '12px', letterSpacing: '0.01em' }}>Register Your Team</Link>
+              <Link href="/tracks" className="btn-magnetic btn-secondary" style={{ fontSize: '13px', fontWeight: 600, padding: '11px 26px', borderRadius: '12px', letterSpacing: '0.01em' }}>Explore Domains</Link>
+            </motion.div>
+          </motion.div>
+        </div>
+
         {/* Mission */}
         <section ref={missionRef} className="section" aria-labelledby="mission-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '32px', paddingBottom: '48px' }}>
-          <div className="container">
+          <div className="container" style={{ paddingLeft: 'clamp(24px, 6vw, 24px)', paddingRight: 'clamp(24px, 6vw, 24px)' }}>
 
             {/* Section header */}
-            <div className="text-center mb-20">
+            <div className="text-center mb-8 lg:mb-20">
               <motion.div
                 className="inline-flex items-center gap-2 mb-5"
                 initial={{ opacity: 0, y: 10 }}
@@ -389,7 +495,7 @@ export default function AboutSection() {
 
         {/* Streams */}
         <section ref={streamsRef} className="section" aria-labelledby="streams-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
-          <div className="container">
+          <div className="container" style={{ paddingLeft: 'clamp(24px, 6vw, 24px)', paddingRight: 'clamp(24px, 6vw, 24px)' }}>
 
             {/* Header */}
             <div className="text-center mb-12">
@@ -483,7 +589,7 @@ export default function AboutSection() {
 
         {/* Feature Cards */}
         <section ref={benefitsRef} className="section" aria-labelledby="features-heading" style={{ position: 'relative', zIndex: 1, paddingTop: '40px' }}>
-          <div className="container">
+          <div className="container" style={{ paddingLeft: 'clamp(24px, 6vw, 24px)', paddingRight: 'clamp(24px, 6vw, 24px)' }}>
 
             {/* Header */}
             <div className="text-center mb-12">

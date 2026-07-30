@@ -9,7 +9,7 @@ function TimeBlock({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex flex-col items-center gap-3">
       <div
-        className="relative flex items-center justify-center w-[60px] h-[60px] sm:w-[76px] sm:h-[76px] md:w-[88px] md:h-[88px] cursor-default
+        className="relative flex items-center justify-center w-[42px] h-[42px] sm:w-[76px] sm:h-[76px] md:w-[88px] md:h-[88px] cursor-default
                    transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.04]"
         style={{ borderRadius: '20px' }}
       >
@@ -45,7 +45,7 @@ function TimeBlock({ value, label }: { value: number; label: string }) {
         />
         <span
           className="relative font-display font-extrabold tabular-nums text-white"
-          style={{ fontSize: 'clamp(1.25rem, 4vw, 2.1rem)', letterSpacing: '-0.04em' }}
+          style={{ fontSize: 'clamp(0.85rem, 4vw, 2.1rem)', letterSpacing: '-0.04em' }}
           aria-label={`${formatted} ${label}`}
         >
           {formatted}
