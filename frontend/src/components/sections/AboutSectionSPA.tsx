@@ -125,7 +125,7 @@ export default function AboutSection() {
                   style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg, rgba(34,211,238,0.7), rgba(99,102,241,0.4))', borderRadius: '2px', marginBottom: '24px' }}
                   initial={{ opacity: 0, scaleX: 0 }}
                   animate={heroInView ? { opacity: 1, scaleX: 1 } : {}}
-                  transition={{ duration: 0.4, delay: 0.22, transformOrigin: 'left' }}
+                  transition={{ duration: 0.4, delay: 0.22 }}
                 />
 
                 {/* Description */}
@@ -313,7 +313,7 @@ export default function AboutSection() {
             <motion.div
               initial={{ opacity: 0, scaleX: 0 }}
               animate={heroInView ? { opacity: 1, scaleX: 1 } : {}}
-              transition={{ duration: 0.4, delay: 0.56, transformOrigin: 'left' }}
+              transition={{ duration: 0.4, delay: 0.56 }}
               style={{ width: '48px', height: '2px', background: 'linear-gradient(90deg, rgba(34,211,238,0.9), rgba(99,102,241,0.5))', borderRadius: '2px', marginBottom: '18px' }}
             />
 
