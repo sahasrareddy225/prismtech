@@ -9,7 +9,8 @@ import ScheduleSection from "@/components/sections/ScheduleSectionSPA";
 import RulesSection from "@/components/sections/RulesSectionSPA";
 import TeamSection from "@/components/sections/TeamSectionSPA";
 import SponsorsSection from "@/components/sections/SponsorsSectionSPA";
-import ContactSection from "@/components/sections/ContactSectionSPA";
+import dynamic from 'next/dynamic';
+const ContactSection = dynamic(() => import("@/components/sections/ContactSectionSPA"), { ssr: false });
 import VenueSection from "@/components/sections/VenueSectionSPA";
 
 export default function Home() {
