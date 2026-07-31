@@ -10,7 +10,8 @@ import {
   Zap, Users
 } from 'lucide-react';
 import Link from 'next/link';
-import HeroIllustration from '@/components/sections/HeroIllustration';
+import dynamic from 'next/dynamic';
+const HeroIllustration = dynamic(() => import('@/components/sections/HeroIllustration'), { ssr: false });
 
 const STATS = [
   { value: '105', suffix: '+', label: 'Expected Teams',     sub: 'Registered participants' },

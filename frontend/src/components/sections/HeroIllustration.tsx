@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 /* ─── Orbit ring data ─────────────────────────────────────────── */
@@ -10,7 +11,7 @@ const RINGS = [
   { size: 220, border: 'rgba(59,130,246,0.18)',  shadow: 'rgba(59,130,246,0.09)',  dur: 7,  ccw: true  },
 ];
 
-/* ─── Orbit node data (dots on rings) ─────────────────────────── */
+/* ─── Orbit node data ─────────────────────────────────────────── */
 const NODES = [
   { ring: 460, angle: 30,  size: 5, color: 'rgba(34,211,238,0.9)' },
   { ring: 460, angle: 200, size: 3, color: 'rgba(59,130,246,0.7)' },
@@ -19,6 +20,16 @@ const NODES = [
   { ring: 300, angle: 60,  size: 3, color: 'rgba(34,211,238,0.8)' },
   { ring: 300, angle: 240, size: 4, color: 'rgba(59,130,246,0.8)' },
 ];
+
+/* ─── Precompute node positions at module level (deterministic SSR) ── */
+const NODE_POSITIONS = NODES.map(n => {
+  const r   = n.ring / 2;
+  const rad = (n.angle * Math.PI) / 180;
+  return {
+    cx: 250 + r * Math.cos(rad),
+    cy: 250 + r * Math.sin(rad),
+  };
+});
 
 /* ─── Circuit line segments ───────────────────────────────────── */
 const CIRCUITS = [
@@ -46,34 +57,29 @@ const PARTICLES = [
 
 /* ─── Floating data chips ─────────────────────────────────────── */
 const CHIPS = [
-  { label: 'AI / ML',      x: 20,  y: 120, dur: 5.2, delay: 0   },
-  { label: 'IoT',          x: 370, y: 90,  dur: 4.8, delay: 0.8 },
-  { label: 'Cybersec',     x: 380, y: 360, dur: 5.5, delay: 1.4 },
-  { label: '24 hrs',       x: 10,  y: 340, dur: 4.6, delay: 0.4 },
+  { label: 'AI / ML',  x: 20,  y: 120, dur: 5.2, delay: 0   },
+  { label: 'IoT',      x: 370, y: 90,  dur: 4.8, delay: 0.8 },
+  { label: 'Cybersec', x: 380, y: 360, dur: 5.5, delay: 1.4 },
+  { label: '24 hrs',   x: 10,  y: 340, dur: 4.6, delay: 0.4 },
 ];
 
-/* ─── Helper: position on ring circumference ──────────────────── */
-function nodePos(ringSize: number, angleDeg: number) {
-  const r = ringSize / 2;
-  const rad = (angleDeg * Math.PI) / 180;
-  return {
-    cx: 250 + r * Math.cos(rad),
-    cy: 250 + r * Math.sin(rad),
-  };
-}
-
 export default function HeroIllustration({ inView }: { inView: boolean }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  /* Use inView only after mount to avoid SSR/client mismatch */
+  const active = mounted && inView;
+
   return (
     <motion.div
       className="flex items-center justify-center w-full h-full"
       initial={{ opacity: 0, x: 40 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
+      animate={active ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
       transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Outer wrapper — sets the illustration size */}
       <div style={{ position: 'relative', width: '500px', height: '500px', flexShrink: 0 }}>
 
-        {/* ── Bloom / ambient glow ── */}
+        {/* Bloom */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(34,211,238,0.11) 0%, rgba(59,130,246,0.07) 40%, transparent 70%)',
@@ -81,7 +87,6 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
           pointerEvents: 'none',
         }} />
 
-        {/* ── SVG canvas ── */}
         <svg
           viewBox="0 0 500 500"
           width="500" height="500"
@@ -89,7 +94,6 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
           aria-hidden="true"
         >
           <defs>
-            {/* Radial glow filter */}
             <filter id="glow-cyan" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
@@ -102,12 +106,10 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               <feGaussianBlur stdDeviation="6" result="blur" />
               <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
-            {/* Gradient for circuit lines */}
             <linearGradient id="circuit-grad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="rgba(34,211,238,0.6)" />
               <stop offset="100%" stopColor="rgba(59,130,246,0.2)" />
             </linearGradient>
-            {/* Core glass gradient */}
             <linearGradient id="cube-face" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="rgba(34,211,238,0.12)" />
               <stop offset="100%" stopColor="rgba(59,130,246,0.06)" />
@@ -116,16 +118,9 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               <stop offset="0%" stopColor="rgba(34,211,238,0.9)" />
               <stop offset="100%" stopColor="rgba(59,130,246,0.6)" />
             </linearGradient>
-            {/* Holographic ring gradient */}
-            <linearGradient id="holo-ring" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(34,211,238,0)" />
-              <stop offset="30%" stopColor="rgba(34,211,238,0.5)" />
-              <stop offset="70%" stopColor="rgba(59,130,246,0.5)" />
-              <stop offset="100%" stopColor="rgba(59,130,246,0)" />
-            </linearGradient>
           </defs>
 
-          {/* ── Holographic base rings ── */}
+          {/* Rings */}
           {RINGS.map((ring, i) => (
             <motion.circle
               key={`ring-${i}`}
@@ -134,27 +129,26 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               stroke={ring.border}
               strokeWidth={i === 2 ? 1.5 : 1}
               style={{ filter: `drop-shadow(0 0 6px ${ring.shadow})` }}
-              animate={{ scale: [1, 1.015, 1], opacity: [0.7, 1, 0.7] }}
+              animate={mounted ? { scale: [1, 1.015, 1], opacity: [0.7, 1, 0.7] } : {}}
               transition={{ duration: ring.dur * 0.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.5 }}
             />
           ))}
 
-          {/* ── Orbit nodes (dots on rings) ── */}
-          {NODES.map((n, i) => {
-            const { cx, cy } = nodePos(n.ring, n.angle);
-            return (
-              <motion.circle
-                key={`node-${i}`}
-                cx={cx} cy={cy} r={n.size / 2}
-                fill={n.color}
-                filter="url(#glow-cyan)"
-                animate={{ opacity: [0.6, 1, 0.6], r: [n.size / 2, n.size / 2 + 0.5, n.size / 2] }}
-                transition={{ duration: 2.5 + i * 0.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
-              />
-            );
-          })}
+          {/* Nodes — positions from precomputed module-level array */}
+          {NODES.map((n, i) => (
+            <motion.circle
+              key={`node-${i}`}
+              cx={NODE_POSITIONS[i].cx}
+              cy={NODE_POSITIONS[i].cy}
+              r={n.size / 2}
+              fill={n.color}
+              filter="url(#glow-cyan)"
+              animate={mounted ? { opacity: [0.6, 1, 0.6], r: [n.size / 2, n.size / 2 + 0.5, n.size / 2] } : {}}
+              transition={{ duration: 2.5 + i * 0.4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+            />
+          ))}
 
-          {/* ── Circuit lines ── */}
+          {/* Circuit lines */}
           {CIRCUITS.map((c, i) => (
             <motion.polyline
               key={`circuit-${i}`}
@@ -165,7 +159,7 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0, opacity: 0 }}
-              animate={inView ? { pathLength: 1, opacity: 1 } : {}}
+              animate={active ? { pathLength: 1, opacity: 1 } : {}}
               transition={{ duration: 1.2, delay: 0.6 + i * 0.15, ease: 'easeOut' }}
             />
           ))}
@@ -178,13 +172,12 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               fill="rgba(34,211,238,0.7)"
               filter="url(#glow-cyan)"
               initial={{ opacity: 0, scale: 0 }}
-              animate={inView ? { opacity: [0.5, 1, 0.5], scale: 1 } : {}}
+              animate={active ? { opacity: [0.5, 1, 0.5], scale: 1 } : {}}
               transition={{ duration: 2, delay: 1.2 + i * 0.15, repeat: Infinity, ease: 'easeInOut' }}
             />
           ))}
 
-          {/* ── Geometric floating layers (outer hexagonal frame) ── */}
-          {/* Outer rotated square layer 1 */}
+          {/* Rotating squares */}
           <motion.rect
             x={250 - 105} y={250 - 105} width={210} height={210}
             rx={18} ry={18}
@@ -192,10 +185,9 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
             stroke="rgba(34,211,238,0.18)"
             strokeWidth={1}
             style={{ transformOrigin: '250px 250px' }}
-            animate={{ rotate: [0, 360] }}
+            animate={mounted ? { rotate: [0, 360] } : {}}
             transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
           />
-          {/* Outer rotated square layer 2 */}
           <motion.rect
             x={250 - 88} y={250 - 88} width={176} height={176}
             rx={14} ry={14}
@@ -203,22 +195,21 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
             stroke="rgba(59,130,246,0.14)"
             strokeWidth={0.8}
             style={{ transformOrigin: '250px 250px' }}
-            animate={{ rotate: [45, 405] }}
+            animate={mounted ? { rotate: [45, 405] } : {}}
             transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
           />
 
-          {/* ── Core glass cube (main 3D-ish box) ── */}
-          {/* Back face (depth illusion) */}
+          {/* Cube back face */}
           <motion.rect
             x={250 - 52 + 10} y={250 - 52 - 10} width={104} height={104}
             rx={10} ry={10}
             fill="rgba(59,130,246,0.04)"
             stroke="rgba(59,130,246,0.25)"
             strokeWidth={1}
-            style={{ transformOrigin: '250px 250px' }}
-            animate={{ y: [0, -6, 0] }}
+            animate={mounted ? { y: [0, -6, 0] } : {}}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           />
+
           {/* Depth connector lines */}
           {[
             [250 - 52, 250 - 52, 250 - 52 + 10, 250 - 52 - 10],
@@ -231,11 +222,12 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               x1={x1} y1={y1} x2={x2} y2={y2}
               stroke="rgba(59,130,246,0.3)"
               strokeWidth={0.8}
-              animate={{ y: [0, -6, 0] }}
+              animate={mounted ? { y: [0, -6, 0] } : {}}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
             />
           ))}
-          {/* Front face */}
+
+          {/* Cube front face */}
           <motion.rect
             x={250 - 52} y={250 - 52} width={104} height={104}
             rx={10} ry={10}
@@ -244,20 +236,22 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
             strokeWidth={1.5}
             filter="url(#glow-strong)"
             style={{ transformOrigin: '250px 250px' }}
-            animate={{ y: [0, -6, 0], rotate: [0, 2, 0, -2, 0] }}
+            animate={mounted ? { y: [0, -6, 0], rotate: [0, 2, 0, -2, 0] } : {}}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           />
-          {/* Inner face */}
+
+          {/* Cube inner face */}
           <motion.rect
             x={250 - 34} y={250 - 34} width={68} height={68}
             rx={7} ry={7}
             fill="rgba(34,211,238,0.04)"
             stroke="rgba(34,211,238,0.3)"
             strokeWidth={0.8}
-            animate={{ y: [0, -6, 0], rotate: [0, 2, 0, -2, 0] }}
+            animate={mounted ? { y: [0, -6, 0], rotate: [0, 2, 0, -2, 0] } : {}}
             transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
           />
-          {/* Corner accent dots on front face */}
+
+          {/* Corner dots */}
           {[
             [250 - 52, 250 - 52],
             [250 + 52, 250 - 52],
@@ -269,25 +263,25 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               cx={cx} cy={cy} r={3.5}
               fill="rgba(34,211,238,0.95)"
               filter="url(#glow-cyan)"
-              animate={{ y: [0, -6, 0], opacity: [0.8, 1, 0.8] }}
+              animate={mounted ? { y: [0, -6, 0], opacity: [0.8, 1, 0.8] } : {}}
               transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.1 }}
             />
           ))}
 
-          {/* ── Floating particles ── */}
+          {/* Particles */}
           {PARTICLES.map((p, i) => (
             <motion.circle
               key={`particle-${i}`}
               cx={p.x} cy={p.y} r={p.s / 2}
               fill={i % 2 === 0 ? 'rgba(34,211,238,0.85)' : 'rgba(59,130,246,0.85)'}
               filter="url(#glow-cyan)"
-              animate={{ cy: [p.y, p.y - 10, p.y], opacity: [0.4, 0.9, 0.4] }}
+              animate={mounted ? { cy: [p.y, p.y - 10, p.y], opacity: [0.4, 0.9, 0.4] } : {}}
               transition={{ duration: p.dur, repeat: Infinity, ease: 'easeInOut', delay: p.delay }}
             />
           ))}
         </svg>
 
-        {/* ── Code symbol </> — HTML overlay for font rendering ── */}
+        {/* Code symbol */}
         <motion.div
           style={{
             position: 'absolute',
@@ -298,18 +292,18 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
             fontWeight: 700,
             letterSpacing: '-0.02em',
             color: 'rgba(34,211,238,0.95)',
-            textShadow: '0 0 16px rgba(34,211,238,0.9), 0 0 40px rgba(34,211,238,0.5), 0 0 80px rgba(34,211,238,0.2)',
+            textShadow: '0 0 16px rgba(34,211,238,0.9), 0 0 40px rgba(34,211,238,0.5)',
             userSelect: 'none',
             zIndex: 10,
             whiteSpace: 'nowrap',
           }}
-          animate={{ y: [0, -6, 0], opacity: [0.9, 1, 0.9] }}
+          animate={mounted ? { y: [0, -6, 0], opacity: [0.9, 1, 0.9] } : {}}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         >
           {'</>'}
         </motion.div>
 
-        {/* ── Floating data chips ── */}
+        {/* Data chips */}
         {CHIPS.map((chip, i) => (
           <motion.div
             key={`chip-${i}`}
@@ -330,7 +324,7 @@ export default function HeroIllustration({ inView }: { inView: boolean }) {
               boxShadow: '0 0 12px rgba(34,211,238,0.1)',
               zIndex: 20,
             }}
-            animate={{ y: [0, -7, 0], opacity: [0.7, 1, 0.7] }}
+            animate={mounted ? { y: [0, -7, 0], opacity: [0.7, 1, 0.7] } : {}}
             transition={{ duration: chip.dur, repeat: Infinity, ease: 'easeInOut', delay: chip.delay }}
           >
             {chip.label}
