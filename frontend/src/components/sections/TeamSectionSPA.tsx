@@ -278,7 +278,7 @@ export default function TeamSection() {
                   <div style={{ fontSize: '13px', color: 'rgba(139,158,192,0.6)' }}>Register your team before September 9, 2026.</div>
                 </div>
               </div>
-              <Link href="#" className="btn-magnetic btn-primary"
+              <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary"
                 style={{ fontSize: '0.9375rem', padding: '13px 32px', borderRadius: '12px', boxShadow: '0 0 24px rgba(0,136,204,0.2)', flexShrink: 0 }}>
                 Register Now
               </Link>

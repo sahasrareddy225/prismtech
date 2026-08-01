@@ -99,7 +99,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.34 }}
         >
-          <Link href="#" className="btn-magnetic btn-primary text-[13px] font-semibold px-6 py-2.5 rounded-xl">
+          <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary text-[13px] font-semibold px-6 py-2.5 rounded-xl">
             Register Your Team
           </Link>
           <Link href="/tracks" className="btn-magnetic btn-ghost text-[13px] group px-4 py-2.5">
@@ -218,7 +218,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Link href="#" className="btn-magnetic btn-primary px-8 py-3 text-[13px] font-semibold">
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary px-8 py-3 text-[13px] font-semibold">
               Register Your Team
             </Link>
             <Link href="/tracks" className="btn-magnetic btn-ghost text-[13px] group px-6 py-3">

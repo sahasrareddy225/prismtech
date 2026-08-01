@@ -92,7 +92,7 @@ export default function WhyParticipateSection() {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.45, delay: 0.55 }}
         >
-          <Link href="#" className="btn-magnetic btn-primary text-sm">
+          <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary text-sm">
             Register Your Team
           </Link>
           <Link href="/about" className="btn-magnetic btn-ghost text-sm group">

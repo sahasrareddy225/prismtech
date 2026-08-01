@@ -51,7 +51,7 @@ export default function Navbar() {
             {' '}· KLH Aziz Nagar, Hyderabad
           </span>
           <Link
-            href="#"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog"
             className="text-xs font-semibold text-[var(--color-ieee-blue-light)] hover:text-white transition-colors underline underline-offset-2"
           >
             Register →
@@ -78,11 +78,11 @@ export default function Navbar() {
             <Link href="/" className="flex items-center gap-2 lg:gap-5" aria-label="PRISMTECH 2026 Home">
               <div className="flex items-center gap-2 lg:gap-4">
                 <div className="bg-white px-2 py-1 lg:px-3 lg:py-1.5 rounded-lg lg:rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.1)] transition-transform duration-300 flex items-center justify-center">
-                  <Image src="/klh-logo.png" alt="KLH Logo" width={140} height={60} className="object-contain" style={{ width: 'auto', height: '28px' }} />
+                  <Image src="/klh-logo.png" alt="KLH Logo" width={140} height={60} className="object-contain h-8 lg:h-[42px] w-auto" />
                 </div>
                 <div className="relative transition-transform duration-300">
                   <div className="absolute -inset-1 bg-cyan-400/20 blur-md rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <Image src="/ieee-logo.png" alt="IEEE Logo" width={60} height={60} className="object-contain rounded-md relative z-10 drop-shadow-[0_0_12px_rgba(34,211,238,0.3)]" style={{ width: 'auto', height: '28px' }} />
+                  <Image src="/ieee-logo.png" alt="IEEE Logo" width={60} height={60} className="object-contain rounded-md relative z-10 drop-shadow-[0_0_12px_rgba(34,211,238,0.3)] h-8 lg:h-[42px] w-auto" />
                 </div>
               </div>
               <div className="flex flex-col justify-center">
@@ -115,7 +115,7 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-7 ml-auto">
-            <Link href="#" className="btn-magnetic btn-primary text-sm py-2.5 px-6 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
+            <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary text-sm py-2.5 px-6 shadow-[0_0_20px_rgba(34,211,238,0.15)]">
               Register Your Team
             </Link>
           </div>
@@ -267,7 +267,7 @@ export default function Navbar() {
           flexShrink: 0,
         }}>
           <Link
-            href="#"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog"
             className="btn-magnetic btn-primary"
             style={{ display: 'flex', justifyContent: 'center', fontSize: '12.5px', padding: '11px 0', borderRadius: '11px', width: '100%' }}
           >

@@ -141,27 +141,7 @@ export default function AboutSection() {
                 </motion.p>
 
                 {/* CTA buttons */}
-                <motion.div
-                  style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ duration: 0.45, delay: 0.3 }}
-                >
-                  <Link
-                    href="#"
-                    className="btn-magnetic btn-primary"
-                    style={{ fontSize: '13.5px', fontWeight: 600, padding: '12px 28px', borderRadius: '10px', letterSpacing: '0.01em' }}
-                  >
-                    Register Your Team
-                  </Link>
-                  <Link
-                    href="/tracks"
-                    className="btn-magnetic btn-secondary"
-                    style={{ fontSize: '13.5px', fontWeight: 600, padding: '12px 28px', borderRadius: '10px', letterSpacing: '0.01em' }}
-                  >
-                    Explore Domains
-                  </Link>
-                </motion.div>
+
 
               </div>
 
@@ -329,19 +309,7 @@ export default function AboutSection() {
               sustainability, healthcare, and smart infrastructure — guided by mentors and industry experts.
             </motion.p>
 
-            {/* Divider line */}
-            <div style={{ height: '1px', background: 'linear-gradient(90deg, rgba(34,211,238,0.12), rgba(99,102,241,0.08), transparent)', marginBottom: '24px' }} />
 
-            {/* Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.45, delay: 0.62 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}
-            >
-              <Link href="#" className="btn-magnetic btn-primary" style={{ fontSize: '13px', fontWeight: 600, padding: '11px 26px', borderRadius: '12px', letterSpacing: '0.01em' }}>Register Your Team</Link>
-              <Link href="/tracks" className="btn-magnetic btn-secondary" style={{ fontSize: '13px', fontWeight: 600, padding: '11px 26px', borderRadius: '12px', letterSpacing: '0.01em' }}>Explore Domains</Link>
-            </motion.div>
           </motion.div>
         </div>
 
@@ -684,7 +652,7 @@ export default function AboutSection() {
               transition={{ duration: 0.4, delay: 0.5 }}
             >
               <Link
-                href="#"
+                href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog"
                 className="btn-magnetic btn-primary"
                 style={{
                   fontSize: '0.9375rem',

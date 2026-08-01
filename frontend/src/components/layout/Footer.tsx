@@ -7,7 +7,7 @@ const NAV = [
   { label: 'About',    href: '/about'        },
   { label: 'Tracks',   href: '/tracks'       },
   { label: 'Schedule', href: '/schedule'     },
-  { label: 'Register', href: '#'},
+  { label: 'Register', href: 'https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog'},
 ];
 
 const RESOURCES = [
