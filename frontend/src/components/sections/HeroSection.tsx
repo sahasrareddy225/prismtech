@@ -94,15 +94,15 @@ export default function HeroSection() {
 
         {/* CTAs */}
         <motion.div
-          className="flex gap-3"
+          className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.34 }}
         >
-          <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary text-[13px] font-semibold px-6 py-2.5 rounded-xl">
+          <Link href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog" className="btn-magnetic btn-primary text-[13px] font-semibold px-6 py-2.5 rounded-xl w-full sm:w-auto text-center justify-center">
             Register Your Team
           </Link>
-          <Link href="/tracks" className="btn-magnetic btn-ghost text-[13px] group px-4 py-2.5">
+          <Link href="/tracks" className="btn-magnetic btn-ghost text-[13px] group px-4 py-2.5 w-full sm:w-auto text-center justify-center">
             Explore Domains
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>

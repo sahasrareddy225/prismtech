@@ -2,7 +2,7 @@
 
 import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { MapPin, Navigation, Car, Bus } from 'lucide-react';
+import { MapPin, Bus } from 'lucide-react';
 
 const card: React.CSSProperties = {
   background: 'linear-gradient(145deg, rgba(14,20,36,0.9), rgba(8,16,32,0.65))',
@@ -79,16 +79,6 @@ export default function VenueSection() {
                   Hyderabad, Telangana 500075
                 </p>
               </div>
-              <a 
-                href="https://maps.app.goo.gl/FXJBcJc5AUpTXkYu9" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn-magnetic btn-primary"
-                style={{ marginTop: '12px', padding: '12px', width: '100%', justifyContent: 'center', fontSize: '0.9rem' }}
-              >
-                <Navigation style={{ width: '16px', height: '16px' }} />
-                Open in Google Maps
-              </a>
             </div>
 
             <div style={{ ...card, padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-start' }}>

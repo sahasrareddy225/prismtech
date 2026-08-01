@@ -43,18 +43,18 @@ export default function Navbar() {
     <>
       {/* Announcement Bar */}
       <div className="announcement-bar w-full" role="banner" aria-label="Event announcement">
-        <div className="container flex items-center justify-center gap-3 text-white/80">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-ieee-blue-light)] animate-pulse-dot" />
-          <span className="text-xs">
+        <div className="container flex items-center justify-center gap-2 sm:gap-3 text-white/80 px-2 sm:px-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-ieee-blue-light)] animate-pulse-dot shrink-0" />
+          <span className="text-[10px] sm:text-xs leading-tight">
             Registration closes{' '}
             <strong className="text-white/95">9 September 2026</strong>
-            {' '}· KLH Aziz Nagar, Hyderabad
+            <span className="hidden sm:inline">{' '}· KLH Aziz Nagar, Hyderabad</span>
           </span>
           <Link
             href="https://docs.google.com/forms/d/e/1FAIpQLScJSw2IPcAiEdoWePMIQgvDRIEj--MUkn_cqCbgNuMzMcfqzA/viewform?usp=dialog"
-            className="text-xs font-semibold text-[var(--color-ieee-blue-light)] hover:text-white transition-colors underline underline-offset-2"
+            className="inline-flex items-center justify-center px-4 py-1 text-[9px] font-bold uppercase tracking-wider bg-white text-[var(--color-ieee-blue-light)] rounded-md hover:bg-gray-100 hover:scale-105 transition-all ml-2 whitespace-nowrap shadow-[0_0_8px_rgba(255,255,255,0.2)]"
           >
-            Register →
+            Register
           </Link>
         </div>
       </div>
